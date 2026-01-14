@@ -6,11 +6,22 @@ Page({
       { role: 'assistant', content: '嗨！我是你的专属礼赠顾问。最近是有什么开心的事，还是遇到了什么送礼的难题？跟我说说，我来帮你参谋参谋～' }
     ],
     inputValue: '',
-    scrollInto: ''
+    scrollInto: '',
+    showMyGifts: true,
+    showGiftHistory: true,
+    hasPills: true
   },
-  onLoad() {
+  onLoad(options) {
     const app = getApp()
     this.client = app && app.globalData && app.globalData.aiClient
+    const ui = require('../../config/ui')
+    const showMyGifts = !!ui.showMyGifts
+    const showGiftHistory = !!ui.showGiftHistory
+    const hasPills = showMyGifts || showGiftHistory
+    this.setData({ showMyGifts, showGiftHistory, hasPills })
+    if (options && options.reset === '1') {
+      this.setData({ messages: [ { role: 'assistant', content: '嗨！我是你的专属礼赠顾问。最近是有什么开心的事，还是遇到了什么送礼的难题？跟我说说，我来帮你参谋参谋～' } ], inputValue: '', scrollInto: 'end-anchor' })
+    }
     const { questions, PERSONA_PROMPT } = require('../../config/chatbot')
     this.questions = questions
     this.qThreshold = Math.ceil((questions.length || 0) * 0.8)
@@ -91,5 +102,6 @@ Page({
     try {
       console.log('礼物匹配对话JSON:\n' + JSON.stringify(json, null, 2))
     } catch (e) {}
+    wx.navigateTo({ url: '/pages/wait/wait' })
   }
 })

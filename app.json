@@ -1,6 +1,8 @@
 {
   "pages": [
-    "pages/chat/chat"
+    "pages/chat/chat",
+    "pages/wait/wait",
+    "pages/result/result"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -11,7 +11,7 @@
     </view>
   </view>
 
-  <scroll-view class="chat-scroll" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
+  <scroll-view class="chat-scroll {{hasPills ? '' : 'no-pills'}}" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
     <view class="messages">
       <block wx:for="{{messages}}" wx:key="index">
         <block wx:if="{{item.type === 'cta'}}">
@@ -42,14 +42,14 @@
     </view>
   </scroll-view>
 
-  <view class="fixed-footer">
+  <view class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
     <view class="footer-bg"></view>
-    <view class="secondary-actions">
-      <view class="pill blue" bindtap="onMyGifts">
+    <view class="secondary-actions" wx:if="{{hasPills}}">
+      <view class="pill blue" bindtap="onMyGifts" wx:if="{{showMyGifts}}">
         <text class="pill-icon">🎁</text>
         <text class="pill-text">我的礼赠</text>
       </view>
-      <view class="pill orange" bindtap="onGiftHistory">
+      <view class="pill orange" bindtap="onGiftHistory" wx:if="{{showGiftHistory}}">
         <text class="pill-icon">🕒</text>
         <text class="pill-text">礼赠历史</text>
       </view>

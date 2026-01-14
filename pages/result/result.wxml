@@ -1,0 +1,34 @@
+<view class="result-page">
+  <view class="card">
+    <scroll-view class="inner-scroll" scroll-y="true" scroll-with-animation="true">
+      <view class="header">
+      <view class="success-icon">✔</view>
+      <text class="title">匹配成功！</text>
+      <text class="subtitle">根据您的回答，为您推荐这份礼物。</text>
+      </view>
+
+      <view class="reason">
+      <text class="reason-label">💡 AI 推荐理由</text>
+      <view class="quote">“兄弟生病时的不开心，往往不只是身体不适，更是对生活节奏被打乱的烦躁，以及需要被关心却不愿明说的矛盾心理。用幽默的方式送温暖，既能化解沉重感，又能传递‘我一直都在’的默契支持。”</view>
+      </view>
+
+      <view class="product">
+      <view class="image-wrap">
+        <image class="image" src="/images/gift.png" mode="aspectFill"></image>
+        <text class="image-tag">创意治愈礼盒</text>
+      </view>
+      <view class="row">
+        <text class="prod-title">‘病号快乐箱’主题礼盒</text>
+        <text class="price">¥188</text>
+      </view>
+      <text class="desc">一个装满黑色幽默与实用关怀的治愈系礼盒。内容：1）搞笑住院牌（可定制姓名）；2）茶汽眼罩（缓解不适+解压趣）；3）刻字保温杯（提醒吃药喝水）；4）手写卡片（书写个性化关怀）。造型借鉴急救箱，打开有玩具音效，用荒诞冲淡病房的沉闷。</text>
+      <button class="buy-btn" bindtap="onBuy">立即购买</button>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="bottom-actions">
+    <button class="btn light" bindtap="onChangeGift">换个礼赠</button>
+    <button class="btn dark" bindtap="onRestart">重新再来</button>
+  </view>
+</view>

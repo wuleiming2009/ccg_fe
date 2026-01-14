@@ -1,7 +1,33 @@
 {
   "libVersion": "3.13.2",
   "projectname": "wechat-uniapp",
-  "condition": {},
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "匹配结果页",
+          "pathName": "pages/result/result",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
+          "name": "聊天页",
+          "pathName": "pages/chat/chat",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "请求等待页",
+          "pathName": "pages/wait/wait",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
+  },
   "setting": {
     "urlCheck": false,
     "coverView": true,
