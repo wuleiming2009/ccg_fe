@@ -1,0 +1,18 @@
+{
+  "name": "wechat-uniapp",
+  "version": "1.0.0",
+  "description": "基于uni-app的微信小程序项目",
+  "main": "main.js",
+  "scripts": {
+    "dev:mp-weixin": "uni build --watch --target mp-weixin",
+    "build:mp-weixin": "uni build --target mp-weixin"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "^2.0.2",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "@dcloudio/webpack-plugin-uni": "^2.0.2",
+    "webpack": "^4.46.0"
+  }
+}

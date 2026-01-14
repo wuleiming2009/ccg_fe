@@ -1,0 +1,22 @@
+/* 全局样式 */
+page {
+  background-color: #fff;
+  height: 100%;
+  font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #FFFFFF;
+}
+
+.hello-text {
+  font-size: 36px;
+  color: #333333;
+  text-align: center;
+  font-weight: normal;
+}

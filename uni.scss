@@ -1,0 +1,21 @@
+/* 全局样式变量 */
+$primary-color: #07C160;
+$text-color: #333333;
+$bg-color: #FFFFFF;
+
+/* 通用样式 */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: $bg-color;
+}
+
+.hello-text {
+  font-size: 36px;
+  color: $text-color;
+  text-align: center;
+  font-weight: normal;
+}

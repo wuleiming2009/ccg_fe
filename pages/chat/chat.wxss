@@ -1,0 +1,140 @@
+/* 页面背景与容器 */
+.chat-page {
+  background: #F0F5FB;
+  min-height: 100vh;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #F0F5FB;
+  padding: 16px;
+  padding-right: 88px;
+  box-sizing: border-box;
+}
+
+/* 头部 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-texts {
+  display: flex;
+  flex-direction: column;
+}
+.greeting {
+  font-size: 24px;
+  color: #1F2A37;
+  font-weight: 700;
+}
+.subtext {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #7A8CA5;
+}
+.header-illustration {
+  position: absolute;
+  right: 30px;
+  top: 2px;
+}
+.avatar-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+}
+
+/* 中部可滚动区域 */
+.chat-scroll {
+  height: 100vh;
+  padding: 112px 16px 136px; /* 顶部与底部留白匹配固定区高度 */
+  box-sizing: border-box;
+}
+
+/* 气泡与标签 */
+.bubble {
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 14px;
+  color: #1F2A37;
+  line-height: 1.6;
+  box-shadow: 0 4px 10px rgba(31,42,55,0.06);
+}
+.left { margin-right: 56px; }
+
+.budget-pill {
+  margin: 12px 0 0 auto;
+  background: #FF7A3E;
+  color: #FFFFFF;
+  padding: 8px 12px;
+  border-radius: 999px;
+  width: fit-content;
+  box-shadow: 0 4px 10px rgba(255, 122, 62, 0.3);
+}
+
+/* 底部固定区域 */
+.fixed-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #F0F5FB;
+  padding: 12px 16px 16px;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(31,42,55,0.06);
+}
+
+/* 次级操作 */
+.secondary-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(31,42,55,0.06);
+}
+.pill-icon { font-size: 16px; }
+.pill-text { font-size: 14px; }
+.pill.blue { color: #4A7DFF; }
+.pill.orange { color: #FF7A3E; }
+
+/* 输入区域 */
+.input-area {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.input {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #7A8CA5;
+}
+.send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #A3AAB5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.send-icon { color: #FFFFFF; }
+.header-texts {
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
+  margin-top: 16px;
+}

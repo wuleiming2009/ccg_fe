@@ -1,0 +1,49 @@
+<view class="chat-page">
+  <view class="fixed-header">
+    <view class="header">
+      <view class="header-texts">
+        <text class="greeting">{{greeting}}</text>
+        <text class="subtext">{{welcomStr}}</text>
+      </view>
+      <view class="header-illustration">
+        <image class="avatar-image" src="/images/gift.png" mode="aspectFill"></image>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="chat-scroll" scroll-y="true">
+    <view class="bubble left">
+      <text>
+        这个想法不错呀！用幽默的方式传递温暖，既能让他会心一笑，又能感受到你的关心。为了帮你找到一个一击即中的时机，最后再问一个小问题：你心里有没有一个大概的预算范围呢？这样我就能在合适的范围内，帮你找到最有趣、最走心的选项啦。
+      </text>
+    </view>
+
+    <view class="budget-pill">200左右</view>
+
+    <view class="bubble left">
+      <text>
+        预算200左右很合适，足够选一份既有创意又走心的小礼物啦！我这就结合“用幽默传递温暖”这个超棒的想法，给你准备几个适合他/你们的礼物方案，保证让他边笑边觉得心里暖暖的～
+      </text>
+    </view>
+  </scroll-view>
+
+  <view class="fixed-footer">
+    <view class="secondary-actions">
+      <view class="pill blue" bindtap="onMyGifts">
+        <text class="pill-icon">🎁</text>
+        <text class="pill-text">我的礼赠</text>
+      </view>
+      <view class="pill orange" bindtap="onGiftHistory">
+        <text class="pill-icon">🕒</text>
+        <text class="pill-text">礼赠历史</text>
+      </view>
+    </view>
+
+    <view class="input-area">
+      <input class="input" placeholder="请点击发送消息…" />
+      <view class="send-btn" bindtap="onSend">
+        <text class="send-icon">➤</text>
+      </view>
+    </view>
+  </view>
+</view>

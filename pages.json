@@ -1,0 +1,22 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "Hello World"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "Hello World",
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#ffffff"
+  },
+  "uniIdRouter": {},
+  "tabBar": {},
+  "easycom": {
+    "autoscan": true,
+    "custom": {}
+  }
+}
