@@ -11,23 +11,26 @@
     </view>
   </view>
 
-  <scroll-view class="chat-scroll" scroll-y="true">
-    <view class="bubble left">
-      <text>
-        这个想法不错呀！用幽默的方式传递温暖，既能让他会心一笑，又能感受到你的关心。为了帮你找到一个一击即中的时机，最后再问一个小问题：你心里有没有一个大概的预算范围呢？这样我就能在合适的范围内，帮你找到最有趣、最走心的选项啦。
-      </text>
-    </view>
-
-    <view class="budget-pill">200左右</view>
-
-    <view class="bubble left">
-      <text>
-        预算200左右很合适，足够选一份既有创意又走心的小礼物啦！我这就结合“用幽默传递温暖”这个超棒的想法，给你准备几个适合他/你们的礼物方案，保证让他边笑边觉得心里暖暖的～
-      </text>
+  <scroll-view class="chat-scroll" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
+    <view class="messages">
+      <view id="msg-{{index}}" wx:for="{{messages}}" wx:key="index" class="bubble {{item.role === 'user' ? 'right' : 'left'}}">
+        <block wx:if="{{item.typing}}">
+          <view class="typing">
+            <view class="dot"></view>
+            <view class="dot"></view>
+            <view class="dot"></view>
+          </view>
+        </block>
+        <block wx:else>
+          <text>{{item.content}}</text>
+        </block>
+      </view>
+      <view id="end-anchor" class="end-anchor"></view>
     </view>
   </scroll-view>
 
   <view class="fixed-footer">
+    <view class="footer-bg"></view>
     <view class="secondary-actions">
       <view class="pill blue" bindtap="onMyGifts">
         <text class="pill-icon">🎁</text>
@@ -40,7 +43,7 @@
     </view>
 
     <view class="input-area">
-      <input class="input" placeholder="请点击发送消息…" />
+      <input class="input" placeholder="请输入消息…" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
       <view class="send-btn" bindtap="onSend">
         <text class="send-icon">➤</text>
       </view>

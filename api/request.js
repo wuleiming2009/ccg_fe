@@ -11,10 +11,10 @@ console.log('[request] mode:', mode, 'baseUrl:', baseUrl);
  */
 function request(url, method = 'GET', data = {}, header = {}) {
   // 显示小程序原生加载弹窗，mask:true 防止点击穿透
-  wx.showLoading({
-    title: '加载中...',
-    mask: true
-  });
+//   wx.showLoading({
+//     title: '加载中...',
+//     mask: true
+//   });
 
   // 返回Promise对象，方便页面用 async/await 调用，写法更优雅
   return new Promise((resolve, reject) => {

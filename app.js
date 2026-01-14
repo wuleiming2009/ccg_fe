@@ -1,8 +1,18 @@
 const ccgapi = require('./api/ccgapi');
+const { createClient } = require('./openai/wx-openai/index');
+const { config: aiConfig } = require('./openai/wx-openai/config');
 
 App({
+  globalData: {
+    aiClient: null
+  },
   onLaunch() {
     console.log('小程序启动')
+    try {
+      this.globalData.aiClient = createClient({ provider: 'deepseek', ...aiConfig.deepseek })
+    } catch (e) {
+      console.warn('AI 客户端初始化失败', e)
+    }
     wx.login({
       async success(res) {
         const code = res.code
