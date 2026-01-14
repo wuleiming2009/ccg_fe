@@ -29,9 +29,32 @@ function WelcomeStringResp(obj) {
   return { str: obj.str };
 }
 
+/**
+ * @typedef {Object} UserInitReq
+ */
+function UserInitReq() {
+  return {};
+}
+
+/**
+ * @typedef {Object} UserInitResp
+ * @property {string[]} questions
+ * @property {number} show_my_gifts
+ * @property {number} show_gift_history
+ */
+function UserInitResp(obj) {
+  return { 
+    questions: obj.questions,
+    show_my_gifts: obj.show_my_gifts,
+    show_gift_history: obj.show_gift_history,
+  };
+}
+
 module.exports = { 
     LoginReq, 
     LoginResp, 
     WelcomeStringReq, 
-    WelcomeStringResp 
+    WelcomeStringResp,
+    UserInitReq,
+    UserInitResp,
 };

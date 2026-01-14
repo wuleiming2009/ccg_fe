@@ -4,7 +4,8 @@ const { config: aiConfig } = require('./openai/wx-openai/config');
 
 App({
   globalData: {
-    aiClient: null
+    aiClient: null,
+    userConfig: null
   },
   onLaunch() {
     console.log('小程序启动')
@@ -21,10 +22,20 @@ App({
           return
         }
         try {
+          // 用户登录
           const loginResp = await ccgapi.login({ js_code: code })
           wx.setStorageSync('token', loginResp.access_token)
+          // 获取用户初始化配置
+          const initResp = await ccgapi.userInit({})
+          const userConfig = {
+            questions: Array.isArray(initResp.questions) ? initResp.questions : [],
+            showMyGifts: initResp.show_my_gifts === 0 ? false : true,
+            showGiftHistory: initResp.show_gift_history === 0 ? false : true
+          }
+          wx.setStorageSync('userConfig', userConfig)
+          console.log("获取用户初始化配置:", wx.getStorageSync('userConfig'))
         } catch (e) {
-          console.error('登录失败', e)
+          console.error('登录或初始化失败', e)
         }
       },
       fail(err) {
