@@ -13,18 +13,31 @@
 
   <scroll-view class="chat-scroll" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
     <view class="messages">
-      <view id="msg-{{index}}" wx:for="{{messages}}" wx:key="index" class="bubble {{item.role === 'user' ? 'right' : 'left'}}">
-        <block wx:if="{{item.typing}}">
-          <view class="typing">
-            <view class="dot"></view>
-            <view class="dot"></view>
-            <view class="dot"></view>
+      <block wx:for="{{messages}}" wx:key="index">
+        <block wx:if="{{item.type === 'cta'}}">
+          <view class="cta-wrap">
+            <button class="cta-btn" bindtap="onStartMatch">
+              <text class="gift-icon">🎁</text>
+              <text class="btn-text">开启礼物匹配 →</text>
+            </button>
+            <text class="cta-caption">已收集完所有信息，准备好为您推荐</text>
           </view>
         </block>
         <block wx:else>
-          <text>{{item.content}}</text>
+          <view id="msg-{{index}}" class="bubble {{item.role === 'user' ? 'right' : 'left'}}">
+            <block wx:if="{{item.typing}}">
+              <view class="typing">
+                <view class="dot"></view>
+                <view class="dot"></view>
+                <view class="dot"></view>
+              </view>
+            </block>
+            <block wx:else>
+              <text>{{item.content}}</text>
+            </block>
+          </view>
         </block>
-      </view>
+      </block>
       <view id="end-anchor" class="end-anchor"></view>
     </view>
   </scroll-view>
