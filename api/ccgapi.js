@@ -40,4 +40,17 @@ function userInit(req) {
   });
 }
 
-module.exports = { login, welcomeString, userInit };
+/**
+ * 用户对话匹配商品
+ * @param {ccgapiComponents.MatchReq} req
+ * @returns {Promise<ccgapiComponents.MatchResp>}
+ */
+function match(req) {
+  const payload = ccgapiComponents.MatchReq(req);
+  return request.post('/ai/v1/match', payload).then((resp) => {
+    const out = ccgapiComponents.MatchResp(resp);
+    return out;
+  });
+}
+
+module.exports = { login, welcomeString, userInit, match };

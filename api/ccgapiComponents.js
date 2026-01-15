@@ -50,6 +50,34 @@ function UserInitResp(obj) {
   };
 }
 
+/**
+ * @typedef {Object} MatchReq
+ * @property {string} messages
+ */
+function MatchReq(input) {
+  return { messages: input.messages };
+}
+
+/**
+ * @typedef {Object} MatchResp
+ * @property {string} reason
+ * @property {Array} products
+ */
+function MatchResp(obj) {
+  return { 
+    reason: obj.reason,
+    products: obj.products.map((item) => ({
+      is_ccg: item.is_ccg,
+      img_url: item.img_url,
+      name: item.name,
+      price: item.price,
+      match_text: item.match_text,
+      match_meaning: item.match_meaning,
+      buy_url: item.buy_url,
+    })),
+  };
+}
+
 module.exports = { 
     LoginReq, 
     LoginResp, 
@@ -57,4 +85,6 @@ module.exports = {
     WelcomeStringResp,
     UserInitReq,
     UserInitResp,
+    MatchReq,
+    MatchResp,
 };

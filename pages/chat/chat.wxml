@@ -20,7 +20,7 @@
               <text class="gift-icon">🎁</text>
               <text class="btn-text">开启礼物匹配 →</text>
             </button>
-            <text class="cta-caption">已收集完所有信息，准备好为您推荐</text>
+            <text class="cta-caption">已了解你的心意，准备好为您推荐</text>
           </view>
         </block>
         <block wx:else>

@@ -2,6 +2,6 @@
   <view class="card">
     <view class="spinner"></view>
     <text class="title">正在为你挑选完美礼物…</text>
-    <text class="subtitle">综合你的情感与预算</text>
+    <text class="subtitle {{failed ? 'error' : ''}}">{{failed ? '匹配失败，请稍后重试' : '综合你的情感与预算'}}</text>
   </view>
 </view>

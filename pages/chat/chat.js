@@ -100,10 +100,12 @@ Page({
     const records = (this.data.messages || [])
       .filter(m => m.role === 'user' || m.role === 'assistant')
       .map(m => ({ role: m.role, content: m.content || '' }))
-    const json = { records }
-    try {
-      console.log('礼物匹配对话JSON:\n' + JSON.stringify(json, null, 2))
-    } catch (e) {}
-    wx.navigateTo({ url: '/pages/wait/wait' })
+    const payloadText = JSON.stringify({ records })
+    wx.navigateTo({
+      url: '/pages/wait/wait',
+      success: (res) => {
+        res.eventChannel && res.eventChannel.emit('matchPayload', { messages: payloadText })
+      }
+    })
   }
 })
