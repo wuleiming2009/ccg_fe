@@ -69,11 +69,78 @@ function MatchReq(input) {
  * @property {number} match_id
  */
 function MatchResp(obj) {
+  const products = Array.isArray(obj.products) ? obj.products : []
   return { 
-    match_id: obj.match_id,
-    reason: obj.reason,
-    products: obj.products.map((item) => ({
+    match_id: (typeof obj.match_id === 'number' ? obj.match_id : (Number(obj.match_id) || 0)),
+    reason: obj.reason || '',
+    products: products.map((item) => ({
       is_ccg: item.is_ccg,
+      img_url: item.img_url,
+      name: item.name,
+      price: item.price,
+      match_text: item.match_text,
+      match_meaning: item.match_meaning,
+      buy_url: item.buy_url,
+    })),
+  };
+}
+
+/**
+ * @typedef {Object} MatchListReq
+ * @property {number} page
+ */
+function MatchListReq(input) {
+  return { 
+    page: input.page,
+  };
+}
+
+/**
+ * @typedef {Object} MatchListResp
+ * @property {number} page
+ * @property {Array} list
+ */
+function MatchListResp(obj) {
+  const arr = Array.isArray(obj.list) ? obj.list : (Array.isArray(obj.products) ? obj.products : [])
+  return { 
+    page: obj.page || 1,
+    list: arr.map((item) => ({
+      match_id: item.match_id,
+      img_url: item.img_url,
+      name: item.name,
+      price: item.price,
+      match_text: item.match_text,
+      Time: item.Time || item.time || item.date,
+    })),
+  };
+}
+
+/**
+ * @typedef {Object} MatchInfoReq
+ * @property {number} match_id
+ */
+function MatchInfoReq(input) {
+  return { 
+    match_id: input.match_id,
+  };
+}
+
+/**
+ * @typedef {Object} MatchInfoResp
+ * @property {number} match_id
+ * @property {string} messages
+ * @property {string} reason
+ * @property {Array} products
+ */
+function MatchInfoResp(obj) {
+  const products = Array.isArray(obj.products) ? obj.products : []
+  return { 
+    match_id: (typeof obj.match_id === 'number' ? obj.match_id : (Number(obj.match_id) || 0)),
+    messages: obj.messages || '',
+    reason: obj.reason || '',
+    products: products.map((item) => ({
+      is_ccg: item.is_ccg,
+      product_id: item.product_id,
       img_url: item.img_url,
       name: item.name,
       price: item.price,
@@ -93,4 +160,8 @@ module.exports = {
     UserInitResp,
     MatchReq,
     MatchResp,
+    MatchListReq,
+    MatchListResp,
+    MatchInfoReq,
+    MatchInfoResp,
 };

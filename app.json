@@ -2,7 +2,10 @@
   "pages": [
     "pages/chat/chat",
     "pages/wait/wait",
-    "pages/result/result"
+    "pages/result/result",
+    "pages/history/history",
+    "pages/review/review",
+    "pages/history_result/history_result"
   ],
   "window": {
     "backgroundTextStyle": "light",

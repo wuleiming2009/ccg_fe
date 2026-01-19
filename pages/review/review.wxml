@@ -1,0 +1,10 @@
+<view class="review-page">
+  <scroll-view class="thread" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
+    <view class="messages">
+      <view id="msg-{{index}}" wx:for="{{messages}}" wx:key="index" class="bubble {{item.role === 'user' ? 'right' : 'left'}}">
+        <text>{{item.content}}</text>
+      </view>
+      <view id="end-anchor" class="end-anchor"></view>
+    </view>
+  </scroll-view>
+</view>

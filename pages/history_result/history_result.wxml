@@ -1,0 +1,29 @@
+<view class="result-page">
+  <view class="card">
+    <scroll-view class="inner-scroll" scroll-y="true" scroll-with-animation="true">
+      <view class="header">
+        <view class="success-icon">✔</view>
+        <text class="title">历史匹配结果</text>
+        <text class="subtitle">根据当时的对话与偏好生成的推荐</text>
+      </view>
+
+      <view class="reason">
+        <text class="reason-label">💡 推荐理由</text>
+        <view class="quote">“{{reason}}”</view>
+      </view>
+
+      <view class="product">
+        <view class="image-wrap">
+          <image class="image" src="{{product.image}}" mode="aspectFill"></image>
+          <text class="image-tag">{{product.tag}}</text>
+        </view>
+        <view class="row">
+          <text class="prod-title">{{product.title}}</text>
+          <text class="price">{{product.price}}</text>
+        </view>
+        <text class="desc">{{product.desc}}</text>
+        <button class="buy-btn" bindtap="onBuy">立即购买</button>
+      </view>
+    </scroll-view>
+  </view>
+</view>

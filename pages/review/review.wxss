@@ -1,0 +1,7 @@
+.review-page { min-height: 100vh; background: #F0F5FB; padding: 12px; box-sizing: border-box; }
+.thread { height: calc(100vh - 24px); box-sizing: border-box; }
+.messages { display: flex; flex-direction: column; gap: 10px; }
+.end-anchor { height: 6px; }
+.bubble { background: #FFFFFF; border-radius: 14px; padding: 14px; color: #1F2A37; line-height: 1.6; box-shadow: 0 4px 10px rgba(31,42,55,0.06); max-width: 82%; }
+.bubble.left { margin-right: 56px; border-bottom-left-radius: 0; }
+.bubble.right { margin-left: auto; background: #FF6B36; color: #FFFFFF; border-bottom-right-radius: 0; }

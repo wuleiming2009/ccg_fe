@@ -53,4 +53,30 @@ function match(req) {
   });
 }
 
-module.exports = { login, welcomeString, userInit, match };
+/**
+ * 用户的匹配历史
+ * @param {ccgapiComponents.MatchListReq} req
+ * @returns {Promise<ccgapiComponents.MatchListResp>}
+ */
+function matchList(req) {
+  const payload = ccgapiComponents.MatchListReq(req);
+  return request.post('/user/v1/match_list', payload).then((resp) => {
+    const out = ccgapiComponents.MatchListResp(resp);
+    return out;
+  });
+}
+
+/**
+ * 匹配历史详情
+ * @param {ccgapiComponents.MatchInfoReq} req
+ * @returns {Promise<ccgapiComponents.MatchInfoResp>}
+ */
+function matchInfo(req) {
+  const payload = ccgapiComponents.MatchInfoReq(req);
+  return request.post('/user/v1/match_info', payload).then((resp) => {
+    const out = ccgapiComponents.MatchInfoResp(resp);
+    return out;
+  });
+}
+
+module.exports = { login, welcomeString, userInit, match, matchList, matchInfo };

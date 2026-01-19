@@ -51,7 +51,7 @@ Page({
     console.log('查看我的礼赠')
   },
   onGiftHistory() {
-    console.log('查看礼赠历史')
+    wx.navigateTo({ url: '/pages/history/history' })
   },
   onInput(e) {
     this.setData({ inputValue: e.detail.value })
