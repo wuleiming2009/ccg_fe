@@ -104,7 +104,7 @@ Page({
     wx.navigateTo({
       url: '/pages/wait/wait',
       success: (res) => {
-        res.eventChannel && res.eventChannel.emit('matchPayload', { messages: payloadText })
+        res.eventChannel && res.eventChannel.emit('matchPayload', { messages: payloadText, match_id: 0 })
       }
     })
   }

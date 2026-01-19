@@ -7,13 +7,14 @@ Page({
     if (ec) {
       ec.on('matchPayload', async (payload) => {
         try {
-          const resp = await ccgapi.match(payload)
+          const resp = await ccgapi.match({ messages: payload.messages || '', match_id: Number(payload.match_id) || 0 })
           wx.navigateTo({
             url: '/pages/result/result',
             success: (res) => {
               if (res.eventChannel) {
                 res.eventChannel.emit('matchResult', resp)
                 res.eventChannel.emit('matchMessages', payload.messages || '')
+                res.eventChannel.emit('matchId', resp.match_id || 0)
               }
             }
           })

@@ -53,18 +53,24 @@ function UserInitResp(obj) {
 /**
  * @typedef {Object} MatchReq
  * @property {string} messages
+ * @property {number} match_id
  */
 function MatchReq(input) {
-  return { messages: input.messages };
+  return { 
+    messages: input.messages,
+    match_id: input.match_id,
+  };
 }
 
 /**
  * @typedef {Object} MatchResp
  * @property {string} reason
  * @property {Array} products
+ * @property {number} match_id
  */
 function MatchResp(obj) {
   return { 
+    match_id: obj.match_id,
     reason: obj.reason,
     products: obj.products.map((item) => ({
       is_ccg: item.is_ccg,

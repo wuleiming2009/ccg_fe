@@ -9,7 +9,8 @@ Page({
       desc: '一个装满黑色幽默与实用关怀的治愈系礼盒（示例）。'
     },
     buy_url: '',
-    messages: ''
+    messages: '',
+    match_id: 0
   },
   onLoad() {
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
@@ -31,14 +32,18 @@ Page({
       ec.on('matchMessages', (msg) => {
         this.setData({ messages: msg || '' })
       })
+      ec.on('matchId', (id) => {
+        this.setData({ match_id: (typeof id === 'number' ? id : (Number(id) || 0)) })
+      })
     }
   },
   onChangeGift() {
     const messages = this.data.messages || ''
+    const match_id = (typeof this.data.match_id === 'number' ? this.data.match_id : (Number(this.data.match_id) || 0))
     wx.navigateTo({
       url: '/pages/wait/wait',
       success: (res) => {
-        res.eventChannel && res.eventChannel.emit('matchPayload', { messages })
+        res.eventChannel && res.eventChannel.emit('matchPayload', { messages, match_id })
       }
     })
   },
