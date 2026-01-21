@@ -5,11 +5,32 @@
     "miniprogram": {
       "list": [
         {
-          "name": "匹配结果页",
-          "pathName": "pages/result/result",
+          "name": "查看礼赠历史结果",
+          "pathName": "pages/history_result/history_result",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "回顾对话",
+          "pathName": "pages/review/review",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "礼赠历史",
+          "pathName": "pages/history/history",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "匹配结果页",
+          "pathName": "pages/result/result",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "聊天页",

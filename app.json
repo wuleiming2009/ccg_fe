@@ -16,6 +16,7 @@
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
   "navigateToMiniProgramAppIdList": [
     "wx91d27dbf599dff74"
   ]
