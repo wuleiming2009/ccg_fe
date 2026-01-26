@@ -1,0 +1,154 @@
+<view class="product-page">
+  <view class="hero">
+    <image class="photo" src="{{img_url || image}}" mode="aspectFill"></image>
+  </view>
+
+  <view class="panel">
+    <view class="meta">
+      <text class="slogan">{{match_meaning || slogan}}</text>
+      <view class="row">
+        <text class="title">{{name}}</text>
+        <text class="price">${{price}}</text>
+      </view>
+    </view>
+
+    <view class="story">
+      <text class="story-label">故事线</text>
+      <view class="story-box">
+        <text class="story-text">“{{match_text}}”</text>
+      </view>
+    </view>
+
+    <view class="detail">
+      <text class="detail-label">套餐内容</text>
+      <view class="detail-box">
+        <text class="detail-text">{{contents_fmt || contents}}</text>
+      </view>
+    </view>
+
+    <view class="detail">
+      <text class="detail-label">适用场景</text>
+      <view class="detail-box">
+        <text class="detail-text">{{scene_fmt || scene}}</text>
+      </view>
+    </view>
+
+    <view class="detail">
+      <text class="detail-label">情绪关键词</text>
+      <view class="detail-box">
+        <text class="detail-text">{{keywords_fmt || keywords}}</text>
+      </view>
+    </view>
+
+    <view class="quantity">
+      <text class="quantity-label">QUANTITY</text>
+      <view class="qty-controls">
+        <view class="qty-btn" bindtap="onDec">-</view>
+        <text class="qty-count">{{qty}}</text>
+        <view class="qty-btn" bindtap="onInc">+</view>
+      </view>
+    </view>
+
+    <button class="cta" bindtap="onGift">送送礼</button>
+  </view>
+
+  <view class="sheet-mask" wx:if="{{showCheckout}}" bindtap="onCloseSheet"></view>
+  <view class="sheet" wx:if="{{showCheckout}}">
+    <view class="sheet-header">
+      <text class="sheet-title">结算详情</text>
+      <view class="sheet-close" bindtap="onCloseSheet">×</view>
+    </view>
+    <view class="sheet-section">
+      <view class="sheet-row">
+        <text class="sheet-label">收礼人信息</text>
+        <text class="sheet-action" bindtap="openRecipient">+ 新增收礼人</text>
+      </view>
+      <text class="sheet-hint">左滑切换地址</text>
+      <view class="sheet-address" wx:if="{{!selectedRecipient}}">
+        <text class="sheet-address-empty">暂无收礼人</text>
+        <button class="sheet-add-btn" bindtap="openRecipient">立即添加</button>
+      </view>
+      <block wx:if="{{recipients.length > 0}}">
+        <swiper class="rec-list" previous-margin="60rpx" next-margin="60rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{recCurrent}}" bindchange="onRecSwiperChange">
+          <swiper-item wx:for="{{recipients}}" wx:key="id">
+            <view class="rec-card {{selectedRecId === item.id ? 'selected' : ''}}" bindtap="selectRecipient" data-id="{{item.id}}">
+              <view class="rec-top">
+                <text class="rec-tag">RECIPIENT {{index + 1 < 10 ? ('0' + (index + 1)) : (index + 1)}} </text>
+                <view class="rec-actions" wx:if="{{selectedRecId === item.id}}">
+                  <view class="rec-edit" catchtap="onEditRecipient" data-id="{{item.id}}">✎</view>
+                  <view class="rec-del" catchtap="onDeleteRecipient" data-id="{{item.id}}">✖</view>
+                </view>
+              </view>
+              <view class="rec-info">
+                <text class="rec-name">{{item.name}}</text>
+                <text class="rec-phone">{{item.phone}}</text>
+                <text class="rec-addr">{{item.address}}</text>
+              </view>
+              <text class="rec-default" wx:if="{{item.is_default}}">默认</text>
+            </view>
+          </swiper-item>
+        </swiper>
+      </block>
+    </view>
+    <view class="sheet-divider"></view>
+    <view class="sheet-section">
+      <text class="sheet-label">订单汇总</text>
+      <view class="sheet-row">
+        <text class="sheet-item">{{name}} × {{qty}}</text>
+        <text class="sheet-price">¥{{price}}</text>
+      </view>
+    </view>
+    <button class="sheet-primary" bindtap="onFinalize">确认支付</button>
+  </view>
+
+  <!-- 新增收礼人弹窗 -->
+  <view class="modal-mask" wx:if="{{showRecipient}}" bindtap="closeRecipient"></view>
+  <view class="modal" wx:if="{{showRecipient}}">
+    <view class="modal-header">
+      <text class="modal-title">新增收礼人</text>
+      <view class="modal-close" bindtap="closeRecipient">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="modal-field">
+        <text class="modal-label">收礼人称呼</text>
+        <input class="modal-input" placeholder="请输入" value="{{recipientForm.nickname}}" bindinput="onRecName" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">联系电话</text>
+        <input class="modal-input" placeholder="请输入" value="{{recipientForm.phone}}" bindinput="onRecPhone" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">详细地址</text>
+        <input class="modal-input" placeholder="请输入完整地址" value="{{recipientForm.address}}" bindinput="onRecAddr" />
+      </view>
+    </view>
+    <button class="modal-primary" bindtap="saveRecipient">确认保存</button>
+  </view>
+</view>
+  <!-- 编辑收礼人弹窗 -->
+  <view class="modal-mask" wx:if="{{showEditRecipient}}" bindtap="closeEditRecipient"></view>
+  <view class="modal" wx:if="{{showEditRecipient}}">
+    <view class="modal-header">
+      <text class="modal-title">编辑收礼人</text>
+      <view class="modal-close" bindtap="closeEditRecipient">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="modal-field">
+        <text class="modal-label">收礼人称呼</text>
+        <input class="modal-input" placeholder="请输入" value="{{editRecipientForm.nickname}}" bindinput="onEditName" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">联系电话</text>
+        <input class="modal-input" placeholder="请输入" value="{{editRecipientForm.phone}}" bindinput="onEditPhone" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">详细地址</text>
+        <input class="modal-input" placeholder="请输入完整地址" value="{{editRecipientForm.address}}" bindinput="onEditAddr" />
+      </view>
+      <view class="modal-field modal-switch">
+        <text class="modal-label">设置为默认地址</text>
+        <switch class="switch-small" color="#FF7A3E" checked="{{editRecipientForm.is_default === 1}}" bindchange="onEditDefaultToggle" />
+      </view>
+    </view>
+    <button class="modal-primary" bindtap="saveEditRecipient">保存更改</button>
+  </view>

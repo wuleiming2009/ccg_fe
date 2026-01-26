@@ -1,0 +1,17 @@
+<view class="market-page">
+  <view class="promo">
+    <text class="promo-title">CC G!FT · 礼物甄选</text>
+    <text class="promo-title2">GIFTS FOR EVERYDAY MOMENTS</text>
+    <view class="promo-divider"></view>
+  </view>
+  <view class="card" wx:for="{{items}}" wx:key="index" bindtap="onOpenDetail" data-index="{{index}}">
+    <view class="hero">
+      <image class="photo" src="{{item.img_url}}" mode="aspectFill"></image>
+    </view>
+    <view class="info">
+      <text class="title">{{item.name}}</text>
+      <text class="price">${{item.price}}</text>
+    </view>
+    <text class="subtitle">{{item.slogan}}</text>
+  </view>
+</view>

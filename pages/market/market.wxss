@@ -1,0 +1,13 @@
+.market-page { min-height: 100vh; background: #F0F5FB; padding: 12px; box-sizing: border-box; }
+.promo { padding: 12px 4px; margin-bottom: 8px; }
+.promo-title { display: block; text-align: center; font-size: 26px; font-weight: 600; color: #1F2A37; }
+.promo-title2 { display: block; text-align: center; font-size: 14px; font-weight: 600; color: #1F2A37; }
+.promo-divider { margin-top: 8px; height: 2px; background: #949698ff; }
+.card { background: #FFFFFF; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 12px rgba(31,42,55,0.06); margin-bottom: 16px; }
+.hero { position: relative; height: 400px; }
+.photo { width: 100%; height: 100%; }
+.tag { position: absolute; right: 12px; top: 12px; background: #EFF2F6; color: #7A8CA5; font-size: 12px; padding: 4px 8px; border-radius: 999px; letter-spacing: 1px; }
+.info { display: flex; justify-content: space-between; align-items: center; padding: 12px; }
+.title { font-size: 16px; font-weight: 700; color: #1F2A37; }
+.price { font-size: 16px; font-weight: 700; color: #1F2A37; }
+.subtitle { padding: 0 12px 12px 12px; font-size: 13px; color: #7A8CA5; }
