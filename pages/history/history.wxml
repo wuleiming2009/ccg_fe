@@ -3,7 +3,7 @@
 
   <block wx:if="{{empty}}">
     <view class="card empty">
-      <image class="icon" src="/images/gift.png" mode="aspectFit"></image>
+      <image class="icon" src="" mode="aspectFit"></image>
       <text class="primary">暂无记录</text>
       <text class="hint">和顾问聊聊，生成你的第一份礼物清单吧。</text>
     </view>

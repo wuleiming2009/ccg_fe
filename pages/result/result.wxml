@@ -22,7 +22,7 @@
         <text class="price">{{product.price}}</text>
       </view>
       <text class="desc">{{product.desc}}</text>
-      <button class="buy-btn" bindtap="onBuy">立即购买</button>
+      <button class="buy-btn" bindtap="onBuy">去送礼</button>
       </view>
     </scroll-view>
   </view>

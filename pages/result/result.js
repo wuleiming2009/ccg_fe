@@ -1,12 +1,13 @@
+const ccgapi = require('../../api/ccgapi')
 Page({
   data: {
     reason: '',
     product: {
-      image: '/images/gift.png',
-      tag: '创意治愈礼盒',
-      title: '‘病号快乐箱’主题礼盒',
-      price: '¥188',
-      desc: '一个装满黑色幽默与实用关怀的治愈系礼盒（示例）。'
+      image: '',
+      tag: '',
+      title: '',
+      price: '¥—',
+      desc: ''
     },
     buy_url: '',
     messages: '',
@@ -19,7 +20,7 @@ Page({
         const mapped = data.products && data.products[0] ? {
           reason: data.reason || '',
           product: {
-            image: data.products[0].img_url || '/images/gift.png',
+            image: data.products[0].img_url || '',
             tag: data.products[0].match_meaning || '',
             title: data.products[0].name || '',
             price: data.products[0].price ? ('¥' + data.products[0].price) : '¥—',
@@ -50,22 +51,22 @@ Page({
   onRestart() {
     wx.redirectTo({ url: '/pages/chat/chat?reset=1' })
   },
-  onBuy() {
-    const url = this.data.buy_url || ''
-    if (!url) { wx.showToast({ title: '暂未提供购买链接', icon: 'none' }); return }
-    if (/^https?:\/\//.test(url)) {
-      wx.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
-      return
-    }
-    if (url.indexOf('#小程序://京东购物') === 0) {
-      wx.navigateToMiniProgram({
-        appId: 'wx91d27dbf599dff74',
-        path: 'pages/proxy/union/union?spreadUrl=' + encodeURIComponent(url),
-        envVersion: 'release',
-        fail: () => wx.setClipboardData({ data: url, success: () => wx.showToast({ title: '已复制京东小程序短链', icon: 'none' }) })
+  async onBuy() {
+    try {
+      const match_id = typeof this.data.match_id === 'number' ? this.data.match_id : (Number(this.data.match_id) || 0)
+      const mi = await ccgapi.matchInfo({ match_id })
+      const p = (mi.products && mi.products[0]) || {}
+      const pid = Number(p.product_id) || 0
+      if (!pid) { wx.showToast({ title: '商品信息暂不可用', icon: 'none' }); return }
+      const infoResp = await ccgapi.productInfo({ product_id: pid })
+      wx.navigateTo({
+        url: '/pages/product/product',
+        success: (res) => {
+          res.eventChannel && res.eventChannel.emit('product', infoResp.info)
+        }
       })
-      return
+    } catch (e) {
+      wx.showToast({ title: '获取商品失败', icon: 'none' })
     }
-    wx.setClipboardData({ data: url, success: () => wx.showToast({ title: '购买链接已复制', icon: 'none' }) })
   }
 })

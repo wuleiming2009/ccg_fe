@@ -200,18 +200,20 @@ function ProductInfoReq(input) {
  * @property {Object} info
  */
 function ProductInfoResp(obj) {
-  return { 
+  const src = obj && (obj.info || obj.product || obj) || {};
+  const toNum = (v) => (typeof v === 'number' ? v : (Number(v) || 0));
+  return {
     info: {
-      product_id: obj.product_id,
-      img_url: obj.img_url || '',
-      name: obj.name || '',
-      price: obj.price || 0,
-      slogan: obj.slogan || '',
-      contents: obj.contents || '',
-      scene: obj.scene || '',
-      keywords: obj.keywords || '',
-      match_text: obj.match_text || '',
-      match_meaning: obj.match_meaning || '',
+      product_id: src.product_id || obj.product_id || 0,
+      img_url: src.img_url || obj.img_url || '',
+      name: src.name || obj.name || '',
+      price: toNum(src.price != null ? src.price : obj.price),
+      slogan: src.slogan || obj.slogan || '',
+      contents: src.contents || obj.contents || '',
+      scene: src.scene || obj.scene || '',
+      keywords: src.keywords || obj.keywords || '',
+      match_text: src.match_text || obj.match_text || '',
+      match_meaning: src.match_meaning || obj.match_meaning || '',
     }
   };
 }

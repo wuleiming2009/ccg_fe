@@ -22,7 +22,7 @@ Page({
         date: it.Time || '',
         price: it.price || 0,
         preview: it.match_text || '',
-        thumb: it.img_url || '/images/gift.png'
+        thumb: it.img_url || ''
       }))
       const items = p === 1 ? list : this.data.items.concat(list)
       this.setData({
