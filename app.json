@@ -22,6 +22,12 @@
   "navigateToMiniProgramAppIdList": [
     "wx91d27dbf599dff74"
   ],
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.3",
+      "provider": "wx069ba97219f66d99"
+    }
+  },
   "tabBar": {
     "color": "#7A8CA5",
     "selectedColor": "#1F2A37",

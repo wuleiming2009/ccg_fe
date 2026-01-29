@@ -9,7 +9,10 @@ Page({
     scrollInto: '',
     showMyGifts: true,
     showGiftHistory: true,
-    hasPills: true
+    hasPills: true,
+    voiceMode: false,
+    recording: false,
+    voiceHint: '按住说话'
   },
   onLoad(options) {
     const app = getApp()
@@ -30,6 +33,7 @@ Page({
     const qList = qs.map((q, i) => `${i + 1}. ${q}`).join('；')
     this.personaPrompt = `${PERSONA_PROMPT} 请以自然中文表达，不要输出括号或其他标记的语气/动作词，如（关切的）（轻声的）。逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。在获取足够信息后，给出预算匹配、创意与走心度兼顾的礼物建议。`
     this.setData({ scrollInto: 'end-anchor' })
+    this.initVoice()
   },
   onShow() {
     this.setData({ greeting: this.getGreeting() })
@@ -37,6 +41,61 @@ Page({
     ccgapi.welcomeString({}).then((resp) => {
       this.setData({ welcomStr: resp.str })
     })
+  },
+  initVoice() {
+    try {
+      const plugin = requirePlugin('WechatSI')
+      this.recManager = plugin.getRecordRecognitionManager && plugin.getRecordRecognitionManager()
+      this.recManager.onRecognize = (res) => {
+        const t = res.result || ''
+        this.setData({ inputValue: t })
+      }
+      this.recManager.onStop = (res) => {
+        const t = res.result || ''
+        const text = (t || '').trim()
+        this.setData({ recording: false, voiceHint: '按住说话', inputValue: text })
+        if (text) {
+          this.onSend()
+        } else {
+          wx.showToast({ title: '未识别到语音', icon: 'none' })
+        }
+      }
+      this.recManager.onError = () => {
+        this.setData({ recording: false, voiceHint: '按住说话' })
+        wx.showToast({ title: '语音识别失败', icon: 'none' })
+      }
+    } catch (e) {}
+  },
+  async ensureRecordAuth() {
+    try {
+      const setting = await new Promise(resolve => wx.getSetting({ success: resolve, fail: () => resolve({ authSetting: {} }) }))
+      if (!setting.authSetting || !setting.authSetting['scope.record']) {
+        await new Promise((resolve, reject) => wx.authorize({ scope: 'scope.record', success: resolve, fail: reject }))
+      }
+    } catch (e) {
+      wx.showModal({ title: '需要录音权限', content: '请在设置中允许麦克风权限以使用语音输入', success: (r) => { if (r.confirm) wx.openSetting({}) } })
+      throw e
+    }
+  },
+  onToggleVoiceMode() {
+    const next = !this.data.voiceMode
+    this.setData({ voiceMode: next })
+  },
+  async onVoiceStart() {
+    if (!this.recManager) { wx.showToast({ title: '语音未就绪', icon: 'none' }); return }
+    await this.ensureRecordAuth().catch(() => {})
+    this.setData({ recording: true, voiceHint: '松开结束' })
+    this.recManager.start({ lang: 'zh_CN' })
+  },
+  onVoiceEnd() {
+    if (!this.recManager) return
+    this.setData({ voiceHint: '按住说话' })
+    this.recManager.stop()
+  },
+  onVoiceCancel() {
+    if (!this.recManager) return
+    this.setData({ recording: false, voiceHint: '按住说话' })
+    this.recManager.stop()
   },
   getGreeting() {
     const hour = new Date().getHours()

@@ -56,7 +56,17 @@
     </view>
 
     <view class="input-area">
-      <input class="input" placeholder="请输入消息…" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
+      <view class="toggle-btn" bindtap="onToggleVoiceMode">
+        <text class="toggle-icon">{{voiceMode ? 'T' : '🎤'}}</text>
+      </view>
+      <block wx:if="{{!voiceMode}}">
+        <input class="input" placeholder="请输入消息…" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
+      </block>
+      <block wx:else>
+        <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
+          <text class="voice-text">{{voiceHint}}</text>
+        </view>
+      </block>
       <view class="send-btn" bindtap="onSend">
         <text class="send-icon">➤</text>
       </view>

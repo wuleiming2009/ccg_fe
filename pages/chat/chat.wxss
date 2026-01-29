@@ -155,6 +155,30 @@
   align-items: center;
   gap: 10px;
 }
+.toggle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(31,42,55,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.toggle-icon { font-size: 16px; color: #1F2A37; }
+.voice-input {
+  flex: 1;
+  height: 40px;
+  border-radius: 999px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1F2A37;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px #E6ECF3;
+}
+.voice-input.recording { background: #FF7A3E; color: #FFFFFF; box-shadow: none; }
 .input {
   flex: 1;
   background: #FFFFFF;
