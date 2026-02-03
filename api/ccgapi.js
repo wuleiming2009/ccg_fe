@@ -157,6 +157,92 @@ function recipientList(req) {
   });
 }
 
+/**
+ *  @doc "按收礼人获取订单列表"
+ * @param {ccgapiComponents.RecipientOrdersReq} req
+ * @returns {Promise<ccgapiComponents.RecipientOrdersResp>}
+ */
+function recipientOrders(req) {
+  const payload = ccgapiComponents.RecipientOrdersReq(req);
+  return request.post('/order/v1/list_by_recipient', payload).then((resp) => {
+    const out = ccgapiComponents.RecipientOrdersResp(resp);
+    return out;
+  });
+}
+
+function recipientListByOrders(req) {
+  const payload = ccgapiComponents.RecipientListByOrdersReq(req);
+  return request.post('/recipient/v1/list_by_orders', payload).then((resp) => {
+    const out = ccgapiComponents.RecipientListByOrdersResp(resp);
+    return out;
+  });
+}
+
+/**
+ *  @doc "新建订单"
+ * @param {ccgapiComponents.OrderNewReq} req
+ * @returns {Promise<ccgapiComponents.OrderNewResp>}
+ */
+function orderNew(req) {
+  const payload = ccgapiComponents.OrderNewReq(req);
+  return request.post('/order/v1/new', payload).then((resp) => {
+    const out = ccgapiComponents.OrderNewResp(resp);
+    return out;
+  });
+}
+
+/**
+ *  @doc "检查订单支付状态"
+ * @param {ccgapiComponents.OrderCheckPaymentReq} req
+ * @returns {Promise<ccgapiComponents.OrderCheckPaymentResp>}
+ */
+function orderCheckPayment(req) {
+  const payload = ccgapiComponents.OrderCheckPaymentReq(req);
+  return request.post('/order/v1/check_payment', payload).then((resp) => {
+    const out = ccgapiComponents.OrderCheckPaymentResp(resp);
+    return out;
+  });
+}
+
+/**
+ *  @doc "订单信息"
+ * @param {ccgapiComponents.OrderInfoReq} req
+ * @returns {Promise<ccgapiComponents.OrderInfoResp>}
+ */
+function orderInfo(req) {
+  const payload = ccgapiComponents.OrderInfoReq(req);
+  return request.post('/order/v1/info', payload).then((resp) => {
+    const out = ccgapiComponents.OrderInfoResp(resp);
+    return out;
+  });
+}
+
+/**
+ *  @doc "预支付"
+ * @param {ccgapiComponents.PaymentPrepayReq} req
+ * @returns {Promise<ccgapiComponents.PaymentPrepayResp>}
+ */
+function paymentPrepay(req) {
+  const payload = ccgapiComponents.PaymentPrepayReq(req);
+  return request.post('/payment/v1/prepay', payload).then((resp) => {
+    const out = ccgapiComponents.PaymentPrepayResp(resp);
+    return out;
+  });
+}
+
+/**
+ *  @doc "根据时间获取订单列表"
+ * @param {ccgapiComponents.OrderListByTimeReq} req
+ * @returns {Promise<ccgapiComponents.OrderListByTimeResp>}
+ */
+function orderListByTime(req) {
+  const payload = ccgapiComponents.OrderListByTimeReq(req);
+  return request.post('/order/v1/list_by_time', payload).then((resp) => {
+    const out = ccgapiComponents.OrderListByTimeResp(resp);
+    return out;
+  });
+}
+
 module.exports = { 
   login, 
   welcomeString, 
@@ -169,5 +255,12 @@ module.exports = {
   recipientAdd,
   recipientEdit,
   recipientDel,
-  recipientList
+  recipientList,
+  recipientOrders,
+  orderNew,
+  orderCheckPayment,
+  orderInfo,
+  paymentPrepay,
+  recipientListByOrders,
+  orderListByTime
 };

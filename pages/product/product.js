@@ -175,8 +175,54 @@ Page({
     const rec = recIndex >= 0 ? list[recIndex] : null
     this.setData({ selectedRecId: id, selectedRecipient: rec || null, recCurrent: recIndex >= 0 ? recIndex : this.data.recCurrent })
   },
-  onFinalize() {
-    wx.showToast({ title: '支付成功（示例）', icon: 'none' })
-    this.setData({ showCheckout: false })
+  async onFinalize() {
+    try {
+      const ccgapi = require('../../api/ccgapi')
+      const product_id = Number(this.data.product_id) || 0
+      const quantity = Number(this.data.qty) || 1
+      const recipient_id = Number(this.data.selectedRecId)
+      if (!product_id || !recipient_id) {
+        wx.showToast({ title: '请先选择收礼人', icon: 'none' })
+        return
+      }
+      wx.showLoading({ title: '处理中…', mask: true })
+      const newResp = await ccgapi.orderNew({ product_id, quantity, recipient_id })
+      const order_id = Number(newResp.order_id) || 0
+      if (!order_id) {
+        wx.hideLoading()
+        wx.showToast({ title: '创建订单失败', icon: 'none' })
+        return
+      }
+      const prepay = await ccgapi.paymentPrepay({ order_id })
+      console.log('[paymentPrepay]', prepay)
+      wx.hideLoading()
+      const timeStamp = String(prepay.time_stamp || prepay.timeStamp || '')
+      const nonceStr = String(prepay.nonce_str || prepay.nonceStr || '')
+      const pkg = String(prepay.package || '')
+      const signType = String(prepay.sign_type || prepay.signType || 'MD5')
+      const paySign = String(prepay.paySign || prepay.paysign || '')
+      if (!timeStamp || !nonceStr || !pkg || !paySign) {
+        wx.showToast({ title: '支付参数不完整', icon: 'none' })
+        return
+      }
+      wx.requestPayment({
+        timeStamp,
+        nonceStr,
+        package: pkg,
+        signType,
+        paySign,
+        success: () => {
+          wx.showToast({ title: '支付成功', icon: 'none' })
+          this.setData({ showCheckout: false })
+        },
+        fail: (err) => {
+          const msg = (err && err.errMsg) || '支付失败'
+          wx.showToast({ title: msg, icon: 'none' })
+        }
+      })
+    } catch (e) {
+      wx.hideLoading()
+      wx.showToast({ title: '支付预下单失败', icon: 'none' })
+    }
   }
 })

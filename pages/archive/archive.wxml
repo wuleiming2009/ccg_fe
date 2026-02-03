@@ -1,0 +1,77 @@
+<view class="archive-page">
+  <view class="toolbar">
+    <view class="spacer"></view>
+    <view class="sort" bindtap="onChangeSort">
+      <text class="sort-text">{{sortMode === 'recipient' ? '按收礼人排序' : '按订单排序'}} ⌄</text>
+    </view>
+  </view>
+
+  <view class="list" wx:if="{{sortMode === 'recipient'}}">
+    <block wx:for="{{recipients}}" wx:key="id">
+      <view class="card">
+        <view class="card-header" bindtap="toggleRecipient" data-id="{{item.id}}">
+          <view class="left">
+            <text class="name">{{item.name}}</text>
+            <text class="count">{{item.order_count || item.count || (item.orders && item.orders.length) || 0}} 件作品</text>
+          </view>
+          <view class="right">
+            <text class="phone">{{item.phone}}</text>
+            <text class="chev {{item.expanded ? 'up' : 'down'}}">⌄</text>
+          </view>
+        </view>
+        <block wx:if="{{item.expanded}}">
+          <block wx:if="{{(item.orders && item.orders.length)}}">
+            <scroll-view class="orders-scroll" scroll-y="true">
+              <block wx:for="{{item.orders}}" wx:for-item="order" wx:key="order_id">
+                <view class="order" bindtap="onOpenOrder" data-id="{{order.order_id}}">
+                  <image class="thumb" src="{{order.img_url}}" mode="aspectFill"></image>
+                  <view class="meta">
+                    <view class="row">
+                      <text class="title">{{order.name}}</text>
+                      <text class="tag">{{order.code}}</text>
+                    </view>
+                    <text class="sub">数量: {{order.qty}}</text>
+                    <view class="row">
+                      <text class="price">订单金额：¥{{order.amount_total || order.price}}</text>
+                      <text class="status">{{order.order_status_text}}</text>
+                    </view>
+                    <text class="date">{{order.date}}</text>
+                  </view>
+                </view>
+              </block>
+            </scroll-view>
+          </block>
+          <block wx:else>
+            <view class="empty">暂无订单</view>
+          </block>
+        </block>
+      </view>
+    </block>
+  </view>
+  <view class="list" wx:else>
+    <block wx:if="{{orders.length > 0}}">
+      <block wx:for="{{orders}}" wx:key="order_id">
+        <view class="order order-col" bindtap="onOpenOrder" data-id="{{item.order_id}}">
+          <view class="order-top">
+            <text class="recipient">收礼人：{{item.recipient}}</text>
+          </view>
+          <view class="order-main">
+            <image class="thumb" src="{{item.img_url}}" mode="aspectFill"></image>
+            <view class="meta">
+              <text class="title">{{item.name}}</text>
+              <view class="row">
+                <text class="sub">数量：{{item.qty}}</text>
+                <text class="status">{{item.order_status_text}}</text>
+              </view>
+              <text class="price">订单金额：¥{{item.price}}</text>
+              <text class="date">{{item.date}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+    <block wx:else>
+      <view class="empty">暂无订单</view>
+    </block>
+  </view>
+</view>

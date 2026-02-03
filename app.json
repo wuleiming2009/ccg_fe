@@ -8,7 +8,10 @@
     "pages/history_result/history_result",
     "pages/webview/webview",
     "pages/product/product",
-    "pages/market/market"
+    "pages/market/market",
+    "pages/archive/archive",
+    "pages/my/my",
+    "pages/order/order"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -35,7 +38,8 @@
     "borderStyle": "black",
     "list": [
       { "pagePath": "pages/chat/chat", "iconPath": "images/star.png", "selectedIconPath": "images/star_selected.png" },
-      { "pagePath": "pages/market/market", "iconPath": "images/bag.png", "selectedIconPath": "images/bag_selected.png" }
+      { "pagePath": "pages/market/market", "iconPath": "images/bag.png", "selectedIconPath": "images/bag_selected.png" },
+      { "pagePath": "pages/my/my", "iconPath": "images/user.png", "selectedIconPath": "images/user_selected.png" }
     ]
   }
 }

@@ -1,0 +1,6 @@
+.my-page { background: #FFFFFF; min-height: 100vh; padding: 16px; }
+.hero { margin-top: 12px; }
+.title { font-size: 20px; font-weight: 700; color: #1F2A37; }
+.subtitle { margin-top: 6px; font-size: 13px; color: #9AA4B2; }
+.actions { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+.primary { background: #000000; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; }
