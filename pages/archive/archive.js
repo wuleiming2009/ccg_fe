@@ -77,7 +77,8 @@ Page({
         price: o.price,
         amount_total: o.amount_total,
         order_status_text: o.order_status_text || '',
-        date: o.date || o.time || o.created_at || ''
+        date: o.date || o.time || o.created_at || '',
+        create_time: o.create_time || o.created_at || o.date || ''
       }))
       if (idx >= 0) {
         const merged = (arr[idx].orders || []).concat(orders)
@@ -121,6 +122,7 @@ Page({
         price: o.amount_paid || (o.product && o.product.price) || '0.00',
         recipient: (o.recipient && (o.recipient.nickname || o.recipient.phone)) || '',
         date: o.date || o.time || o.created_at || '',
+        create_time: o.create_time || o.created_at || o.date || '',
         order_status_text: (function(s){
           if (s === 0) return '待支付'
           if (s === 1) return '已支付'

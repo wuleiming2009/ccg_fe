@@ -378,6 +378,7 @@ function RecipientOrdersResp(obj) {
         order_status: orderStatus,
         order_status_text: statusMap[orderStatus] || '',
         date: item.date || item.time || item.created_at || '',
+        create_time: item.create_time || item.created_at || item.date || '',
       }
     }),
   };
