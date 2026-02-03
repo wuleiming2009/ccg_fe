@@ -211,9 +211,19 @@ Page({
         package: pkg,
         signType,
         paySign,
-        success: () => {
-          wx.showToast({ title: '支付成功', icon: 'none' })
-          this.setData({ showCheckout: false })
+        success: async () => {
+          try {
+            const info = await ccgapi.orderInfo({ order_id })
+            this.setData({ showCheckout: false })
+            wx.navigateTo({
+              url: '/pages/order/order',
+              success: (res) => {
+                res.eventChannel && res.eventChannel.emit('order', info)
+              }
+            })
+          } catch (e) {
+            wx.showToast({ title: '支付成功，获取订单失败', icon: 'none' })
+          }
         },
         fail: (err) => {
           const msg = (err && err.errMsg) || '支付失败'
