@@ -3,7 +3,7 @@ Page({
     greeting: '',
     welcomStr: '愿你被生活温柔以待',
     messages: [
-      { role: 'assistant', content: '嗨！我是你的专属礼赠顾问。最近是有什么开心的事，还是遇到了什么送礼的难题？跟我说说，我来帮你参谋参谋～' }
+      { role: 'assistant', content: '嗨～最近过得怎么样？有没有发生什么有趣的事，或是想聊聊、需要我一起琢磨的？' }
     ],
     inputValue: '',
     scrollInto: '',
@@ -24,14 +24,18 @@ Page({
     const hasPills = showMyGifts || showGiftHistory
     this.setData({ showMyGifts, showGiftHistory, hasPills })
     if (options && options.reset === '1') {
-      this.setData({ messages: [ { role: 'assistant', content: '嗨！我是你的专属礼赠顾问。最近是有什么开心的事，还是遇到了什么送礼的难题？跟我说说，我来帮你参谋参谋～' } ], inputValue: '', scrollInto: 'end-anchor' })
+      this.setData({ messages: [ { role: 'assistant', content: '嗨～最近过得怎么样？有没有发生什么有趣的事，或是想聊聊、需要我一起琢磨的？' } ], inputValue: '', scrollInto: 'end-anchor' })
+      this.validAnswerCount = 0
+      this.matchStarted = false
     }
     const { questions, PERSONA_PROMPT } = require('../../config/chatbot')
     const qs = Array.isArray(cfg.questions) && cfg.questions.length ? cfg.questions : questions
     this.questions = qs
     this.qThreshold = Math.ceil((qs.length || 0) * 0.8)
     const qList = qs.map((q, i) => `${i + 1}. ${q}`).join('；')
-    this.personaPrompt = `${PERSONA_PROMPT} 请以自然中文表达，不要输出括号或其他标记的语气/动作词，如（关切的）（轻声的）。逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。在获取足够信息后，给出预算匹配、创意与走心度兼顾的礼物建议。`
+    this.personaPrompt = `${PERSONA_PROMPT} 请以自然中文表达，不要输出括号或其他标记的语气/动作词，如（关切的）（轻声的）。逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。请始终以朋友口吻聊天，不要在聊天中提供任何商品或礼物建议，也不要直白说明“送礼”的需求或推荐流程。每次回复末尾追加<meta>{"valid_answer":(true|false),"valid_answer_count":整数,"cta_hint":(true|false)}</meta>，用于内部评估上一条用户回答是否为正常且有用的答案、已收集的有效答案数量，以及你认为是否可以在此时轻轻提醒开启匹配。不要让用户看到<meta>，仅在文本最后插入该标签。`
+    this.validAnswerCount = 0
+    this.matchStarted = false
     this.setData({ scrollInto: 'end-anchor' })
     this.initVoice()
   },
@@ -130,32 +134,92 @@ Page({
       const resp = await this.client.chat({ messages: this.buildChatMessages(msgs) })
       const list = this.data.messages.slice()
       const typingIndex = list.length - 1
-      list[typingIndex] = { role: 'assistant', content: this.sanitize(resp.content || '（无回复）') }
+      const raw = resp.content || '（无回复）'
+      const parsed = this.extractMeta(raw)
+      list[typingIndex] = { role: 'assistant', content: this.sanitize(parsed.visible) }
       this.setData({ messages: list, scrollInto: 'end-anchor' })
-      this.updateCTAVisibility()
+      this.updateProgress(parsed.meta, text)
+      this.logProgress(parsed.meta)
+      this.updateCTAVisibility(parsed.meta)
     } catch (e) {
       wx.showToast({ title: '发送失败', icon: 'none' })
       console.error('chat send error', e)
     }
   },
   buildChatMessages(list) {
-    return [{ role: 'system', content: this.personaPrompt }].concat(list)
+    const dialog = (Array.isArray(list) ? list : [])
+      .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+      .map(m => ({ role: m.role, content: m.content }))
+    return [{ role: 'system', content: this.personaPrompt }].concat(dialog)
   },
   sanitize(text) {
     return String(text)
       .replace(/（[^）]{1,20}）/g, '')
       .replace(/\([^)]{1,20}\)/g, '')
+      .replace(/<meta>[\s\S]*?<\/meta>/gi, '')
       .trim()
   },
-  updateCTAVisibility() {
-    const hasCTA = (this.data.messages || []).some(m => m.type === 'cta')
-    const userCount = (this.data.messages || []).filter(m => m.role === 'user').length
-    if (!hasCTA && userCount >= this.qThreshold) {
-      const next = this.data.messages.concat([{ type: 'cta' }])
+  extractMeta(text) {
+    const m = /<meta>([\s\S]*?)<\/meta>/i.exec(String(text))
+    if (!m) return { visible: String(text), meta: null }
+    let meta = null
+    try {
+      meta = JSON.parse(m[1])
+    } catch (e) {
+      meta = null
+    }
+    const visible = String(text).replace(m[0], '')
+    return { visible, meta }
+  },
+  updateProgress(meta, lastUserText) {
+    if (meta && typeof meta.valid_answer_count === 'number') {
+      this.validAnswerCount = Math.max(0, meta.valid_answer_count)
+      return
+    }
+    if (meta && meta.valid_answer === true) {
+      this.validAnswerCount = (this.validAnswerCount || 0) + 1
+      return
+    }
+    // Fallback: heuristic check
+    if (this.isNormalAnswer(lastUserText)) {
+      this.validAnswerCount = (this.validAnswerCount || 0) + 1
+    }
+  },
+  isNormalAnswer(text) {
+    const t = String(text || '').trim()
+    if (!t) return false
+    if (t.length < 6) return false
+    const generic = [ '不知道', '不太清楚', '随便', '看你', '无', '没有', '不需要', '算了' ]
+    if (generic.some(k => t.includes(k))) return false
+    // Reject only emoji/punct
+    if (/^[\p{P}\p{Z}\p{S}]+$/u.test(t)) return false
+    return true
+  },
+  updateCTAVisibility(meta) {
+    if (this.matchStarted) return
+    const msgs = (this.data.messages || [])
+    const anyCTA = msgs.some(m => m.type === 'cta')
+    const lastIsCTA = msgs.length > 0 && msgs[msgs.length - 1].type === 'cta'
+    const validCount = this.validAnswerCount || 0
+    if (!anyCTA && validCount >= this.qThreshold) {
+      const next = msgs.concat([{ type: 'cta' }])
+      this.setData({ messages: next, scrollInto: 'end-anchor' })
+      return
+    }
+    if (meta && meta.cta_hint === true && !lastIsCTA) {
+      const base = msgs.filter(m => m.type !== 'cta')
+      const next = base.concat([{ type: 'cta' }])
       this.setData({ messages: next, scrollInto: 'end-anchor' })
     }
   },
+  logProgress(meta) {
+    const hasCTA = (this.data.messages || []).some(m => m.type === 'cta')
+    const validCount = this.validAnswerCount || 0
+    const eligible = validCount >= (this.qThreshold || 0)
+    console.log('progress', { validAnswerCount: validCount, qThreshold: this.qThreshold, hasCTA, eligible, matchStarted: !!this.matchStarted, meta })
+  },
   onStartMatch() {
+    this.matchStarted = true
     const records = (this.data.messages || [])
       .filter(m => m.role === 'user' || m.role === 'assistant')
       .map(m => ({ role: m.role, content: m.content || '' }))
