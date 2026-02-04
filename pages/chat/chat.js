@@ -12,7 +12,11 @@ Page({
     hasPills: true,
     voiceMode: false,
     recording: false,
-    voiceHint: '按住说话'
+    voiceHint: '按住说话',
+    introMode: true,
+    introAnim: {},
+    banners: [],
+    discounts: { exist: false, icon: '', text: '', action: '' }
   },
   onLoad(options) {
     const app = getApp()
@@ -23,10 +27,14 @@ Page({
     const showGiftHistory = cfg.showGiftHistory !== undefined ? !!cfg.showGiftHistory : !!ui.showGiftHistory
     const hasPills = showMyGifts || showGiftHistory
     this.setData({ showMyGifts, showGiftHistory, hasPills })
+    const banners = Array.isArray(cfg.banners) ? cfg.banners : []
+    const discounts = cfg.discounts || { exist: false, icon: '', text: '', action: '' }
+    this.setData({ banners, discounts })
     if (options && options.reset === '1') {
       this.setData({ messages: [ { role: 'assistant', content: '嗨～最近过得怎么样？有没有发生什么有趣的事，或是想聊聊、需要我一起琢磨的？' } ], inputValue: '', scrollInto: 'end-anchor' })
       this.validAnswerCount = 0
       this.matchStarted = false
+      this.setData({ introMode: true, introAnim: {} })
     }
     const { questions, PERSONA_PROMPT } = require('../../config/chatbot')
     const qs = Array.isArray(cfg.questions) && cfg.questions.length ? cfg.questions : questions
@@ -59,7 +67,11 @@ Page({
         const text = (t || '').trim()
         this.setData({ recording: false, voiceHint: '按住说话', inputValue: text })
         if (text) {
-          this.onSend()
+          if (this.data.introMode) {
+            this.onIntroSend()
+          } else {
+            this.onSend()
+          }
         } else {
           wx.showToast({ title: '未识别到语音', icon: 'none' })
         }
@@ -116,8 +128,80 @@ Page({
   onGiftHistory() {
     wx.navigateTo({ url: '/pages/history/history' })
   },
+  onBannerTap(e) {
+    const link = e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.link
+    const url = encodeURIComponent(String(link || ''))
+    if (!url) return
+    wx.navigateTo({ url: `/pages/webview/webview?url=${url}` })
+  },
+  onDiscountTap() {
+    const act = (this.data.discounts && this.data.discounts.action) || ''
+    const parts = String(act).split('@')
+    const type = (parts[0] || '').trim()
+    const payload = (parts[1] || '').trim()
+    if (!type) { wx.showToast({ title: '已领取', icon: 'none' }); return }
+    if (type === 'web') {
+      if (!payload) { wx.showToast({ title: '链接无效', icon: 'none' }); return }
+      const url = encodeURIComponent(payload)
+      wx.navigateTo({ url: `/pages/webview/webview?url=${url}` })
+      return
+    }
+    if (type === 'page') {
+      if (!payload) { wx.showToast({ title: '页面地址无效', icon: 'none' }); return }
+      wx.navigateTo({ url: payload })
+      return
+    }
+    if (type === 'query') {
+      if (!payload) { wx.showToast({ title: '请求地址无效', icon: 'none' }); return }
+      const request = require('../../api/request')
+      const isAbs = /^https?:\/\//i.test(payload)
+      if (isAbs) {
+        wx.request({ url: payload, method: 'GET', header: { 'Authorization': wx.getStorageSync('token') || '' }, success: () => wx.showToast({ title: '已领取', icon: 'none' }), fail: () => wx.showToast({ title: '网络异常', icon: 'none' }) })
+      } else {
+        request.get(payload, {}).then(() => wx.showToast({ title: '已领取', icon: 'none' })).catch(() => wx.showToast({ title: '请求失败', icon: 'none' }))
+      }
+      return
+    }
+    wx.showToast({ title: '动作不支持', icon: 'none' })
+  },
   onInput(e) {
     this.setData({ inputValue: e.detail.value })
+  },
+  onIntroInput(e) {
+    this.setData({ inputValue: e.detail.value })
+  },
+  onIntroFocus() {
+  },
+  onIntroSend() {
+    if (this.data.introMode) {
+      const animation = wx.createAnimation({ duration: 220, timingFunction: 'ease-in-out' })
+      animation.scale(1.03).opacity(0.0).step()
+      this.setData({ introAnim: animation.export() })
+      setTimeout(() => {
+        this.setData({ introMode: false, introAnim: {} })
+        this.onSend()
+      }, 200)
+      return
+    }
+    this.onSend()
+  },
+  onIntroVoice() {
+    if (this.data.introMode) {
+      const animation = wx.createAnimation({ duration: 220, timingFunction: 'ease-in-out' })
+      animation.scale(1.03).opacity(0.0).step()
+      this.setData({ introAnim: animation.export() })
+      setTimeout(async () => {
+        this.setData({ introMode: false, introAnim: {} })
+        this.setData({ voiceMode: true })
+        await this.ensureRecordAuth().catch(() => {})
+        if (this.recManager) {
+          this.setData({ recording: true, voiceHint: '松开结束' })
+          this.recManager.start({ lang: 'zh_CN' })
+        }
+      }, 200)
+      return
+    }
+    this.onToggleVoiceMode()
   },
   async onSend() {
     const text = (this.data.inputValue || '').trim()

@@ -156,8 +156,8 @@
   gap: 10px;
 }
 .toggle-btn {
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #FFFFFF;
   box-shadow: 0 2px 8px rgba(31,42,55,0.08);
@@ -168,7 +168,7 @@
 .toggle-icon { font-size: 16px; color: #1F2A37; }
 .voice-input {
   flex: 1;
-  height: 40px;
+  height: 24px;
   border-radius: 999px;
   background: #FFFFFF;
   display: flex;
@@ -176,20 +176,22 @@
   justify-content: center;
   color: #1F2A37;
   font-weight: 600;
-  box-shadow: inset 0 0 0 1px #E6ECF3;
+  box-shadow: inset 0 0 0 2px #D8E2F0;
 }
 .voice-input.recording { background: #FF7A3E; color: #FFFFFF; box-shadow: none; }
 .input {
   flex: 1;
   background: #FFFFFF;
   border-radius: 999px;
-  padding: 10px 14px;
+  height: 30px;
+  padding: 4px 8px;
   font-size: 14px;
   color: #7A8CA5;
+  box-shadow: inset 0 0 0 2px #D8E2F0, 0 6px 16px rgba(31,42,55,0.06);
 }
 .send-btn {
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #8b8b8b;
   display: flex;
@@ -208,3 +210,85 @@
 .dot:nth-child(2) { animation-delay: 0.2s; }
 .dot:nth-child(3) { animation-delay: 0.4s; }
 @keyframes blink { 0% { opacity: 0.2 } 50% { opacity: 1 } 100% { opacity: 0.2 } }
+/* 首屏输入层 */
+.intro-layer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 20;
+}
+.intro-container { width: 94vw; min-height: 100vh; position: relative; margin: 0 auto; }
+.intro-center { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 0; }
+.intro-above { position: absolute; left: 0; right: 0; bottom: calc(50% + 40px + 24px); display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.intro-below { position: absolute; left: 0; right: 0; top: calc(50% + 40px + 24px); bottom: 80px; display: flex; align-items: center; justify-content: center; }
+.intro-card {
+  width: 100%;
+  min-height: 80px;
+  background: #FFFFFF;
+  border-radius: 24px;
+  box-shadow: 0 12px 28px rgba(31,42,55,0.10);
+  border: 2px solid #E0E7FF;
+  position: relative;
+  padding: 8px;
+  box-sizing: border-box;
+  z-index: 1;
+}
+.intro-banner {
+  width: 100%;
+  height: 200px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 6px 16px rgba(31,42,55,0.06);
+  border: 2px solid #E0E7FF;
+  box-sizing: border-box;
+}
+.intro-banner swiper { width: 100%; height: 100%; }
+.banner-image { width: 100%; height: 100%; }
+.discount-card {
+  margin: 0 2px;
+  width: calc(100% - 20px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FFF3E8;
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+.discount-icon { font-size: 18px; }
+.discount-text { flex: 1; color: #1F2A37; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.discount-action { color: #FF7A3E; font-weight: 600; }
+.intro-input {
+  width: 100%;
+  height: 92px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px #E6ECF3;
+  padding: 12px 14px;
+  color: #7A8CA5;
+}
+.intro-actions {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 10px;
+}
+.intro-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F2F4F7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.intro-icon { color: #9AA4B2; }
+.floating-text { color: #7A8CA5; font-size: 13px; animation: floatY 2.6s ease-in-out infinite alternate; }
+@keyframes floatY { 0% { transform: translateY(-6px); } 100% { transform: translateY(6px); } }

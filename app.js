@@ -30,7 +30,9 @@ App({
           const userConfig = {
             questions: Array.isArray(initResp.questions) ? initResp.questions : [],
             showMyGifts: initResp.show_my_gifts === 0 ? false : true,
-            showGiftHistory: initResp.show_gift_history === 0 ? false : true
+            showGiftHistory: initResp.show_gift_history === 0 ? false : true,
+            banners: Array.isArray(initResp.banners) ? initResp.banners : [],
+            discounts: initResp.discounts || { exist: false, icon: '', text: '', action: '' }
           }
           wx.setStorageSync('userConfig', userConfig)
           console.log("获取用户初始化配置:", wx.getStorageSync('userConfig'))

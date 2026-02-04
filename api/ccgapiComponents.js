@@ -48,6 +48,13 @@ function UserInitResp(obj) {
     questions: obj.questions,
     show_my_gifts: obj.show_my_gifts,
     show_gift_history: obj.show_gift_history,
+    banners: Array.isArray(obj.banners) ? obj.banners.map(b => ({ img: b.img || '', link: b.link || '' })) : [],
+    discounts: {
+      exist: obj.discounts.exists === 0 ? false : true,
+      icon: obj.discounts.icon || '',
+      text: obj.discounts.text || '',
+      action: obj.discounts.action || '',
+    }
   };
 }
 

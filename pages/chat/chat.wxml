@@ -1,5 +1,55 @@
 <view class="chat-page">
-  <view class="fixed-header">
+  <block wx:if="{{introMode}}">
+    <view class="intro-layer">
+      <view class="intro-container">
+        <view class="intro-above">
+          <block wx:if="{{banners.length > 0}}">
+            <view class="intro-banner">
+              <swiper autoplay="true" interval="4000" circular="true" indicator-dots="true" indicator-color="#E5E7EB" indicator-active-color="#6B7280">
+                <block wx:for="{{banners}}" wx:key="index">
+                  <swiper-item>
+                    <image class="banner-image" src="{{item.img}}" mode="aspectFill" data-link="{{item.link}}" bindtap="onBannerTap"></image>
+                  </swiper-item>
+                </block>
+              </swiper>
+            </view>
+          </block>
+          <block wx:if="{{discounts.exist}}">
+            <view class="discount-card" bindtap="onDiscountTap">
+              <text class="discount-icon">🎁</text>
+              <text class="discount-text">优惠信息：{{discounts.text}}</text>
+              <text class="discount-action">{{discounts.action ? '立即领取' : ''}}</text>
+            </view>
+          </block>
+        </view>
+        <view class="intro-center">
+          <view class="intro-card" animation="{{introAnim}}">
+            <view class="input-area">
+              <view class="toggle-btn" bindtap="onToggleVoiceMode">
+                <text class="toggle-icon">{{voiceMode ? 'T' : '🎤'}}</text>
+              </view>
+              <block wx:if="{{!voiceMode}}">
+                <input class="input" placeholder="在此输入你的纠结..." value="{{inputValue}}" bindinput="onIntroInput" confirm-type="send" bindconfirm="onIntroSend" />
+              </block>
+              <block wx:else>
+                <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
+                  <text class="voice-text">{{voiceHint}}</text>
+                </view>
+              </block>
+              <view class="send-btn" bindtap="onIntroSend">
+                <text class="send-icon">➤</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="intro-below">
+          <text class="floating-text">我不会替你做决定，只帮你把情况理清楚</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="fixed-header" wx:if="{{!introMode}}">
     <view class="header">
       <view class="header-texts">
         <text class="greeting">{{greeting}}</text>
@@ -11,7 +61,7 @@
     </view>
   </view>
 
-  <scroll-view class="chat-scroll {{hasPills ? '' : 'no-pills'}}" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
+  <scroll-view wx:if="{{!introMode}}" class="chat-scroll {{hasPills ? '' : 'no-pills'}}" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
     <view class="messages">
       <block wx:for="{{messages}}" wx:key="index">
         <block wx:if="{{item.type === 'cta'}}">
@@ -42,7 +92,7 @@
     </view>
   </scroll-view>
 
-  <view class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
+  <view wx:if="{{!introMode}}" class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
     <view class="footer-bg"></view>
     <view class="secondary-actions" wx:if="{{hasPills}}">
       <view class="pill blue" bindtap="onMyGifts" wx:if="{{showMyGifts}}">
