@@ -37,9 +37,9 @@
     "backgroundColor": "#eeece5",
     "borderStyle": "black",
     "list": [
-      { "pagePath": "pages/chat/chat", "iconPath": "images/star.png", "selectedIconPath": "images/star_selected.png" },
-      { "pagePath": "pages/market/market", "iconPath": "images/bag.png", "selectedIconPath": "images/bag_selected.png" },
-      { "pagePath": "pages/my/my", "iconPath": "images/user.png", "selectedIconPath": "images/user_selected.png" }
+      { "pagePath": "pages/market/market", "iconPath": "images/tabbar2.png", "selectedIconPath": "images/tabbar2_s.png", "text": "礼物集市", "color": "#7A8CA5", "selectedColor": "#1F2A37" },
+      { "pagePath": "pages/chat/chat", "iconPath": "images/tabbar1.png", "selectedIconPath": "images/tabbar1_s.png" },
+      { "pagePath": "pages/my/my", "iconPath": "images/tabbar3.png", "selectedIconPath": "images/tabbar3_s.png", "text": "会员管家", "color": "#7A8CA5", "selectedColor": "#1F2A37" }
     ]
   }
 }

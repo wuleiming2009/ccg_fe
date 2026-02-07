@@ -47,8 +47,6 @@ function UserInitReq() {
 function UserInitResp(obj) {
   return { 
     questions: obj.questions,
-    show_my_gifts: obj.show_my_gifts,
-    show_gift_history: obj.show_gift_history,
     user_name: obj.user_name || ''
   };
 }
@@ -529,8 +527,12 @@ module.exports = {
     PaymentPrepayResp,
     RecipientListByOrdersReq,
     RecipientListByOrdersResp,
-    OrderListByTimeReq,
-    OrderListByTimeResp,
+  OrderListByTimeReq,
+  OrderListByTimeResp,
+  UserInfoReq,
+  UserInfoResp,
+  SetInfoReq,
+  SetInfoResp,
 };
 /**
  * @typedef {Object} OrderNewReq
@@ -556,3 +558,9 @@ function OrderNewResp(obj) {
     order_id: (typeof obj.order_id === 'number' ? obj.order_id : (Number(obj.order_id) || 0)),
   };
 }
+
+// 用户信息
+function UserInfoReq() { return {}; }
+function UserInfoResp(obj) { return { user_name: obj.user_name || '' }; }
+function SetInfoReq(input) { return { user_name: input.user_name }; }
+function SetInfoResp(obj) { return { success: obj.success || '' }; }

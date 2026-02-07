@@ -29,8 +29,6 @@ App({
           const initResp = await ccgapi.userInit({})
           const userConfig = {
             questions: Array.isArray(initResp.questions) ? initResp.questions : [],
-            showMyGifts: initResp.show_my_gifts === 0 ? false : true,
-            showGiftHistory: initResp.show_gift_history === 0 ? false : true,
             user_name: initResp.user_name || ''
           }
           wx.setStorageSync('userConfig', userConfig)

@@ -1,4 +1,4 @@
-.review-page { min-height: 100vh; background: #F0F5FB; padding: 12px; box-sizing: border-box; }
+.review-page { min-height: 100vh; background: #eeece5; padding: 12px; box-sizing: border-box; }
 .thread { height: calc(100vh - 24px); box-sizing: border-box; }
 .messages { display: flex; flex-direction: column; gap: 10px; }
 .end-anchor { height: 6px; }

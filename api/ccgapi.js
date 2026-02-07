@@ -41,6 +41,32 @@ function userInit(req) {
 }
 
 /**
+ * 用户配置获取
+ * @param {ccgapiComponents.UserInfoReq} req
+ * @returns {Promise<ccgapiComponents.UserInfoResp>}
+ */
+function userInfo(req) {
+  const payload = ccgapiComponents.UserInfoReq(req);
+  return request.post('/user/v1/info', payload).then((resp) => {
+    const out = ccgapiComponents.UserInfoResp(resp);
+    return out;
+  });
+}
+
+/**
+ * 用户配置设置
+ * @param {ccgapiComponents.SetInfoReq} req
+ * @returns {Promise<ccgapiComponents.SetInfoResp>}
+ */
+function setInfo(req) {
+  const payload = ccgapiComponents.SetInfoReq(req);
+  return request.post('/user/v1/set', payload).then((resp) => {
+    const out = ccgapiComponents.SetInfoResp(resp);
+    return out;
+  });
+}
+
+/**
  * 用户对话匹配商品
  * @param {ccgapiComponents.MatchReq} req
  * @returns {Promise<ccgapiComponents.MatchResp>}
@@ -247,6 +273,8 @@ module.exports = {
   login, 
   welcomeString, 
   userInit, 
+  userInfo,
+  setInfo,
   match, 
   matchList, 
   matchInfo,

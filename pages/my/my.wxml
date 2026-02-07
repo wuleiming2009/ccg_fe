@@ -1,9 +1,51 @@
 <view class="my-page">
-  <view class="hero">
-    <text class="title">我的管理页</text>
+  <view class="fixed-header">
+    <view class="header">
+      <view class="header-texts">
+        <text class="greeting">{{greeting}}</text>
+        <text class="subtext">{{welcomStr}}</text>
+      </view>
+      <view class="header-illustration">
+        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
+      </view>
+    </view>
+  </view>
+
+  <view class="profile-card">
+    <view class="card-top">
+      <text class="card-label">MEMBER PROFILE</text>
+      <view class="edit-pill" bindtap="onEditName"><text class="edit-text">修改名称</text></view>
+    </view>
+    <view class="card-main">
+      <view class="avatar-placeholder"><text class="avatar-initial">{{initial}}</text></view>
+      <view class="name-info">
+        <text class="member-name">{{name || '未命名'}}</text>
+        <text class="member-tier">白金级礼赠会员</text>
+      </view>
+    </view>
   </view>
 
   <view class="actions">
-    <button class="primary" bindtap="onOpenArchive">礼赠订单</button>
+    <view class="big-btn" bindtap="onOpenArchive"><text class="big-btn-text">查看礼赠订单</text><text class="chev">></text></view>
+    <view class="big-btn" bindtap="onContact"><text class="big-btn-text">合作咨询</text><text class="chev orange">></text></view>
+  </view>
+
+  <view wx:if="{{showNameEdit}}" class="modal-mask" bindtap="onCloseModal"></view>
+  <view wx:if="{{showNameEdit}}" class="modal">
+    <text class="modal-title">修改名称</text>
+    <input class="modal-input" value="{{name}}" bindinput="onNameInput" placeholder="请输入用户名" />
+    <view class="modal-actions">
+      <button class="modal-btn light" bindtap="onCloseModal">取消</button>
+      <button class="modal-btn dark" bindtap="onSaveName">保存</button>
+    </view>
+  </view>
+
+  <view wx:if="{{showContact}}" class="modal-mask" bindtap="onCloseContact"></view>
+  <view wx:if="{{showContact}}" class="modal">
+    <text class="modal-title">合作咨询</text>
+    <image class="qr-img" src="{{contactQrUrl}}" mode="aspectFit"></image>
+    <view class="modal-actions">
+      <button class="modal-btn light" bindtap="onCloseContact">关闭</button>
+    </view>
   </view>
 </view>

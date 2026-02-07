@@ -1,4 +1,4 @@
-.order-page { background: #FFFFFF; min-height: 100vh; padding: 16px; }
+.order-page { background: #eeece5; min-height: 100vh; padding: 16px; }
 .card { background: #F7FAFF; border-radius: 16px; padding: 14px; box-shadow: 0 4px 12px rgba(31,42,55,0.06); }
 .card + .divider { margin: 16px 0; height: 1px; background: #E6ECF3; }
 .card-header { font-size: 12px; color: #9AA4B2; letter-spacing: 2px; margin-bottom: 10px; }

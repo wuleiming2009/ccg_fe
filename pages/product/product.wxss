@@ -1,4 +1,4 @@
-.product-page { min-height: 100vh; background: #FFFFFF; }
+.product-page { min-height: 100vh; background: #eeece5; }
 .hero { height: 400px; background: #EAF0F5; }
 .photo { width: 100%; height: 100%; }
 .panel { margin-top: 4px; border-top-left-radius: 16px; border-top-right-radius: 16px; background: #FFFFFF; box-shadow: 0 -6px 12px rgba(31,42,55,0.06); padding: 16px; }

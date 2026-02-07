@@ -21,12 +21,8 @@ Page({
   onLoad(options) {
     const app = getApp()
     this.client = app && app.globalData && app.globalData.aiClient
-    const ui = require('../../config/ui')
     const cfg = wx.getStorageSync('userConfig') || {}
-    const showMyGifts = cfg.showMyGifts !== undefined ? !!cfg.showMyGifts : !!ui.showMyGifts
-    const showGiftHistory = cfg.showGiftHistory !== undefined ? !!cfg.showGiftHistory : !!ui.showGiftHistory
-    const hasPills = showMyGifts || showGiftHistory
-    this.setData({ showMyGifts, showGiftHistory, hasPills })
+    this.setData({ hasPills: true })
     this.setData({ userName: cfg.user_name || '' })
     if (options && options.reset === '1') {
       this.setData({ messages: [ { role: 'assistant', content: '嗨～最近过得怎么样？有没有发生什么有趣的事，或是想聊聊、需要我一起琢磨的？' } ], inputValue: '', scrollInto: 'end-anchor' })
@@ -49,7 +45,9 @@ Page({
     this.setData({ introPlaceholder: ph })
   },
   onShow() {
-    this.setData({ greeting: this.getGreeting() })
+    const name = (this.data.userName || '').trim()
+    const prefix = name ? `Hi，${name} ` : 'Hi，'
+    this.setData({ greeting: prefix + this.getGreeting() })
     const ccgapi = require('../../api/ccgapi');
     ccgapi.welcomeString({}).then((resp) => {
       this.setData({ welcomStr: resp.str })
@@ -116,9 +114,9 @@ Page({
   },
   getGreeting() {
     const hour = new Date().getHours()
-    if (hour >= 5 && hour < 12) return '早上好 ✨'
-    if (hour >= 12 && hour < 18) return '下午好 ✨'
-    return '晚上好 ✨'
+    if (hour >= 5 && hour < 12) return '上午好'
+    if (hour >= 12 && hour < 18) return '下午好'
+    return '晚上好'
   },
   onMatch() {
     console.log('开启礼物匹配')

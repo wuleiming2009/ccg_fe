@@ -1,6 +1,7 @@
 <view class="chat-page">
   <block wx:if="{{introMode}}">
     <view class="intro-layer">
+      <image class="intro-bg" src="../../images/chat_bg.png" mode="aspectFill"></image>
       <view class="intro-container">
         <view class="intro-hero">
           <text class="hero-line">有些心意，</text>
@@ -13,7 +14,7 @@
           </view>
           <view class="input-area">
             <view class="toggle-btn" bindtap="onToggleVoiceMode">
-              <text class="toggle-icon">{{voiceMode ? 'T' : '🎤'}}</text>
+              <image class="toggle-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
             </view>
             <block wx:if="{{!voiceMode}}">
               <input class="input" placeholder="{{introPlaceholder}}" placeholder-style="color:#b6b8bb" value="{{inputValue}}" bindinput="onIntroInput" confirm-type="send" bindconfirm="onIntroSend" />
@@ -24,7 +25,7 @@
               </view>
             </block>
             <view class="send-btn intro-send" bindtap="onIntroSend">
-              <text class="send-icon">➤</text>
+              <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
             </view>
           </view>
           <view class="quick-caps-out">
@@ -83,20 +84,26 @@
 
   <view wx:if="{{!introMode}}" class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
     <view class="footer-bg"></view>
-    <view class="secondary-actions" wx:if="{{hasPills}}">
-      <view class="pill blue" bindtap="onMyGifts" wx:if="{{showMyGifts}}">
-        <text class="pill-icon">🎁</text>
-        <text class="pill-text">我的礼赠</text>
+    <scroll-view class="history-scroll" scroll-x="true" show-scrollbar="false">
+      <view class="secondary-actions history-pills">
+        <view class="pill lite">
+          <text class="pill-text lite">上次送给妈妈的礼物</text>
+        </view>
+        <view class="pill lite">
+          <text class="pill-text lite">给客户的感谢表达</text>
+        </view>
+        <view class="pill lite">
+          <text class="pill-text lite">道歉礼物方案</text>
+        </view>
+        <view class="pill lite" bindtap="onGiftHistory">
+          <text class="pill-text lite">礼赠历史</text>
+        </view>
       </view>
-      <view class="pill orange" bindtap="onGiftHistory" wx:if="{{showGiftHistory}}">
-        <text class="pill-icon">🕒</text>
-        <text class="pill-text">礼赠历史</text>
-      </view>
-    </view>
+    </scroll-view>
 
     <view class="input-area">
       <view class="toggle-btn" bindtap="onToggleVoiceMode">
-        <text class="toggle-icon">{{voiceMode ? 'T' : '🎤'}}</text>
+        <image class="toggle-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
       </view>
       <block wx:if="{{!voiceMode}}">
         <input class="input" placeholder="请输入消息…" placeholder-style="color:#b6b8bb" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
@@ -107,7 +114,7 @@
         </view>
       </block>
       <view class="send-btn" bindtap="onSend">
-        <text class="send-icon">➤</text>
+        <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
       </view>
     </view>
   </view>

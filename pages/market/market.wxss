@@ -1,4 +1,4 @@
-.market-page { min-height: 100vh; background: #F0F5FB; padding: 12px; box-sizing: border-box; }
+.market-page { min-height: 100vh; background: #eeece5; padding: 12px; box-sizing: border-box; }
 .promo { padding: 12px 4px; margin-bottom: 8px; }
 .promo-title { display: block; text-align: center; font-size: 26px; font-weight: 600; color: #1F2A37; }
 .promo-title2 { display: block; text-align: center; font-size: 14px; font-weight: 600; color: #1F2A37; }
