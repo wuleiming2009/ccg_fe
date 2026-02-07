@@ -15,7 +15,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#eeece5",
     "navigationBarTitleText": "CCG礼赠顾问",
     "navigationBarTextStyle": "black"
   },
@@ -34,7 +34,7 @@
   "tabBar": {
     "color": "#7A8CA5",
     "selectedColor": "#1F2A37",
-    "backgroundColor": "#FFFFFF",
+    "backgroundColor": "#eeece5",
     "borderStyle": "black",
     "list": [
       { "pagePath": "pages/chat/chat", "iconPath": "images/star.png", "selectedIconPath": "images/star_selected.png" },
