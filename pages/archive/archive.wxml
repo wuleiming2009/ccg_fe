@@ -12,7 +12,7 @@
         <view class="card-header" bindtap="toggleRecipient" data-id="{{item.id}}">
           <view class="left">
             <text class="name">{{item.name}}</text>
-            <text class="count">{{item.order_count || item.count || (item.orders && item.orders.length) || 0}} 件作品</text>
+            <text class="count">{{item.order_count || item.count || (item.orders && item.orders.length) || 0}} 件礼赠</text>
           </view>
           <view class="right">
             <text class="phone">{{item.phone}}</text>

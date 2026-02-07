@@ -11,7 +11,7 @@
   <view class="divider"></view>
 
   <view class="card product-card">
-    <view class="card-header">选购作品 / THE WORK</view>
+    <view class="card-header">选购礼赠 / THE WORK</view>
     <view class="prod-row">
       <image class="prod-thumb" src="{{product.img_url}}" mode="aspectFill"></image>
       <view class="prod-meta">
