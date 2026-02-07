@@ -16,7 +16,7 @@ Page({
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
     if (ec) {
       ec.on('order', (info) => {
-        const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已关闭', 4: '已退款' }
+        const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已发货', 4: '已关闭', 5: '已退款' }
         this.setData({
           order_id: info.order_id,
           product: info.product || {},

@@ -5,11 +5,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "集市",
-          "pathName": "pages/market/market",
+          "name": "礼赠订单列表",
+          "pathName": "pages/archive/archive",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "集市",
+          "pathName": "pages/market/market",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "查看礼赠历史结果",

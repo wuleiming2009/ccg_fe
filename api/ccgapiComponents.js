@@ -363,7 +363,7 @@ function RecipientOrdersResp(obj) {
       const p = item.product || {}
       const toNum = (v) => (typeof v === 'number' ? v : (Number(v) || 0))
       const priceCents = (item.amount_paid != null ? toNum(item.amount_paid) : (p.price != null ? toNum(p.price) : toNum(item.price)))
-      const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已关闭', 4: '已退款' }
+      const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已发货', 4: '已关闭', 5: '已退款' }
       const orderStatus = toNum(item.order_status)
       return {
         order_id: item.order_id || item.id,
