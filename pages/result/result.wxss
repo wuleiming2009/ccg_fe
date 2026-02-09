@@ -18,6 +18,7 @@
 .desc { margin-top: 6px; font-size: 13px; color: #7A8CA5; line-height: 1.6; }
 .buy-btn { margin-top: 10px; width: 100%; background: #FF7A3E; color: #FFFFFF; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
 .bottom-actions { position: fixed; left: 0; right: 0; bottom: 12px; display: flex; gap: 12px; padding: 0 12px; box-sizing: border-box; height: 64px; align-items: center; }
+.ai-note { display: block; margin: 8px 12px 0; text-align: center; color: #9AA4B2; font-size: 12px; }
 .btn { flex: 1; border-radius: 999px; padding: 12px 18px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
 .btn.light { background: #FFFFFF; color: #1F2A37; border: 1px solid #E3E8EF; }
 .btn.dark { background: #000000; color: #FFFFFF; }

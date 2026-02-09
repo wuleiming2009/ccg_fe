@@ -24,6 +24,7 @@
       <text class="desc">{{product.desc}}</text>
       <button class="buy-btn" bindtap="onBuy">去送礼</button>
       </view>
+      <text class="ai-note">本结果由AI生成，仅供参考</text>
     </scroll-view>
   </view>
 
