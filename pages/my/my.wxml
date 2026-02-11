@@ -6,7 +6,7 @@
         <text class="subtext">{{welcomStr}}</text>
       </view>
       <view class="header-illustration">
-        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
+        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift2.png" mode="aspectFill"></image>
       </view>
     </view>
   </view>

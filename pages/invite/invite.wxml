@@ -1,0 +1,38 @@
+<view class="invite-page">
+  <view class="hero">
+    <text class="title-en">INVITATIONS / 礼赴邀请</text>
+    <view class="main-title">
+      <text>一位友人为您</text>
+      <text>准备了来自 CC GIFT 的礼赠</text>
+    </view>
+    <view class="notes">
+      <text class="note">送礼人已选择保持匿名</text>
+      <text class="note">我们将确保您的隐私安全。</text>
+    </view>
+  </view>
+
+  <view class="form">
+    <view class="smart-card">
+      <textarea class="smart-textarea" placeholder="「粘贴识别」或输入文本，智能拆分姓名、电话和地址" placeholder-class="ph" value="{{rawText}}" bindinput="onRawInput" auto-height="true" />
+      <view class="smart-row">
+        <button class="sticky-btn" bindtap="onPasteRecognize">粘贴并识别</button>
+      </view>
+    </view>
+
+    <button class="wx-address-btn" bindtap="onChooseAddress">微信地址簿</button>
+
+    <view class="field">
+      <text class="label">收礼人称呼 / NAME</text>
+      <input class="input" placeholder="请输入收礼人称呼，注意：这个称呼送礼人会看见哦！" placeholder-class="ph" value="{{name}}" bindinput="onName" />
+    </view>
+    <view class="field">
+      <text class="label">收礼联系电话 / PHONE</text>
+      <input class="input" placeholder="请输入联系方式，我们将严格保密并对送礼人隐藏" placeholder-class="ph" value="{{phone}}" bindinput="onPhone" />
+    </view>
+    <view class="field">
+      <text class="label">收礼配送地址 / ADDRESS</text>
+      <input class="input" placeholder="请提供完整的收礼地址，我们将严格保密并对送礼人隐藏" placeholder-class="ph" value="{{address}}" bindinput="onAddr" />
+    </view>
+    <button class="submit" bindtap="onSubmit">提交收礼信息 →</button>
+  </view>
+</view>

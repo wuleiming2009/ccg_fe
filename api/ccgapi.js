@@ -269,6 +269,19 @@ function orderListByTime(req) {
   });
 }
 
+/**
+ * 填写收礼信息
+ * @param {ccgapiComponents.SetOrderRecipientReq} req
+ * @returns {Promise<ccgapiComponents.SetOrderRecipientResp>}
+ */
+function setOrderRecipient(req) {
+  const payload = ccgapiComponents.SetOrderRecipientReq(req);
+  return request.post('/order/v1/set_order_recipient', payload).then((resp) => {
+    const out = ccgapiComponents.SetOrderRecipientResp(resp);
+    return out;
+  });
+}
+
 module.exports = { 
   login, 
   welcomeString, 
@@ -290,5 +303,6 @@ module.exports = {
   orderInfo,
   paymentPrepay,
   recipientListByOrders,
-  orderListByTime
+  orderListByTime,
+  setOrderRecipient
 };

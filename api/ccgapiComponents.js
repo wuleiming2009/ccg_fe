@@ -533,6 +533,8 @@ module.exports = {
   UserInfoResp,
   SetInfoReq,
   SetInfoResp,
+  SetOrderRecipientReq,
+  SetOrderRecipientResp,
 };
 /**
  * @typedef {Object} OrderNewReq
@@ -564,3 +566,14 @@ function UserInfoReq() { return {}; }
 function UserInfoResp(obj) { return { user_name: obj.user_name || '' }; }
 function SetInfoReq(input) { return { user_name: input.user_name }; }
 function SetInfoResp(obj) { return { success: obj.success || '' }; }
+
+// 填写收礼信息
+function SetOrderRecipientReq(input) {
+  return {
+    order_id: input.order_id,
+    nickname: input.nickname,
+    phone: input.phone,
+    address: input.address,
+  };
+}
+function SetOrderRecipientResp(obj) { return { success: obj.success || '' }; }

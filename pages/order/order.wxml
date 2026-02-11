@@ -38,5 +38,6 @@
       </view>
     </view>
     <button class="pay-btn" wx:if="{{order_status === 0 || status_text === '待支付'}}" bindtap="onPay">去支付</button>
+    <button class="invite-btn" wx:if="{{order_status === 1 && isInvite}}" open-type="share">发送填址邀请</button>
   </view>
 </view>

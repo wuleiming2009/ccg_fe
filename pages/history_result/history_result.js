@@ -60,4 +60,5 @@ Page({
       wx.showToast({ title: '获取商品失败', icon: 'none' })
     }
   }
+  
 })

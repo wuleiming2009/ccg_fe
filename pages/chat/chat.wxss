@@ -43,7 +43,7 @@
 }
 .avatar-image {
   width: 160px;
-  height: 160px;
+  height: 200px;
   border-radius: 12px;
 }
 

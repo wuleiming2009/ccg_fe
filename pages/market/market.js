@@ -10,6 +10,7 @@ Page({
   },
   onLoad() {
     this.fetchPage(1)
+    wx.showShareMenu({ withShareTicket: true })
   },
   async fetchPage(p) {
     if (this.data.loading) return
@@ -53,5 +54,8 @@ Page({
   },
   onPullDownRefresh() {
     this.fetchPage(1).finally(() => wx.stopPullDownRefresh())
+  },
+  onShareAppMessage() {
+    return { title: 'CC GIFT 礼物集市', path: '/pages/market/market' }
   }
 })

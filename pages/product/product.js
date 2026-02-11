@@ -17,6 +17,7 @@ Page({
     showCheckout: false,
     showRecipient: false,
     recipientForm: { nickname: '', phone: '', address: '' },
+    recipientRawText: '',
     recipient: { name: '', phone: '', address: '' },
     recipients: [],
     selectedRecId: null,
@@ -25,9 +26,12 @@ Page({
     showEditRecipient: false,
     editRecipientForm: { recipient_id: '', nickname: '', phone: '', address: '', is_default: 0 },
   },
-  onLoad() {
-    const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
-    if (ec) {
+  onLoad(options) {
+    let ec = null
+    if (typeof this.getOpenerEventChannel === 'function') {
+      try { ec = this.getOpenerEventChannel() } catch (e) { ec = null }
+    }
+    if (ec && typeof ec.on === 'function') {
       ec.on('product', (item) => {
         const format = (t, sep) => {
           if (!t) return ''
@@ -47,6 +51,32 @@ Page({
           keywords_fmt: format(item.keywords, ' · '),
           match_text: item.match_text,
           match_meaning: item.match_meaning,
+        })
+      })
+    }
+    const pid = Number(options && (options.pid || options.product_id)) || 0
+    if (pid) {
+      const ccgapi = require('../../api/ccgapi')
+      ccgapi.productInfo({ product_id: pid }).then((infoResp) => {
+        const it = infoResp.info || {}
+        const format = (t, sep) => {
+          if (!t) return ''
+          return String(t).split(',').map(s => s.trim()).filter(Boolean).join(sep)
+        }
+        this.setData({
+          product_id: it.product_id || pid,
+          img_url: it.img_url,
+          name: it.name,
+          price: it.price,
+          slogan: it.slogan || '',
+          contents: it.contents || '',
+          scene: it.scene || '',
+          keywords: it.keywords || '',
+          contents_fmt: format(it.contents, ' | '),
+          scene_fmt: format(it.scene, ' · '),
+          keywords_fmt: format(it.keywords, ' · '),
+          match_text: it.match_text,
+          match_meaning: it.match_meaning,
         })
       })
     }
@@ -72,6 +102,59 @@ Page({
   onRecName(e) { this.setData({ recipientForm: { ...this.data.recipientForm, nickname: e.detail.value } }) },
   onRecPhone(e) { this.setData({ recipientForm: { ...this.data.recipientForm, phone: e.detail.value } }) },
   onRecAddr(e) { this.setData({ recipientForm: { ...this.data.recipientForm, address: e.detail.value } }) },
+  onRecRawInput(e) { this.setData({ recipientRawText: e.detail.value }) },
+  onRecPasteRecognize() {
+    const setData = (nickname, phone, address) => this.setData({ recipientForm: { nickname, phone, address } })
+    const tryParse = (txt) => {
+      const phoneMatch = txt.match(/(?:\+?86[-\s]?)?(1[3-9]\d{9})/)
+      const phone = phoneMatch ? phoneMatch[1] : ''
+      const removedPhone = phoneMatch ? phoneMatch[0] : ''
+      let cleaned = txt.replace(removedPhone, ' ').replace(/[，,;；]/g, ' ').replace(/\s+/g, ' ').trim()
+      const honorMatch = cleaned.match(/(.{1,8}?(先生|女士|小姐|同学|老师))/)
+      let nickname = ''
+      let address = ''
+      if (honorMatch) {
+        nickname = honorMatch[1].trim()
+        address = cleaned.replace(honorMatch[1], '').trim()
+      } else {
+        const tokens = cleaned.split(' ')
+        const first = tokens[0] || ''
+        const addrKeywords = /(省|市|区|县|镇|乡|村|道|路|街|巷|弄|号|室|楼|栋)/
+        if (addrKeywords.test(first) || first.length > 16) {
+          nickname = ''
+          address = cleaned
+        } else {
+          nickname = first
+          address = tokens.slice(1).join(' ').trim()
+        }
+      }
+      setData(nickname, phone, address)
+      wx.showToast({ title: '已识别', icon: 'none' })
+    }
+    const raw = String(this.data.recipientRawText || '').trim()
+    if (raw) { tryParse(raw); return }
+    wx.getClipboardData({
+      success: (res) => {
+        const txt = String(res.data || '').trim()
+        if (!txt) { wx.showToast({ title: '剪贴板为空', icon: 'none' }); return }
+        this.setData({ recipientRawText: txt })
+        tryParse(txt)
+      },
+      fail: () => wx.showToast({ title: '无法读取剪贴板', icon: 'none' })
+    })
+  },
+  onRecChooseAddress() {
+    if (!wx.chooseAddress) { wx.showToast({ title: '当前版本不支持地址簿', icon: 'none' }); return }
+    wx.chooseAddress({
+      success: (res) => {
+        const nickname = res.userName || ''
+        const phone = res.telNumber || ''
+        const full = `${res.provinceName || ''}${res.cityName || ''}${res.countyName || ''}${res.detailInfo || ''}`
+        this.setData({ recipientForm: { nickname, phone, address: full } })
+      },
+      fail: () => wx.showToast({ title: '打开地址簿失败', icon: 'none' })
+    })
+  },
   async saveRecipient() {
     const { nickname, phone, address } = this.data.recipientForm
     if (!nickname || !phone || !address) { wx.showToast({ title: '请填写完整信息', icon: 'none' }); return }
@@ -99,8 +182,8 @@ Page({
       const prefer = preferId ? list.find(r => r.id === String(preferId)) : null
       const defaultItem = list.find(r => String(r.is_default) === '1') || null
       const chosen = prefer || defaultItem || (list.length ? list[0] : null)
-      const selId = chosen ? chosen.id : null
-      const curIndex = selId ? list.findIndex(r => r.id === selId) : 0
+      const selId = chosen ? chosen.id : 'invite'
+      const curIndex = selId === 'invite' ? 0 : (list.findIndex(r => r.id === selId) + 1)
       this.setData({ recipients: list, selectedRecId: selId, selectedRecipient: chosen || null, recCurrent: curIndex >= 0 ? curIndex : 0 })
     } catch (e) {
       wx.showToast({ title: '收礼人列表获取失败'+e.message, icon: 'none' })
@@ -109,10 +192,27 @@ Page({
   onRecSwiperChange(e) {
     const idx = e.detail && typeof e.detail.current === 'number' ? e.detail.current : 0
     const list = this.data.recipients || []
-    const item = list[idx]
+    if (idx === 0) {
+      this.setData({ recCurrent: 0, selectedRecId: 'invite', selectedRecipient: null })
+      return
+    }
+    const realIdx = idx - 1
+    const item = list[realIdx]
     if (item) {
       this.setData({ recCurrent: idx, selectedRecId: item.id, selectedRecipient: item })
     }
+  },
+  selectRecipient(e) {
+    const id = String(e.currentTarget.dataset.id)
+    const list = this.data.recipients || []
+    if (id === 'invite') {
+      this.setData({ selectedRecId: 'invite', selectedRecipient: null, recCurrent: 0 })
+      return
+    }
+    const recIndex = list.findIndex(r => r.id === id)
+    const rec = recIndex >= 0 ? list[recIndex] : null
+    const cur = recIndex >= 0 ? (recIndex + 1) : this.data.recCurrent
+    this.setData({ selectedRecId: id, selectedRecipient: rec || null, recCurrent: cur })
   },
   onEditRecipient(e) {
     const id = String(e.currentTarget.dataset.id)
@@ -175,16 +275,21 @@ Page({
     const rec = recIndex >= 0 ? list[recIndex] : null
     this.setData({ selectedRecId: id, selectedRecipient: rec || null, recCurrent: recIndex >= 0 ? recIndex : this.data.recCurrent })
   },
+  onShow() { wx.showShareMenu({ withShareTicket: true }) },
+  onShareAppMessage() {
+    const pid = Number(this.data.product_id) || 0
+    const path = pid ? (`/pages/product/product?pid=${pid}`) : '/pages/market/market'
+    return { title: 'CC GIFT 礼物详情', path }
+  },
   async onFinalize() {
     try {
       const ccgapi = require('../../api/ccgapi')
       const product_id = Number(this.data.product_id) || 0
       const quantity = Number(this.data.qty) || 1
-      const recipient_id = Number(this.data.selectedRecId)
-      if (!product_id || !recipient_id) {
-        wx.showToast({ title: '请先选择收礼人', icon: 'none' })
-        return
-      }
+      const isInvite = String(this.data.selectedRecId) === 'invite'
+      const recipient_id = isInvite ? 999 : Number(this.data.selectedRecId)
+      if (!product_id) { wx.showToast({ title: '商品无效', icon: 'none' }); return }
+      if (!isInvite && !recipient_id) { wx.showToast({ title: '请先选择收礼人', icon: 'none' }); return }
       wx.showLoading({ title: '处理中…', mask: true })
       const newResp = await ccgapi.orderNew({ product_id, quantity, recipient_id })
       const order_id = Number(newResp.order_id) || 0
@@ -214,6 +319,7 @@ Page({
         success: async () => {
           try {
             const info = await ccgapi.orderInfo({ order_id })
+            // 标记为邀请模式时，收礼人为空，交由订单页展示“发送填址邀请”
             this.setData({ showCheckout: false })
             wx.navigateTo({
               url: '/pages/order/order',

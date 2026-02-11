@@ -5,7 +5,7 @@
 .greeting { font-size: 26px; color: #e59143; font-weight: 400; }
 .subtext { margin-top: 6px; font-size: 16px; color: #e59143; }
 .header-illustration { position: absolute; right: 30px; top: 2px; }
-.avatar-image { width: 160px; height: 160px; border-radius: 12px; }
+.avatar-image { width: 160px; height: 200px; border-radius: 12px; }
 .profile-card { margin-top: 210px; background: #FFFFFF; border-radius: 16px; box-shadow: 0 8px 16px rgba(31,42,55,0.08); padding: 12px; }
 .card-top { display: flex; justify-content: space-between; align-items: center; }
 .card-label { font-size: 12px; color: #9AA4B2; letter-spacing: 2px; }

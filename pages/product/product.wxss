@@ -72,6 +72,12 @@
 .modal-body { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
 .modal-label { font-size: 12px; color: #9AA4B2; }
 .modal-input { border-bottom: 1px solid #E6ECF3; padding: 8px 4px; }
+.ph { font-size: 12px; color: #9AA4B2; }
+.smart-card { background: #FFFFFF; border: 1px solid #E6ECF3; border-radius: 12px; padding: 10px; box-shadow: 0 2px 8px rgba(31,42,55,0.06); }
+.smart-textarea { width: 100%; min-height: 72px; background: #FFFFFF; border: 1px solid #E6ECF3; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; color: #1F2A37; font-size: 14px; }
+.smart-row { margin-top: 8px; display: flex; justify-content: flex-start; align-items: center; }
+.sticky-btn { background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 8px 14px; font-size: 12px; }
+.wx-address-btn { margin-top: 8px; width: auto; background: #07C160; color: #FFFFFF; border-radius: 999px; padding: 6px 10px; font-weight: 600; font-size: 12px; }
 .modal-primary { margin-top: 12px; width: 100%; background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; }
 .modal-field { display: flex; flex-direction: column; gap: 6px; }
 .modal-switch { flex-direction: row; justify-content: space-between; align-items: center; }
@@ -80,3 +86,12 @@
 .detail-label { font-size: 12px; color: #9AA4B2; letter-spacing: 1px; }
 .detail-box { margin-top: 6px; background: #F7FAFF; border-radius: 12px; padding: 12px; }
 .detail-text { font-size: 14px; color: #1F2A37; line-height: 1.6; }
+.rec-card.invite { background: #FFFFFF; border-color: #E6ECF3; color: #1F2A37; }
+.rec-card.invite.selected { background: #FF7A3E; color: #FFFFFF; }
+.rec-card.invite .rec-tag { color: #9AA4B2; letter-spacing: 2px; }
+.rec-card.invite .rec-info .big { font-size: 20px; font-weight: 800; color: #1F2A37; }
+.rec-card.invite .rec-info .tip { font-size: 14px; color: #9AA4B2; margin-top: 4px; }
+.rec-card.invite.selected .rec-tag { color: rgba(255,255,255,0.85); }
+.rec-card.invite.selected .rec-info .big { color: #FFFFFF; }
+.rec-card.invite.selected .rec-info .tip { color: rgba(255,255,255,0.85); }
+.rec-card.invite .rec-send { width: 18px; height: 18px; }

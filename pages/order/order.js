@@ -21,13 +21,16 @@ Page({
           order_id: info.order_id,
           product: info.product || {},
           recipient: info.recipient || {},
+          recipient_id: Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0),
           quantity: info.quantity || 0,
           amount_total: info.amount_total || '0.00',
           status_text: statusMap[info.order_status] || info.order_status_text || '',
           order_status: (typeof info.order_status === 'number' ? info.order_status : (Number(info.order_status) || -1)),
           order_date: info.date || '',
-          create_time: info.create_time || ''
+          create_time: info.create_time || '',
+          isInvite: Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0) === 999
         })
+        wx.showShareMenu({ withShareTicket: true })
       })
     }
   },
@@ -65,5 +68,10 @@ Page({
       wx.hideLoading()
       wx.showToast({ title: '预支付失败', icon: 'none' })
     }
+  },
+  onShareAppMessage() {
+    const id = Number(this.data.order_id) || 0
+    const path = `/pages/invite/invite?order_id=${id}`
+    return { title: '填写收礼地址邀请', path }
   }
 })

@@ -5,11 +5,18 @@
     "miniprogram": {
       "list": [
         {
+          "name": "分享填址邀请页",
+          "pathName": "pages/invite/invite",
+          "query": "order_id=7095077888",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "礼赠订单列表",
           "pathName": "pages/archive/archive",
           "query": "",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "集市",

@@ -18,6 +18,12 @@ Page({
     userName: '',
     introPlaceholder: ''
   },
+  onShow() {
+    wx.showShareMenu({ withShareTicket: true })
+  },
+  onShareAppMessage() {
+    return { title: 'CC GIFT 礼赠顾问', path: '/pages/chat/chat' }
+  },
   onLoad(options) {
     const app = getApp()
     this.client = app && app.globalData && app.globalData.aiClient
