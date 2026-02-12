@@ -11,7 +11,13 @@
     </view>
   </view>
 
-  <view class="form">
+  <view wx:if="{{completed}}" class="completed-card">
+    <text class="completed-title">已填写礼赠地址</text>
+    <text class="completed-note">感谢您已提交收货信息，礼物正在路上～</text>
+    <button class="completed-btn" bindtap="onGoChat">去聊天</button>
+  </view>
+
+  <view wx:if="{{!completed}}" class="form">
     <view class="smart-card">
       <textarea class="smart-textarea" placeholder="「粘贴识别」或输入文本，智能拆分姓名、电话和地址" placeholder-class="ph" value="{{rawText}}" bindinput="onRawInput" auto-height="true" />
       <view class="smart-row">

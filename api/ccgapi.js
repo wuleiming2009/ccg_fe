@@ -305,4 +305,17 @@ module.exports = {
   recipientListByOrders,
   orderListByTime,
   setOrderRecipient
+  ,getOrderStatus
 };
+/**
+ * 检查订单状态
+ * @param {ccgapiComponents.GetOrderStatusReq} req
+ * @returns {Promise<ccgapiComponents.GetOrderStatusResp>}
+ */
+function getOrderStatus(req) {
+  const payload = ccgapiComponents.GetOrderStatusReq(req);
+  return request.post('/order/v1/get_order_status', payload).then((resp) => {
+    const out = ccgapiComponents.GetOrderStatusResp(resp);
+    return out;
+  });
+}

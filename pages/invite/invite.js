@@ -1,10 +1,18 @@
 const env = require('../../config/env')
 
 Page({
-  data: { order_id: 0, name: '', phone: '', address: '', rawText: '' },
-  onLoad(query) {
+  data: { order_id: 0, name: '', phone: '', address: '', rawText: '', completed: false },
+  async onLoad(query) {
     const oid = Number((query && query.order_id) || 0)
     this.setData({ order_id: oid })
+    try {
+      const ccgapi = require('../../api/ccgapi')
+      const status = await ccgapi.getOrderStatus({ order_id: oid })
+      const isDone = Number(status.recipient_id || 0) !== 999 && Number(status.recipient_id || 0) > 0
+      this.setData({ completed: !!isDone })
+    } catch (e) {
+      this.setData({ completed: false })
+    }
   },
   onName(e) { this.setData({ name: e.detail.value }) },
   onPhone(e) { this.setData({ phone: e.detail.value }) },
@@ -92,4 +100,5 @@ Page({
       fail: () => wx.showToast({ title: '无法读取剪贴板', icon: 'none' })
     })
   }
+  ,onGoChat() { wx.switchTab({ url: '/pages/chat/chat' }) }
 })

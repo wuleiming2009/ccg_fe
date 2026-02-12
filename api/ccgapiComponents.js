@@ -535,6 +535,8 @@ module.exports = {
   SetInfoResp,
   SetOrderRecipientReq,
   SetOrderRecipientResp,
+  GetOrderStatusReq,
+  GetOrderStatusResp,
 };
 /**
  * @typedef {Object} OrderNewReq
@@ -577,3 +579,16 @@ function SetOrderRecipientReq(input) {
   };
 }
 function SetOrderRecipientResp(obj) { return { success: obj.success || '' }; }
+
+// 检查订单状态
+function GetOrderStatusReq(input) {
+  return {
+    order_id: input.order_id,
+  };
+}
+function GetOrderStatusResp(obj) {
+  return {
+    order_status: (typeof obj.order_status === 'number' ? obj.order_status : (Number(obj.order_status) || 0)),
+    recipient_id: (typeof obj.recipient_id === 'number' ? obj.recipient_id : (Number(obj.recipient_id) || 0)),
+  };
+}
