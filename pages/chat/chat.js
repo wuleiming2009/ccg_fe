@@ -190,6 +190,16 @@ Page({
     this.setData({ messages: msgs, inputValue: '', scrollInto: 'end-anchor' })
     const withTyping = this.data.messages.concat([{ role: 'assistant', content: '...', typing: true }])
     this.setData({ messages: withTyping, scrollInto: 'end-anchor' })
+    wx.nextTick(() => { this.scrollToEnd() })
+    setTimeout(() => { this.scrollToEnd() }, 1000)
+    const preEligible = ((this.validAnswerCount || 0) + (this.isNormalAnswer(text) ? 1 : 0)) >= (this.qThreshold || 0)
+    if (preEligible && !this.matchStarted) {
+      this.updateProgress(null, text)
+      this.logProgress(null)
+      this.scrollToEnd()
+      this.autoMatchInChat()
+      return
+    }
     try {
       if (!this.client) {
         wx.showToast({ title: 'AI未初始化', icon: 'none' })
@@ -324,8 +334,14 @@ Page({
         const products = Array.isArray(resp && resp.products) ? resp.products : []
         const say = { role: 'assistant', content: '我了解到你的想法了，找了一些礼物给你看看。' }
         const cards = { type: 'products', products }
-        const list = (this.data.messages || []).concat([say])
-        this.setData({ messages: list, scrollInto: 'end-anchor' })
+        const list = this.data.messages.slice()
+        const typingIndex = list.length - 1
+        if (typingIndex >= 0 && list[typingIndex] && list[typingIndex].typing) {
+          list[typingIndex] = say
+        } else {
+          list.push(say)
+        }
+        this.setData({ messages: list })
         const next = (this.data.messages || []).concat([cards])
         const prodAnchor = 'prod-anchor'
         this.setData({ messages: next, prodCurrent: 0, selectedProductIndex: 0 })
