@@ -79,6 +79,14 @@ function match(req) {
   });
 }
 
+function matchInChat(req) {
+  const payload = ccgapiComponents.MatchInChatReq(req);
+  return request.post('/ai/v1/match_in_chat', payload).then((resp) => {
+    const out = ccgapiComponents.MatchInChatResp(resp);
+    return out;
+  });
+}
+
 /**
  * 用户的匹配历史
  * @param {ccgapiComponents.MatchListReq} req
@@ -289,6 +297,7 @@ module.exports = {
   userInfo,
   setInfo,
   match, 
+  matchInChat,
   matchList, 
   matchInfo,
   marketList,

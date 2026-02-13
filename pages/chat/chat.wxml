@@ -63,6 +63,28 @@
             <text class="cta-caption">已了解你的心意，准备好为您推荐</text>
           </view>
         </block>
+        <block wx:elif="{{item.type === 'products'}}">
+          <swiper class="prod-list" previous-margin="124rpx" next-margin="124rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{prodCurrent}}" bindchange="onProdSwiperChange">
+            <swiper-item wx:for="{{item.products}}" wx:key="index">
+              <view class="prod-card {{selectedProductIndex === index ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{index}}">
+                <image class="band-bg" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/match_product_bg.png" mode="aspectFill"></image>
+                <view class="header-band">
+                  <view class="band-texts">
+                    <text class="band-title">{{item.name}}</text>
+                    <text class="band-sub">{{item.match_meaning || ''}}</text>
+                  </view>
+                </view>
+                <view class="image-area">
+                  <image class="card-image" src="{{item.img_url}}" mode="aspectFill"></image>
+                  <view class="pill-btn overlay" data-index="{{index}}" bindtap="onOpenProduct">
+                    <text>打开心意</text>
+                  </view>
+                </view>
+              </view>
+            </swiper-item>
+          </swiper>
+          <view id="prod-anchor" class="end-anchor"></view>
+        </block>
         <block wx:else>
           <view id="msg-{{index}}" class="bubble {{item.role === 'user' ? 'right' : 'left'}}">
             <block wx:if="{{item.typing}}">

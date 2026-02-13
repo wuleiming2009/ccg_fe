@@ -16,7 +16,9 @@ Page({
     introMode: true,
     introAnim: {},
     userName: '',
-    introPlaceholder: ''
+    introPlaceholder: '',
+    prodCurrent: 0,
+    selectedProductIndex: 0
   },
   onShow() {
     wx.showShareMenu({ withShareTicket: true })
@@ -44,6 +46,7 @@ Page({
     this.personaPrompt = `${PERSONA_PROMPT} 请以自然中文表达，不要输出括号或其他标记的语气/动作词，如（关切的）（轻声的）。逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。请始终以朋友口吻聊天，不要在聊天中提供任何商品或礼物建议，也不要直白说明“送礼”的需求或推荐流程。每次回复末尾追加<meta>{"valid_answer":(true|false),"valid_answer_count":整数,"cta_hint":(true|false)}</meta>，用于内部评估上一条用户回答是否为正常且有用的答案、已收集的有效答案数量，以及你认为是否可以在此时轻轻提醒开启匹配。不要让用户看到<meta>，仅在文本最后插入该标签。`
     this.validAnswerCount = 0
     this.matchStarted = false
+    this.autoMatchTriggered = false
     this.setData({ scrollInto: 'end-anchor' })
     this.initVoice()
     const placeholders = ['有什么困惑问我吗？', '有问题，尽管问。']
@@ -249,9 +252,9 @@ Page({
   isNormalAnswer(text) {
     const t = String(text || '').trim()
     if (!t) return false
-    if (t.length < 6) return false
-    const generic = [ '不知道', '不太清楚', '随便', '看你', '无', '没有', '不需要', '算了' ]
-    if (generic.some(k => t.includes(k))) return false
+    if (t.length < 3) return false
+    const genericExact = [ '不知道', '不太清楚', '随便', '看你', '无', '没有', '不需要', '算了' ]
+    if (genericExact.includes(t)) return false
     // Reject only emoji/punct
     if (/^[\p{P}\p{Z}\p{S}]+$/u.test(t)) return false
     return true
@@ -263,21 +266,33 @@ Page({
     const lastIsCTA = msgs.length > 0 && msgs[msgs.length - 1].type === 'cta'
     const validCount = this.validAnswerCount || 0
     if (!anyCTA && validCount >= this.qThreshold) {
-      const next = msgs.concat([{ type: 'cta' }])
-      this.setData({ messages: next, scrollInto: 'end-anchor' })
+      console.log('auto-match check', { reason: 'threshold', validCount, qThreshold: this.qThreshold, matchStarted: !!this.matchStarted })
+      this.autoMatchInChat()
       return
     }
     if (meta && meta.cta_hint === true && !lastIsCTA) {
-      const base = msgs.filter(m => m.type !== 'cta')
-      const next = base.concat([{ type: 'cta' }])
-      this.setData({ messages: next, scrollInto: 'end-anchor' })
+      console.log('auto-match check', { reason: 'cta_hint', validCount, qThreshold: this.qThreshold, matchStarted: !!this.matchStarted })
+      this.autoMatchInChat()
     }
   },
   logProgress(meta) {
-    const hasCTA = (this.data.messages || []).some(m => m.type === 'cta')
+    const stats = this.getDialogStats()
     const validCount = this.validAnswerCount || 0
     const eligible = validCount >= (this.qThreshold || 0)
-    console.log('progress', { validAnswerCount: validCount, qThreshold: this.qThreshold, hasCTA, eligible, matchStarted: !!this.matchStarted, meta })
+    const why = []
+    if (!eligible) why.push('未达到阈值')
+    if (eligible && !this.matchStarted && !this.autoMatchTriggered) why.push('尚未触发自动匹配')
+    console.log('chat-state', {
+      rounds: { user: stats.userCount, assistant: stats.assistantCount },
+      messageCount: stats.messageCount,
+      validAnswerCount: validCount,
+      qThreshold: this.qThreshold,
+      eligible,
+      matchStarted: !!this.matchStarted,
+      autoMatchTriggered: !!this.autoMatchTriggered,
+      meta: meta ? { valid_answer_count: meta.valid_answer_count, valid_answer: meta.valid_answer, cta_hint: meta.cta_hint } : null,
+      not_started_reason: why
+    })
   },
   onStartMatch() {
     this.matchStarted = true
@@ -291,5 +306,74 @@ Page({
         res.eventChannel && res.eventChannel.emit('matchPayload', { messages: payloadText, match_id: 0 })
       }
     })
+  }
+  ,autoMatchInChat() {
+    if (this.matchStarted) return
+    this.matchStarted = true
+    this.autoMatchTriggered = true
+    const ccgapi = require('../../api/ccgapi')
+    const records = (this.data.messages || [])
+      .filter(m => m.role === 'user' || m.role === 'assistant')
+      .map(m => ({ role: m.role, content: m.content || '' }))
+    const payloadText = JSON.stringify({ records })
+    const stats = this.getDialogStats()
+    console.log('match_in_chat start', { payloadLen: payloadText.length, rounds: { user: stats.userCount, assistant: stats.assistantCount }, validAnswerCount: this.validAnswerCount, qThreshold: this.qThreshold })
+    ccgapi.matchInChat({ messages: payloadText })
+      .then((resp) => {
+        console.log('match_in_chat result', { match_id: resp && resp.match_id, products_count: Array.isArray(resp && resp.products) ? resp.products.length : 0 })
+        const products = Array.isArray(resp && resp.products) ? resp.products : []
+        const say = { role: 'assistant', content: '我了解到你的想法了，找了一些礼物给你看看。' }
+        const cards = { type: 'products', products }
+        const list = (this.data.messages || []).concat([say])
+        this.setData({ messages: list, scrollInto: 'end-anchor' })
+        const next = (this.data.messages || []).concat([cards])
+        const prodAnchor = 'prod-anchor'
+        this.setData({ messages: next, prodCurrent: 0, selectedProductIndex: 0 })
+        wx.nextTick(() => {
+          this.setData({ scrollInto: prodAnchor })
+          setTimeout(() => this.setData({ scrollInto: prodAnchor }), 0)
+          setTimeout(() => this.setData({ scrollInto: prodAnchor }), 3000)
+        })
+      })
+      .catch((e) => {
+        console.error('match_in_chat error', e)
+      })
+  }
+  ,onOpenProduct(e) {
+    const idx = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index
+    const i = Number(idx) || 0
+    const cardsMsg = (this.data.messages || []).find(m => m && m.type === 'products')
+    const arr = cardsMsg && Array.isArray(cardsMsg.products) ? cardsMsg.products : []
+    const p = arr[i]
+    if (!p) { console.log('open product miss', { index: i }); return }
+    const pid = Number(p.product_id) || 0
+    if (pid) {
+      wx.navigateTo({ url: `/pages/product/product?pid=${pid}` })
+    } else {
+      wx.showToast({ title: '商品详情暂不可用', icon: 'none' })
+    }
+  }
+  ,getDialogStats() {
+    const msgs = Array.isArray(this.data.messages) ? this.data.messages : []
+    let userCount = 0
+    let assistantCount = 0
+    for (const m of msgs) {
+      if (m.role === 'user') userCount++
+      else if (m.role === 'assistant') assistantCount++
+    }
+    return { userCount, assistantCount, messageCount: msgs.length }
+  }
+  ,scrollToEnd() {
+    this.setData({ scrollInto: 'end-anchor' })
+    setTimeout(() => this.setData({ scrollInto: 'end-anchor' }), 0)
+  }
+  ,onProdSwiperChange(e) {
+    const idx = e.detail && typeof e.detail.current === 'number' ? e.detail.current : 0
+    this.setData({ prodCurrent: idx, selectedProductIndex: idx })
+  }
+  ,selectProduct(e) {
+    const idx = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index
+    const i = Number(idx) || 0
+    this.setData({ selectedProductIndex: i, prodCurrent: i })
   }
 })

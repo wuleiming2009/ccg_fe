@@ -499,6 +499,8 @@ module.exports = {
     UserInitResp,
     MatchReq,
     MatchResp,
+    MatchInChatReq,
+    MatchInChatResp,
     MatchListReq,
     MatchListResp,
     MatchInfoReq,
@@ -590,5 +592,28 @@ function GetOrderStatusResp(obj) {
   return {
     order_status: (typeof obj.order_status === 'number' ? obj.order_status : (Number(obj.order_status) || 0)),
     recipient_id: (typeof obj.recipient_id === 'number' ? obj.recipient_id : (Number(obj.recipient_id) || 0)),
+  };
+}
+
+function MatchInChatReq(input) {
+  return {
+    messages: input.messages,
+  };
+}
+
+function MatchInChatResp(obj) {
+  const products = Array.isArray(obj.products) ? obj.products : []
+  return {
+    match_id: (typeof obj.match_id === 'number' ? obj.match_id : (Number(obj.match_id) || 0)),
+    products: products.map((item) => ({
+      product_id: (typeof item.product_id === 'number' ? item.product_id : (Number(item.product_id) || 0)),
+      is_ccg: item.is_ccg,
+      img_url: String(item.img_url || '').replace(/`/g, '').trim(),
+      name: String(item.name || '').trim(),
+      price: money.centsToYuan(item.price),
+      match_text: item.match_text,
+      match_meaning: item.match_meaning,
+      buy_url: item.buy_url,
+    })),
   };
 }

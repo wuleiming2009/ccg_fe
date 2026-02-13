@@ -72,6 +72,10 @@ Page({
   onShareAppMessage() {
     const id = Number(this.data.order_id) || 0
     const path = `/pages/invite/invite?order_id=${id}`
-    return { title: '填写收礼地址邀请', path }
+    const env = require('../../config/env')
+    const prodImg = (this.data.product && this.data.product.img_url) || ''
+    const fallback = 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/4d35825d420247f8acd224f66e281cb2.png'
+    const imageUrl = /^https?:\/\//.test(prodImg) ? prodImg : fallback
+    return { title: '填写收礼地址邀请', path, imageUrl }
   }
 })
