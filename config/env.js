@@ -1,4 +1,4 @@
-const mode = "dev";
+const mode = "prod";
 const baseUrl = mode === 'dev'
   ? 'http://ccgapi.x-four.cn:8888'
   : mode === 'test'
