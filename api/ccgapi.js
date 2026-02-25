@@ -66,6 +66,14 @@ function setInfo(req) {
   });
 }
 
+function decodePhone(req) {
+  const payload = ccgapiComponents.DecodePhoneReq(req);
+  return request.post('/user/v1/decode_phone', payload).then((resp) => {
+    const out = ccgapiComponents.DecodePhoneResp(resp);
+    return out;
+  });
+}
+
 /**
  * 用户对话匹配商品
  * @param {ccgapiComponents.MatchReq} req
@@ -264,6 +272,14 @@ function paymentPrepay(req) {
   });
 }
 
+function setSendName(req) {
+  const payload = ccgapiComponents.SetSendNameReq(req);
+  return request.post('/order/v1/set_send_name', payload).then((resp) => {
+    const out = ccgapiComponents.SetSendNameResp(resp);
+    return out;
+  });
+}
+
 /**
  *  @doc "根据时间获取订单列表"
  * @param {ccgapiComponents.OrderListByTimeReq} req
@@ -273,6 +289,19 @@ function orderListByTime(req) {
   const payload = ccgapiComponents.OrderListByTimeReq(req);
   return request.post('/order/v1/list_by_time', payload).then((resp) => {
     const out = ccgapiComponents.OrderListByTimeResp(resp);
+    return out;
+  });
+}
+
+/**
+ *  @doc "获取自己收到的订单列表"
+ * @param {ccgapiComponents.RecipientOrdersListReq} req
+ * @returns {Promise<ccgapiComponents.RecipientOrdersListResp>}
+ */
+function recipientOrderList(req) {
+  const payload = ccgapiComponents.RecipientOrdersListReq(req);
+  return request.post('/order/v1/recipient_order_list', payload).then((resp) => {
+    const out = ccgapiComponents.RecipientOrdersListResp(resp);
     return out;
   });
 }
@@ -296,6 +325,7 @@ module.exports = {
   userInit, 
   userInfo,
   setInfo,
+  decodePhone,
   match, 
   matchInChat,
   matchList, 
@@ -311,8 +341,10 @@ module.exports = {
   orderCheckPayment,
   orderInfo,
   paymentPrepay,
+  setSendName,
   recipientListByOrders,
   orderListByTime,
+  recipientOrderList,
   setOrderRecipient
   ,getOrderStatus
 };

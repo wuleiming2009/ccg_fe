@@ -1,7 +1,7 @@
 const env = require('../../config/env')
 
 Page({
-  data: { order_id: 0, name: '', phone: '', address: '', rawText: '', completed: false },
+  data: { order_id: 0, name: '', phone: '', address: '', rawText: '', completed: false, sendUserName: '', sendUserNameDisplay: '' },
   async onLoad(query) {
     const oid = Number((query && query.order_id) || 0)
     this.setData({ order_id: oid })
@@ -9,7 +9,8 @@ Page({
       const ccgapi = require('../../api/ccgapi')
       const status = await ccgapi.getOrderStatus({ order_id: oid })
       const isDone = Number(status.recipient_id || 0) !== 999 && Number(status.recipient_id || 0) > 0
-      this.setData({ completed: !!isDone })
+      const nm = String(status.send_user_name || '').trim()
+      this.setData({ completed: !!isDone, sendUserName: nm, sendUserNameDisplay: nm ? (' ' + nm + ' ') : '' })
     } catch (e) {
       this.setData({ completed: false })
     }

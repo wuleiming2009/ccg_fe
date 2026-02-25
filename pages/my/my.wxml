@@ -14,19 +14,24 @@
   <view class="profile-card">
     <view class="card-top">
       <text class="card-label">MEMBER PROFILE</text>
-      <view class="edit-pill" bindtap="onEditName"><text class="edit-text">修改名称</text></view>
+      <view class="btns">
+        <button wx:if="{{showWxAuth}}" class="pill-btn wx-pill pill-sm" open-type="getPhoneNumber" bindgetphonenumber="onGetPhone">微信授权</button>
+        <button class="pill-btn edit-pill pill-sm" bindtap="onEditName">修改名称</button>
+      </view>
     </view>
     <view class="card-main">
       <view class="avatar-placeholder"><text class="avatar-initial">{{initial}}</text></view>
       <view class="name-info">
         <text class="member-name">{{name || '未命名'}}</text>
         <text class="member-tier">白金级礼赠会员</text>
+        <text class="member-contact">联系方式：{{phone || '未绑定'}}</text>
       </view>
     </view>
   </view>
 
   <view class="actions">
     <view class="big-btn" bindtap="onOpenArchive"><text class="big-btn-text">查看礼赠订单</text><text class="chev">></text></view>
+    <view class="big-btn" bindtap="onOpenReceived"><text class="big-btn-text">查看收到的礼物</text><text class="chev">></text></view>
     <view class="big-btn" bindtap="onContact"><text class="big-btn-text">合作咨询</text><text class="chev orange">></text></view>
   </view>
 

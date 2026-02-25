@@ -41,7 +41,7 @@
     </view>
 
     <view class="quantity">
-      <text class="quantity-label">QUANTITY</text>
+      <text class="quantity-label">数量</text>
       <view class="qty-controls">
         <view class="qty-btn" bindtap="onDec">-</view>
         <text class="qty-count">{{qty}}</text>
@@ -74,6 +74,7 @@
               <text class="rec-name big">支付后发送填址邀请</text>
               <text class="rec-addr tip">适合匿名赠礼或不确定地址场景</text>
             </view>
+            <view class="rec-send" catchtap="onInviteIdentity">发送填址邀请</view>
           </view>
         </swiper-item>
         <swiper-item wx:for="{{recipients}}" wx:key="id">
@@ -164,4 +165,59 @@
       </view>
     </view>
     <button class="modal-primary" bindtap="saveEditRecipient">保存更改</button>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showInviteConfirm}}" bindtap="onInviteCancel"></view>
+  <view class="modal invite" wx:if="{{showInviteConfirm}}">
+    <view class="modal-header">
+      <text class="modal-title">发送填址邀请</text>
+      <view class="modal-close" bindtap="onInviteCancel">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="letter">
+        <view class="letter-top"></view>
+        <view class="letter-body">
+          <text class="letter-line">将使用称呼</text>
+          <block wx:if="{{!inviteEditing}}">
+            <text class="invite-name" bindtap="onInviteToggleEdit">{{inviteSenderName || '称呼'}}</text>
+          </block>
+          <block wx:else>
+            <input class="invite-input" value="{{inviteSenderName}}" bindinput="onInviteNameInput" confirm-type="done" />
+          </block>
+          <text class="letter-line">发送礼物邀请</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <button class="modal-secondary" bindtap="onInviteCancel">取消</button>
+      <button class="modal-primary" bindtap="onInviteConfirm">确认发送</button>
+    </view>
+  </view>
+
+  <!-- 下单前补全信息弹窗 -->
+  <view class="modal-mask" wx:if="{{showUserInfoAsk}}" bindtap="onAskCancel"></view>
+  <view class="modal ask" wx:if="{{showUserInfoAsk}}">
+    <view class="modal-header">
+      <text class="modal-title">完善信息让我们更好的为您服务</text>
+      <view class="modal-close" bindtap="onAskCancel">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="ask-row">
+        <view class="modal-info">
+          <text class="modal-label">当前信息</text>
+          <view class="ask-field">
+            <text class="ask-label">称呼</text>
+            <input class="ask-input" placeholder="请输入称呼" value="{{askUserName}}" bindinput="onAskNameInput" />
+          </view>
+          <view class="ask-field">
+            <text class="ask-label">手机号</text>
+            <text class="ask-value">{{askWxPhone || '未绑定'}}</text>
+          </view>
+        </view>
+        <button wx:if="{{!askWxPhone}}" class="wx-all-btn small" open-type="getPhoneNumber" bindgetphonenumber="onAskGetPhone">微信授权</button>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <button class="modal-primary" bindtap="onAskConfirm">确认</button>
+    </view>
   </view>

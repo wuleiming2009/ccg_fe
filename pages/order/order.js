@@ -10,7 +10,9 @@ Page({
     status_text: '',
     order_status: -1,
     order_date: '',
-    create_time: ''
+    create_time: '',
+    showInviteConfirm: false,
+    inviteName: ''
   },
   onLoad(options) {
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
@@ -77,5 +79,27 @@ Page({
     const fallback = 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/4d35825d420247f8acd224f66e281cb2.png'
     const imageUrl = /^https?:\/\//.test(prodImg) ? prodImg : fallback
     return { title: '填写收礼地址邀请', path, imageUrl }
+  }
+  ,onInviteIdentity() {
+    const uc = wx.getStorageSync('userConfig') || {}
+    const nm = uc && (uc.user_name || '')
+    this.setData({ showInviteConfirm: true, inviteName: nm })
+  }
+  ,onInviteCancel() { this.setData({ showInviteConfirm: false }) }
+  ,onInviteNameInput(e) { this.setData({ inviteName: e.detail.value }) }
+  ,onInviteSend() {
+    const name = String(this.data.inviteName || '').trim()
+    if (!name) { wx.showToast({ title: '请填写称呼', icon: 'none' }); return }
+    const ccgapi = require('../../api/ccgapi')
+    const oid = Number(this.data.order_id) || 0
+    const p1 = ccgapi.setInfo({ user_name: name, wx_nickname: name }).catch(() => {})
+    const p2 = oid ? ccgapi.setSendName({ order_id: oid, send_user_name: name }).catch(() => {}) : Promise.resolve()
+    Promise.all([p1, p2]).then(() => {
+      const cur = wx.getStorageSync('userConfig') || {}
+      cur.user_name = name
+      wx.setStorageSync('userConfig', cur)
+    }).finally(() => {
+      this.setData({ showInviteConfirm: false })
+    })
   }
 })

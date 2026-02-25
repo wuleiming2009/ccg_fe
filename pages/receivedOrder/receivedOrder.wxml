@@ -1,0 +1,33 @@
+<view class="order-page">
+  <view class="card recipient-card">
+    <view class="card-header">送礼人 / THE SENDER</view>
+    <view class="rec-row">
+      <text class="rec-name">{{send_user_name || '—'}}</text>
+    </view>
+  </view>
+
+  <view class="card product-card">
+    <view class="card-header">收到的礼物 / RECEIVED</view>
+    <view class="prod-row">
+      <image class="prod-thumb" src="{{product.img_url}}" mode="aspectFill"></image>
+      <view class="prod-meta">
+        <text class="prod-title">{{product.name}}</text>
+        <view class="info-row">
+          <text class="label">数量</text>
+          <text class="value">{{quantity}}</text>
+        </view>
+        <text class="status big">{{status_text}}</text>
+      </view>
+    </view>
+    <view class="tail">
+      <view class="tail-col">
+        <text class="label">礼赠编号</text>
+        <text class="mono">{{order_id}}</text>
+      </view>
+      <view class="tail-col">
+        <text class="label">礼赠日期</text>
+        <text>{{create_time}}</text>
+      </view>
+    </view>
+  </view>
+</view>

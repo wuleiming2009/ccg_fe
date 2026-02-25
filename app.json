@@ -11,6 +11,8 @@
     "pages/product/product",
     "pages/market/market",
     "pages/archive/archive",
+    "pages/received/received",
+    "pages/receivedOrder/receivedOrder",
     "pages/my/my",
     "pages/order/order"
   ],

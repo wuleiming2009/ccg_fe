@@ -2,11 +2,10 @@
   <view class="hero">
     <text class="title-en">INVITATIONS / 礼赴邀请</text>
     <view class="main-title">
-      <text>一位友人为您</text>
+      <text>一位友人{{sendUserNameDisplay}}为您</text>
       <text>准备了来自 CC GIFT 的礼赠</text>
     </view>
     <view class="notes">
-      <text class="note">送礼人已选择保持匿名</text>
       <text class="note">我们将确保您的隐私安全。</text>
     </view>
   </view>

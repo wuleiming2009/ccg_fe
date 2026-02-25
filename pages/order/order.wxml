@@ -38,6 +38,23 @@
       </view>
     </view>
     <button class="pay-btn" wx:if="{{order_status === 0 || status_text === '待支付'}}" bindtap="onPay">去支付</button>
-    <button class="invite-btn" wx:if="{{order_status === 1 && isInvite}}" open-type="share">发送填址邀请</button>
+    <button class="invite-btn" wx:if="{{order_status === 1 && isInvite}}" bindtap="onInviteIdentity">发送填址邀请</button>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showInviteConfirm}}" bindtap="onInviteCancel"></view>
+<view class="modal" wx:if="{{showInviteConfirm}}">
+  <view class="modal-header">
+    <text class="modal-title">发送填址邀请</text>
+    <view class="modal-close" bindtap="onInviteCancel">×</view>
+  </view>
+  <view class="modal-body">
+    <view class="modal-field">
+      <text class="modal-label">以谁的名义送礼</text>
+      <input class="modal-input" placeholder="请输入称呼" value="{{inviteName}}" bindinput="onInviteNameInput" />
+    </view>
+  </view>
+  <view class="modal-actions">
+    <button class="modal-primary" open-type="share" bindtap="onInviteSend">发送邀请</button>
   </view>
 </view>

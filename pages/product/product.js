@@ -25,6 +25,15 @@ Page({
     recCurrent: 0,
     showEditRecipient: false,
     editRecipientForm: { recipient_id: '', nickname: '', phone: '', address: '', is_default: 0 },
+    showInviteConfirm: false,
+    inviteEditing: false,
+    inviteSenderName: '',
+    inviteConfirmed: false,
+    pendingOrderInfo: null,
+    showUserInfoAsk: false,
+    askUserName: '',
+    askPhone: '',
+    askWxPhone: '',
   },
   onLoad(options) {
     let ec = null
@@ -54,6 +63,9 @@ Page({
         })
       })
     }
+    const cfg = wx.getStorageSync('userConfig') || {}
+    const nm = cfg && (cfg.user_name || '')
+    this.setData({ inviteSenderName: nm })
     const pid = Number(options && (options.pid || options.product_id)) || 0
     if (pid) {
       const ccgapi = require('../../api/ccgapi')
@@ -284,6 +296,18 @@ Page({
   async onFinalize() {
     try {
       const ccgapi = require('../../api/ccgapi')
+      if (!this._skipInfoCheckOnce) {
+        const uc = wx.getStorageSync('userConfig') || {}
+        const nm = String(uc.user_name || '').trim()
+        const ph = String(uc.phone || '').trim()
+        const wxph = String(uc.wx_phone || '').trim()
+        if (!nm || !ph) {
+          this.setData({ showUserInfoAsk: true, askUserName: nm, askPhone: ph, askWxPhone: wxph })
+          return
+        }
+      } else {
+        this._skipInfoCheckOnce = false
+      }
       const product_id = Number(this.data.product_id) || 0
       const quantity = Number(this.data.qty) || 1
       const isInvite = String(this.data.selectedRecId) === 'invite'
@@ -319,8 +343,11 @@ Page({
         success: async () => {
           try {
             const info = await ccgapi.orderInfo({ order_id })
-            // 标记为邀请模式时，收礼人为空，交由订单页展示“发送填址邀请”
             this.setData({ showCheckout: false })
+            if (isInvite) {
+              this.setData({ showInviteConfirm: true, inviteConfirmed: false, pendingOrderInfo: info })
+              return
+            }
             wx.navigateTo({
               url: '/pages/order/order',
               success: (res) => {
@@ -340,5 +367,71 @@ Page({
       wx.hideLoading()
       wx.showToast({ title: '支付预下单失败', icon: 'none' })
     }
+  }
+  ,onInviteToggleEdit() { this.setData({ inviteEditing: !this.data.inviteEditing }) }
+  ,onInviteNameInput(e) { this.setData({ inviteSenderName: e.detail.value }) }
+  ,onInviteCancel() { this.setData({ showInviteConfirm: false, inviteEditing: false, pendingOrderInfo: null }) }
+  ,onInviteConfirm() {
+    const info = this.data.pendingOrderInfo
+    const name = String(this.data.inviteSenderName || '').trim()
+    this.setData({ inviteConfirmed: true, showInviteConfirm: false, inviteEditing: false, pendingOrderInfo: null })
+    const ccgapi = require('../../api/ccgapi')
+    if (info && info.order_id) {
+      ccgapi.setSendName({ order_id: Number(info.order_id), send_user_name: name || undefined }).catch(() => {})
+    }
+    if (info) {
+      wx.navigateTo({
+        url: '/pages/order/order',
+        success: (res) => {
+          res.eventChannel && res.eventChannel.emit('order', info)
+        }
+      })
+    }
+  }
+  ,onInviteIdentity() {
+    try {
+      const uc = wx.getStorageSync('userConfig') || {}
+      const nm = uc && uc.user_name || ''
+      this.setData({ inviteSenderName: nm, showInviteConfirm: true, inviteEditing: true })
+    } catch (_) {
+      this.setData({ showInviteConfirm: true, inviteEditing: true })
+    }
+  }
+  ,onAskNameInput(e) { this.setData({ askUserName: e.detail.value }) }
+  ,onAskPhoneInput(e) { this.setData({ askPhone: e.detail.value }) }
+  ,onAskCancel() { this.setData({ showUserInfoAsk: false }) }
+  ,onAskWxNameAuth() { wx.showToast({ title: '请手动填写称呼', icon: 'none' }) }
+  ,onAskGetPhone(e) {
+    try {
+      console.log('ask.getPhoneNumber detail', e && e.detail)
+      const d = e && e.detail || {}
+      const plain = d.phoneNumber || d.purePhoneNumber || ''
+      const code = d.code || ''
+      const ccgapi = require('../../api/ccgapi')
+      if (plain) { console.log('ask.wx_phone', plain); this.setData({ askPhone: plain, askWxPhone: plain }); return }
+      if (code) {
+        console.log('ask.wx_phone_code', code)
+        ccgapi.decodePhone({ code }).then((r) => { console.log('ask.decodePhone result', r); const p = r && r.phone || ''; if (p) this.setData({ askPhone: p, askWxPhone: p }) })
+      }
+    } catch (_) {}
+  }
+  ,async onAskConfirm() {
+    const name = String(this.data.askUserName || '').trim()
+    const phone = String(this.data.askWxPhone || '').trim()
+    if (!name) { wx.showToast({ title: '请填写称呼', icon: 'none' }); return }
+    try {
+      const ccgapi = require('../../api/ccgapi')
+      await ccgapi.setInfo({ user_name: name || undefined, wx_nickname: name || undefined, phone: phone || undefined, wx_phone: phone || undefined })
+      const cur = wx.getStorageSync('userConfig') || {}
+      if (name) cur.user_name = name
+      if (phone) cur.phone = phone
+      if (phone) cur.wx_phone = phone
+      wx.setStorageSync('userConfig', cur)
+    } catch (e) {
+      // 忽略错误，继续下单
+    }
+    this.setData({ showUserInfoAsk: false })
+    this._skipInfoCheckOnce = true
+    this.onFinalize()
   }
 })

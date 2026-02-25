@@ -47,7 +47,9 @@ function UserInitReq() {
 function UserInitResp(obj) {
   return { 
     questions: obj.questions,
-    user_name: obj.user_name || ''
+    model: obj.model || '',
+    user_name: obj.user_name || '',
+    phone: obj.phone || obj.wx_phone || ''
   };
 }
 
@@ -439,6 +441,7 @@ function OrderInfoResp(obj) {
       phone: r.phone || '',
       address: r.address || '',
     },
+    send_user_name: obj.send_user_name || '',
     create_time: obj.create_time || '',
   };
 }
@@ -539,6 +542,12 @@ module.exports = {
   SetOrderRecipientResp,
   GetOrderStatusReq,
   GetOrderStatusResp,
+  DecodePhoneReq,
+  DecodePhoneResp,
+  SetSendNameReq,
+  SetSendNameResp,
+  RecipientOrdersListReq,
+  RecipientOrdersListResp,
 };
 /**
  * @typedef {Object} OrderNewReq
@@ -567,9 +576,36 @@ function OrderNewResp(obj) {
 
 // 用户信息
 function UserInfoReq() { return {}; }
-function UserInfoResp(obj) { return { user_name: obj.user_name || '' }; }
-function SetInfoReq(input) { return { user_name: input.user_name }; }
+function UserInfoResp(obj) {
+  return {
+    user_name: obj.user_name || '',
+    phone: obj.phone || '',
+    wx_nickname: obj.wx_nickname || '',
+    wx_phone: obj.wx_phone || ''
+  };
+}
+function SetInfoReq(input) {
+  const out = {}
+  if (input && input.user_name != null && String(input.user_name).trim() !== '') out.user_name = input.user_name
+  if (input && input.phone != null && String(input.phone).trim() !== '') out.phone = input.phone
+  if (input && input.wx_nickname != null && String(input.wx_nickname).trim() !== '') out.wx_nickname = input.wx_nickname
+  if (input && input.wx_phone != null && String(input.wx_phone).trim() !== '') out.wx_phone = input.wx_phone
+  if (input && input.wx_phone_code != null && String(input.wx_phone_code).trim() !== '') out.wx_phone_code = input.wx_phone_code
+  return out;
+}
 function SetInfoResp(obj) { return { success: obj.success || '' }; }
+
+// 通过 code 解码微信手机号
+function DecodePhoneReq(input) { return { code: input.code }; }
+function DecodePhoneResp(obj) {
+  return { phone: obj.phone || obj.wx_phone || obj.purePhoneNumber || obj.pure_phone || '' };
+}
+
+// 设置订单邀请人称呼
+function SetSendNameReq(input) {
+  return { order_id: input.order_id, send_user_name: input.send_user_name };
+}
+function SetSendNameResp(obj) { return { success: obj.success || '' }; }
 
 // 填写收礼信息
 function SetOrderRecipientReq(input) {
@@ -592,6 +628,7 @@ function GetOrderStatusResp(obj) {
   return {
     order_status: (typeof obj.order_status === 'number' ? obj.order_status : (Number(obj.order_status) || 0)),
     recipient_id: (typeof obj.recipient_id === 'number' ? obj.recipient_id : (Number(obj.recipient_id) || 0)),
+    send_user_name: obj.send_user_name || ''
   };
 }
 
@@ -615,5 +652,25 @@ function MatchInChatResp(obj) {
       match_meaning: item.match_meaning,
       buy_url: item.buy_url,
     })),
+  };
+}
+/**
+ * @typedef {Object} RecipientOrdersListReq
+ * @property {number} page
+ */
+function RecipientOrdersListReq(input) {
+  return { page: input.page || 1 };
+}
+
+/**
+ * @typedef {Object} RecipientOrdersListResp
+ * @property {number} page
+ * @property {Array} list
+ */
+function RecipientOrdersListResp(obj) {
+  const arr = Array.isArray(obj.list) ? obj.list : []
+  return {
+    page: obj.page || 1,
+    list: arr.map((item) => OrderInfoResp(item)),
   };
 }
