@@ -6,7 +6,7 @@
         <text class="subtext">{{welcomStr}}</text>
       </view>
       <view class="header-illustration">
-        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift2.png" mode="aspectFill"></image>
+        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
       </view>
     </view>
   </view>
@@ -32,7 +32,7 @@
   <view class="actions">
     <view class="big-btn" bindtap="onOpenArchive"><text class="big-btn-text">查看礼赠订单</text><text class="chev">></text></view>
     <view class="big-btn" bindtap="onOpenReceived"><text class="big-btn-text">查看收到的礼物</text><text class="chev">></text></view>
-    <view class="big-btn" bindtap="onContact"><text class="big-btn-text">合作咨询</text><text class="chev orange">></text></view>
+    <view class="big-btn" bindtap="onContact"><text class="big-btn-text">合作咨询</text><text class="chev">></text></view>
   </view>
 
   <view wx:if="{{showNameEdit}}" class="modal-mask" bindtap="onCloseModal"></view>

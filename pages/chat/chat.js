@@ -42,11 +42,14 @@ Page({
     const qs = Array.isArray(cfg.questions) && cfg.questions.length ? cfg.questions : questions
     this.questions = qs
     this.qThreshold = Math.ceil((qs.length || 0) * 0.8)
+    this.defaultQThreshold = this.qThreshold
     const qList = qs.map((q, i) => `${i + 1}. ${q}`).join('；')
     this.personaPrompt = `${PERSONA_PROMPT} 请以自然中文表达，不要输出括号或其他标记的语气/动作词，如（关切的）（轻声的）。逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。请始终以朋友口吻聊天，不要在聊天中提供任何商品或礼物建议，也不要直白说明“送礼”的需求或推荐流程。每次回复末尾追加<meta>{"valid_answer":(true|false),"valid_answer_count":整数,"cta_hint":(true|false)}</meta>，用于内部评估上一条用户回答是否为正常且有用的答案、已收集的有效答案数量，以及你认为是否可以在此时轻轻提醒开启匹配。不要让用户看到<meta>，仅在文本最后插入该标签。`
     this.validAnswerCount = 0
     this.matchStarted = false
     this.autoMatchTriggered = false
+    this.productsPending = false
+    this.awaitingRerun = false
     this.setData({ scrollInto: 'end-anchor' })
     this.initVoice()
     const placeholders = ['有什么困惑问我吗？', '有问题，尽管问。']
@@ -192,6 +195,12 @@ Page({
     this.setData({ messages: withTyping, scrollInto: 'end-anchor' })
     wx.nextTick(() => { this.scrollToEnd() })
     setTimeout(() => { this.scrollToEnd() }, 1000)
+    if (this.productsPending && !this.awaitingRerun) {
+      this.track('cards_continue_chat_no_select', {})
+      this.productsPending = false
+      this.bumpThreshold && this.bumpThreshold('continue_no_select')
+      this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 600)
+    }
     const preEligible = ((this.validAnswerCount || 0) + (this.isNormalAnswer(text) ? 1 : 0)) >= (this.qThreshold || 0)
     if (preEligible && !this.matchStarted) {
       this.updateProgress(null, text)
@@ -333,7 +342,8 @@ Page({
         console.log('match_in_chat result', { match_id: resp && resp.match_id, products_count: Array.isArray(resp && resp.products) ? resp.products.length : 0 })
         const products = Array.isArray(resp && resp.products) ? resp.products : []
         const say = { role: 'assistant', content: '我了解到你的想法了，找了一些礼物给你看看。' }
-        const cards = { type: 'products', products }
+        this.prodSeq = (this.prodSeq || 0) + 1
+        const cards = { type: 'products', products, _id: this.prodSeq, current: 0 }
         const list = this.data.messages.slice()
         const typingIndex = list.length - 1
         if (typingIndex >= 0 && list[typingIndex] && list[typingIndex].typing) {
@@ -343,13 +353,15 @@ Page({
         }
         this.setData({ messages: list })
         const next = (this.data.messages || []).concat([cards])
-        const prodAnchor = 'prod-anchor'
-        this.setData({ messages: next, prodCurrent: 0, selectedProductIndex: 0 })
+        const prodAnchor = `prod-anchor-${cards._id}`
+        this.setData({ messages: next })
         wx.nextTick(() => {
           this.setData({ scrollInto: prodAnchor })
           setTimeout(() => this.setData({ scrollInto: prodAnchor }), 0)
           setTimeout(() => this.setData({ scrollInto: prodAnchor }), 3000)
         })
+        this.productsPending = true
+        if (this.defaultQThreshold) this.qThreshold = this.defaultQThreshold
       })
       .catch((e) => {
         console.error('match_in_chat error', e)
@@ -364,10 +376,94 @@ Page({
     if (!p) { console.log('open product miss', { index: i }); return }
     const pid = Number(p.product_id) || 0
     if (pid) {
+      this.productsPending = false
       wx.navigateTo({ url: `/pages/product/product?pid=${pid}` })
     } else {
       wx.showToast({ title: '商品详情暂不可用', icon: 'none' })
     }
+  }
+  ,track(name, data) {
+    try {
+      console.log('track', name, data || {})
+      if (wx && wx.reportEvent) {
+        const key = String(name).replace(/[^a-z0-9_]/gi, '_').toLowerCase()
+        wx.reportEvent(key, data || {})
+      }
+    } catch (_) {}
+  }
+  ,onGoMarketFromCards() {
+    this.track('cards_go_market', {})
+    this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 600)
+    this.productsPending = false
+    this.bumpThreshold && this.bumpThreshold('go_market')
+    wx.switchTab({ url: '/pages/market/market' })
+  }
+  ,onDislikeProducts() {
+    this.track('cards_dislike', {})
+    const list = (this.data.messages || []).slice()
+    for (let i = list.length - 1; i >= 0; i--) {
+      if (list[i] && list[i].type === 'products') { list.splice(i, 1); break }
+    }
+    list.push({ role: 'assistant', content: '明白～我们可以继续聊聊你的偏好，或者告诉我预算、场景、风格，我会更准确。' })
+    this.setData({ messages: list })
+    this.matchStarted = false
+    this.autoMatchTriggered = false
+    this.productsPending = false
+    this.bumpThreshold && this.bumpThreshold('dislike')
+    this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 600)
+  }
+  ,onAnotherBatch() {
+    this.track('cards_another_batch', {})
+    this.productsPending = false
+    this.bumpThreshold && this.bumpThreshold('another_batch')
+  }
+  ,bumpThreshold(reason) {
+    try {
+      const base = this.defaultQThreshold || this.qThreshold || 0
+      const inc = Math.max(1, (this.defaultQThreshold || base) - 1)
+      const from = this.qThreshold || base
+      const next = from + inc
+      this.qThreshold = next
+      if (reason === 'continue_no_select') {
+        this.matchStarted = false
+        this.autoMatchTriggered = false
+      }
+      this.track('threshold_bumped', { reason, from, to: next, inc })
+    } catch (_) {}
+  }
+  ,autoRerunFromChat() {
+    this.track('cards_auto_another_on_chat', {})
+    this.awaitingRerun = true
+    this.productsPending = false
+    this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 600)
+    this.rerunMatchInChat()
+  }
+  ,rerunMatchInChat() {
+    const ccgapi = require('../../api/ccgapi')
+    const records = (this.data.messages || [])
+      .filter(m => m.role === 'user' || m.role === 'assistant')
+      .map(m => ({ role: m.role, content: m.content || '' }))
+    records.push({ role: 'system', content: '用户不感兴趣，希望换一批不同风格的礼物推荐。' })
+    const payloadText = JSON.stringify({ records })
+    this.prodSeq = (this.prodSeq || 0) + 1
+    const newId = this.prodSeq
+    ccgapi.matchInChat({ messages: payloadText })
+      .then((resp) => {
+        console.log('match_in_chat another result', { match_id: resp && resp.match_id, products_count: Array.isArray(resp && resp.products) ? resp.products.length : 0 })
+        const products = Array.isArray(resp && resp.products) ? resp.products : []
+        const cards = { type: 'products', products, _id: newId, current: 0 }
+        const next = (this.data.messages || []).concat([cards])
+        this.setData({ messages: next })
+        const prodAnchor = `prod-anchor-${cards._id}`
+        wx.nextTick(() => {
+          this.setData({ scrollInto: prodAnchor })
+          setTimeout(() => this.setData({ scrollInto: prodAnchor }), 0)
+          setTimeout(() => this.setData({ scrollInto: prodAnchor }), 3000)
+        })
+        this.productsPending = true
+        this.awaitingRerun = false
+      })
+      .catch((e) => { console.error('match_in_chat another error', e) })
   }
   ,getDialogStats() {
     const msgs = Array.isArray(this.data.messages) ? this.data.messages : []
@@ -385,7 +481,10 @@ Page({
   }
   ,onProdSwiperChange(e) {
     const idx = e.detail && typeof e.detail.current === 'number' ? e.detail.current : 0
-    this.setData({ prodCurrent: idx, selectedProductIndex: idx })
+    const mid = e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.mid
+    const msgs = (this.data.messages || []).slice()
+    const mIndex = msgs.findIndex(m => m && m.type === 'products' && String(m._id) === String(mid))
+    if (mIndex >= 0) { msgs[mIndex].current = idx; this.setData({ messages: msgs }) }
   }
   ,selectProduct(e) {
     const idx = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index

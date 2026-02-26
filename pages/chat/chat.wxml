@@ -46,7 +46,7 @@
         <text class="subtext">{{welcomStr}}</text>
       </view>
       <view class="header-illustration">
-        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift2.png" mode="aspectFill"></image>
+        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
       </view>
     </view>
   </view>
@@ -64,9 +64,9 @@
           </view>
         </block>
         <block wx:elif="{{item.type === 'products'}}">
-          <swiper class="prod-list" previous-margin="124rpx" next-margin="124rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{prodCurrent}}" bindchange="onProdSwiperChange">
+          <swiper class="prod-list" previous-margin="124rpx" next-margin="124rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{item.current || 0}}" data-mid="{{item._id}}" bindchange="onProdSwiperChange">
             <swiper-item wx:for="{{item.products}}" wx:key="index">
-              <view class="prod-card {{selectedProductIndex === index ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{index}}">
+              <view class="prod-card {{(item.current || 0) === index ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{index}}">
                 <image class="band-bg" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/match_product_bg.png" mode="aspectFill"></image>
                 <view class="header-band">
                   <view class="band-texts">
@@ -83,7 +83,12 @@
               </view>
             </swiper-item>
           </swiper>
-          <view id="prod-anchor" class="end-anchor"></view>
+          <view class="light-actions">
+            <button class="light-btn orange" bindtap="onGoMarketFromCards">去礼物甄选</button>
+            <button class="light-btn gray" bindtap="onDislikeProducts">不感兴趣</button>
+            <button class="light-btn outline" bindtap="onAnotherBatch">换一批</button>
+          </view>
+          <view id="prod-anchor-{{item._id}}" class="end-anchor"></view>
         </block>
         <block wx:else>
           <view id="msg-{{index}}" class="bubble {{item.role === 'user' ? 'right' : 'left'}}">
