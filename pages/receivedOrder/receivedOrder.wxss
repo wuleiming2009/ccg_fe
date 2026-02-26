@@ -1,5 +1,6 @@
 .order-page { background: #eeece5; min-height: 100vh; padding: 16px; }
 .card { background: #F7FAFF; border-radius: 16px; padding: 14px; box-shadow: 0 4px 12px rgba(31,42,55,0.06); }
+.card + .card { margin-top: 16px; }
 .card-header { font-size: 12px; color: #9AA4B2; letter-spacing: 2px; margin-bottom: 10px; }
 .sender { font-size: 16px; font-weight: 800; color: #1F2A37; margin: 0 0 8px 0; }
 .prod-row { display: flex; align-items: center; gap: 12px; position: relative; }
