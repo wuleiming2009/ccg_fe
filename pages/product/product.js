@@ -342,6 +342,13 @@ Page({
         paySign,
         success: async () => {
           try {
+            const env = require('../../config/env')
+            const TEMPLATE_ID = env && env.orderMsgTemplateId
+            if (TEMPLATE_ID) {
+              wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], success: (r) => { console.log('subscribe ok', r) }, fail: (e) => { console.error('subscribe fail', e) } })
+            }
+          } catch (e) { console.error('subscribe request error', e) }
+          try {
             const info = await ccgapi.orderInfo({ order_id })
             this.setData({ showCheckout: false })
             if (isInvite) {

@@ -13,11 +13,14 @@ Page({
   },
   onLoad(query) {
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
-    if (ec && ec.on) {
-      ec.on('order', (info) => this.applyInfo(info))
+    if (ec && typeof ec.on === 'function') {
+      ec.on('order', (info) => { this.applyInfo(info); wx.showShareMenu && wx.showShareMenu({ withShareTicket: true }) })
     }
-    const oid = Number(query && query.order_id) || 0
-    if (oid) this.fetch(oid)
+    const oid = Number(query && (query.orderId || query.order_id)) || 0
+    if (oid) {
+      this.fetch(oid)
+      wx.showShareMenu && wx.showShareMenu({ withShareTicket: true })
+    }
   },
   async fetch(order_id) {
     try {
@@ -48,4 +51,3 @@ Page({
     })
   }
 })
-

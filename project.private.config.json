@@ -5,16 +5,30 @@
     "miniprogram": {
       "list": [
         {
-          "name": "收到礼物的列表",
-          "pathName": "pages/received/received",
-          "query": "",
+          "name": "收到礼物订单详情",
+          "pathName": "pages/receivedOrder/receivedOrder",
+          "query": "orderId=8291121152",
           "scene": null,
           "launchMode": "default"
         },
         {
+          "name": "订单详情",
+          "pathName": "pages/order/order",
+          "query": "orderId=3491168256",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "分享填址邀请页",
           "pathName": "pages/invite/invite",
-          "query": "order_id=8291121152",
+          "query": "order_id=3491168256",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "收到礼物的列表",
+          "pathName": "pages/received/received",
+          "query": "",
           "launchMode": "default",
           "scene": null
         },

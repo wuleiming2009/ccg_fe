@@ -16,25 +16,39 @@ Page({
   },
   onLoad(options) {
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
-    if (ec) {
-      ec.on('order', (info) => {
-        const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已发货', 4: '已关闭', 5: '已退款' }
-        this.setData({
-          order_id: info.order_id,
-          product: info.product || {},
-          recipient: info.recipient || {},
-          recipient_id: Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0),
-          quantity: info.quantity || 0,
-          amount_total: info.amount_total || '0.00',
-          status_text: statusMap[info.order_status] || info.order_status_text || '',
-          order_status: (typeof info.order_status === 'number' ? info.order_status : (Number(info.order_status) || -1)),
-          order_date: info.date || '',
-          create_time: info.create_time || '',
-          isInvite: Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0) === 999
-        })
-        wx.showShareMenu({ withShareTicket: true })
-      })
+    if (ec && typeof ec.on === 'function') {
+      ec.on('order', (info) => { this.applyInfo(info); wx.showShareMenu && wx.showShareMenu({ withShareTicket: true }) })
     }
+    const oid = Number((options && (options.orderId || options.order_id)) || 0)
+    if (oid) {
+      this.fetch(oid)
+      wx.showShareMenu && wx.showShareMenu({ withShareTicket: true })
+    }
+  },
+  async fetch(order_id) {
+    try {
+      const info = await ccgapi.orderInfo({ order_id })
+      this.applyInfo(info)
+    } catch (e) {
+      wx.showToast({ title: '加载订单失败', icon: 'none' })
+    }
+  },
+  applyInfo(info) {
+    const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已发货', 4: '已关闭', 5: '已退款' }
+    const recipientId = Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0)
+    this.setData({
+      order_id: info.order_id,
+      product: info.product || {},
+      recipient: info.recipient || {},
+      recipient_id: recipientId,
+      quantity: info.quantity || 0,
+      amount_total: info.amount_total || '0.00',
+      status_text: statusMap[info.order_status] || info.order_status_text || '',
+      order_status: (typeof info.order_status === 'number' ? info.order_status : (Number(info.order_status) || -1)),
+      order_date: info.date || '',
+      create_time: info.create_time || '',
+      isInvite: recipientId === 999
+    })
   },
   async onPay() {
     try {
@@ -60,6 +74,13 @@ Page({
         paySign,
         success: () => {
           wx.showToast({ title: '支付成功', icon: 'none' })
+          try {
+            const env = require('../../config/env')
+            const TEMPLATE_ID = env && env.orderMsgTemplateId
+            if (TEMPLATE_ID) {
+              wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], success: (r) => { console.log('subscribe ok', r) }, fail: (e) => { console.error('subscribe fail', e) } })
+            }
+          } catch (e) { console.error('subscribe request error', e) }
           this.setData({ status_text: '已支付', order_status: 1 })
         },
         fail: (err) => {
