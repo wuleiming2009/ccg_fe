@@ -296,6 +296,15 @@ Page({
   async onFinalize() {
     try {
       const ccgapi = require('../../api/ccgapi')
+      try {
+        const env = require('../../config/env')
+        const TEMPLATE_ID = env && env.orderMsgTemplateId
+        if (TEMPLATE_ID && wx.requestSubscribeMessage) {
+          await new Promise((resolve) => {
+            wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], complete: () => resolve() })
+          })
+        }
+      } catch (_) {}
       if (!this._skipInfoCheckOnce) {
         const uc = wx.getStorageSync('userConfig') || {}
         const nm = String(uc.user_name || '').trim()
@@ -341,13 +350,6 @@ Page({
         signType,
         paySign,
         success: async () => {
-          try {
-            const env = require('../../config/env')
-            const TEMPLATE_ID = env && env.orderMsgTemplateId
-            if (TEMPLATE_ID) {
-              wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], success: (r) => { console.log('subscribe ok', r) }, fail: (e) => { console.error('subscribe fail', e) } })
-            }
-          } catch (e) { console.error('subscribe request error', e) }
           try {
             const info = await ccgapi.orderInfo({ order_id })
             this.setData({ showCheckout: false })

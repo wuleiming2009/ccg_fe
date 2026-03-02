@@ -54,6 +54,15 @@ Page({
     try {
       const id = Number(this.data.order_id) || 0
       if (!id) { wx.showToast({ title: '订单无效', icon: 'none' }); return }
+      try {
+        const env = require('../../config/env')
+        const TEMPLATE_ID = env && env.orderMsgTemplateId
+        if (TEMPLATE_ID && wx.requestSubscribeMessage) {
+          await new Promise((resolve) => {
+            wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], complete: () => resolve() })
+          })
+        }
+      } catch (_) {}
       wx.showLoading({ title: '拉起支付…', mask: true })
       const prepay = await ccgapi.paymentPrepay({ order_id: id })
       wx.hideLoading()
@@ -74,13 +83,6 @@ Page({
         paySign,
         success: () => {
           wx.showToast({ title: '支付成功', icon: 'none' })
-          try {
-            const env = require('../../config/env')
-            const TEMPLATE_ID = env && env.orderMsgTemplateId
-            if (TEMPLATE_ID) {
-              wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], success: (r) => { console.log('subscribe ok', r) }, fail: (e) => { console.error('subscribe fail', e) } })
-            }
-          } catch (e) { console.error('subscribe request error', e) }
           this.setData({ status_text: '已支付', order_status: 1 })
         },
         fail: (err) => {

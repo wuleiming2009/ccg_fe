@@ -74,7 +74,7 @@
               <text class="rec-name big">支付后发送填址邀请</text>
               <text class="rec-addr tip">适合匿名赠礼或不确定地址场景</text>
             </view>
-            <view class="rec-send" catchtap="onInviteIdentity">发送填址邀请</view>
+            
           </view>
         </swiper-item>
         <swiper-item wx:for="{{recipients}}" wx:key="id">

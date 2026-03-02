@@ -116,5 +116,5 @@
 .rec-card.invite.selected .rec-tag { color: rgba(255,255,255,0.85); }
 .rec-card.invite.selected .rec-info .big { color: #FFFFFF; }
 .rec-card.invite.selected .rec-info .tip { color: rgba(255,255,255,0.85); }
-.rec-card.invite .rec-send { width: 18px; height: 18px; }
-.rec-send { margin-top: 10px; align-self: flex-start; background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 6px 10px; font-size: 12px; }
+.rec-card.invite .rec-send { width: auto; height: auto; }
+.rec-send { margin-top: 10px; align-self: flex-start; background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 6px 10px; font-size: 12px; display: inline-block; white-space: nowrap; }
