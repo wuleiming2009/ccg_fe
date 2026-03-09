@@ -125,4 +125,13 @@ Page({
       this.setData({ showInviteConfirm: false })
     })
   }
+  ,onOpenTracking(e) {
+    const nu = String(e.currentTarget.dataset.nu || '').trim()
+    const com = String(e.currentTarget.dataset.com || '').trim()
+    const provider = String(e.currentTarget.dataset.provider || 'kuaidi100').trim()
+    const { buildLogisticsUrl } = require('../../utils/logistics')
+    const url = buildLogisticsUrl({ nu, com, provider })
+    if (!url || !/^https:/.test(url)) { wx.showToast({ title: '链接无效', icon: 'none' }); return }
+    wx.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
+  }
 })

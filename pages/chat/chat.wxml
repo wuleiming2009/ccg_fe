@@ -17,7 +17,7 @@
               <image class="toggle-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
             </view>
             <block wx:if="{{!voiceMode}}">
-              <input class="input" placeholder="{{introPlaceholder}}" placeholder-style="color:#b6b8bb" value="{{inputValue}}" bindinput="onIntroInput" confirm-type="send" bindconfirm="onIntroSend" />
+              <input class="input" placeholder="{{introPlaceholder}}" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onIntroInput" confirm-type="send" bindconfirm="onIntroSend" />
             </block>
             <block wx:else>
               <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
@@ -64,29 +64,28 @@
           </view>
         </block>
         <block wx:elif="{{item.type === 'products'}}">
-          <swiper class="prod-list" previous-margin="124rpx" next-margin="124rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{item.current || 0}}" data-mid="{{item._id}}" bindchange="onProdSwiperChange">
-            <swiper-item wx:for="{{item.products}}" wx:key="index">
-              <view class="prod-card {{(item.current || 0) === index ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{index}}">
-                <image class="band-bg" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/match_product_bg.png" mode="aspectFill"></image>
+          <swiper class="prod-list" previous-margin="92rpx" next-margin="92rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{item.current || 0}}" data-mid="{{item._id}}" bindchange="onProdSwiperChange">
+            <swiper-item wx:for="{{item.products}}" wx:for-item="prod" wx:for-index="pidx" wx:key="pidx">
+              <view class="prod-card {{(item.current || 0) == pidx ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{pidx}}">
                 <view class="header-band">
                   <view class="band-texts">
-                    <text class="band-title">{{item.name}}</text>
-                    <text class="band-sub">{{item.match_meaning || ''}}</text>
+                    <text class="band-title">{{prod.name}}</text>
+                    <text class="band-sub">{{prod.match_meaning || ''}}</text>
                   </view>
                 </view>
                 <view class="image-area">
-                  <image class="card-image" src="{{item.img_url}}" mode="aspectFill"></image>
-                  <view class="pill-btn overlay" data-index="{{index}}" bindtap="onOpenProduct">
+                  <image class="card-image" src="{{prod.img_url}}" mode="aspectFill"></image>
+                  <view class="pill-btn overlay" data-index="{{pidx}}" bindtap="onOpenProduct">
                     <text>打开心意</text>
                   </view>
                 </view>
               </view>
             </swiper-item>
           </swiper>
-          <view class="light-actions">
-            <button class="light-btn orange" bindtap="onGoMarketFromCards">去礼物甄选</button>
-            <button class="light-btn gray" bindtap="onDislikeProducts">不感兴趣</button>
-            <button class="light-btn outline" bindtap="onAnotherBatch">换一批</button>
+          <view class="light-actions" wx:if="{{!item.actionsHidden}}">
+            <button class="light-btn orange" bindtap="onGoMarketFromCards" data-mid="{{item._id}}">去礼物甄选</button>
+            <button class="light-btn gray" bindtap="onDislikeProducts" data-mid="{{item._id}}">不感兴趣</button>
+            <button class="light-btn outline" bindtap="onAnotherBatch" data-mid="{{item._id}}">换一批</button>
           </view>
           <view id="prod-anchor-{{item._id}}" class="end-anchor"></view>
         </block>
@@ -111,7 +110,7 @@
 
   <view wx:if="{{!introMode}}" class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
     <view class="footer-bg"></view>
-    <scroll-view class="history-scroll" scroll-x="true" show-scrollbar="false">
+    <scroll-view wx:if="{{hasPills}}" class="history-scroll" scroll-x="true" show-scrollbar="false">
       <view class="secondary-actions history-pills">
         <view class="pill lite">
           <text class="pill-text lite">上次送给妈妈的礼物</text>
@@ -133,7 +132,7 @@
         <image class="toggle-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
       </view>
       <block wx:if="{{!voiceMode}}">
-        <input class="input" placeholder="请输入消息…" placeholder-style="color:#b6b8bb" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
+        <input class="input" placeholder="请输入消息…" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
       </block>
       <block wx:else>
         <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">

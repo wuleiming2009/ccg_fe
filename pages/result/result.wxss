@@ -14,9 +14,9 @@
 .image-tag { position: absolute; right: 8px; top: 8px; background: #EFF2F6; color: #1F2A37; font-size: 12px; padding: 4px 8px; border-radius: 999px; }
 .row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
 .prod-title { font-size: 16px; font-weight: 600; color: #1F2A37; }
-.price { font-size: 14px; font-weight: 700; color: #FF7A3E; background: #FFE1D2; padding: 2px 8px; border-radius: 999px; }
+.price { font-size: 14px; font-weight: 700; color: #ff7a3f; background: #FFE1D2; padding: 2px 8px; border-radius: 999px; }
 .desc { margin-top: 6px; font-size: 13px; color: #7A8CA5; line-height: 1.6; }
-.buy-btn { margin-top: 10px; width: 100%; background: #FF7A3E; color: #FFFFFF; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.buy-btn { margin-top: 10px; width: 100%; background: #ff7a3f; color: #FFFFFF; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
 .bottom-actions { position: fixed; left: 0; right: 0; bottom: 12px; display: flex; gap: 12px; padding: 0 12px; box-sizing: border-box; height: 64px; align-items: center; }
 .ai-note { display: block; margin: 8px 12px 0; text-align: center; color: #9AA4B2; font-size: 12px; }
 .btn { flex: 1; border-radius: 999px; padding: 12px 18px; display: flex; align-items: center; justify-content: center; font-weight: 600; }

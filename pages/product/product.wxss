@@ -11,7 +11,7 @@
 .story-label { font-size: 12px; color: #9AA4B2; letter-spacing: 1px; }
 .story-box { margin-top: 8px; background: #F7FAFF; border-radius: 12px; padding: 12px; }
 .story-text { font-size: 14px; color: #1F2A37; line-height: 1.6; }
-.cta { margin-top: 16px; width: 100%; background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; text-align: center; white-space: nowrap; }
+.cta { margin-top: 16px; width: 100%; background: #ff7a3f; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; text-align: center; white-space: nowrap; }
 .gift-btn { margin-top: 16px; width: 100%; background: #000000; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; text-align: center; }
 
 .quantity { margin-top: 12px; }
@@ -33,18 +33,18 @@
 .sheet-hint { margin-top: 4px; font-size: 12px; color: #9AA4B2; }
 .sheet-address { margin-top: 8px; background: #F7FAFF; border: 1px solid #E6ECF3; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .sheet-address-empty { font-size: 13px; color: #7A8CA5; }
-.sheet-add-btn { background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 8px 16px; font-size: 14px; }
+.sheet-add-btn { background: #ff7a3f; color: #FFFFFF; border-radius: 999px; padding: 8px 16px; font-size: 14px; }
 .sheet-divider { height: 1px; background: #E6ECF3; margin: 12px 0; }
 .sheet-item { font-size: 14px; color: #1F2A37; }
 .sheet-price { font-size: 16px; font-weight: 700; color: #1F2A37; }
-.sheet-primary { margin-top: 12px; width: 100%; background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; }
+.sheet-primary { margin-top: 12px; width: 100%; background: #ff7a3f; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; }
 
 /* recipients */
 .rec-list { margin-top: 8px; height: 220px; }
 .rec-list swiper-item { display: flex; align-items: center; }
 /* swiper 使用，无需 rec-row */
 .rec-card { width: 86%; min-height: 140px; background: #FFFFFF; border: 1px solid #E6ECF3; border-radius: 16px; padding: 20px; position: relative; box-shadow: 0 8px 20px rgba(31,42,55,0.10); transform: scale(0.92); transform-origin: center; transition: transform .25s ease, box-shadow .25s ease; z-index: 1; margin: 0 auto; }
-.rec-card.selected { background: #FF7A3E; color: #FFFFFF; }
+.rec-card.selected { background: #ff7a3f; color: #FFFFFF; }
 .rec-card.selected { transform: scale(1); box-shadow: 0 12px 24px rgba(31,42,55,0.16); z-index: 2; }
 .rec-top { display: flex; justify-content: space-between; align-items: center; }
 .rec-tag { font-size: 12px; color: #9AA4B2; }
@@ -59,7 +59,7 @@
 .rec-card.selected .rec-phone { color: #FFFFFF; }
 .rec-addr { font-size: 14px; color: #9AA4B2; }
 .rec-card.selected .rec-addr { color: rgba(255,255,255,0.85); }
-.rec-default { position: absolute; right: 12px; bottom: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #FF7A3E; color: #FF7A3E; background: #FFF7F2; font-size: 12px; }
+.rec-default { position: absolute; right: 12px; bottom: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #ff7a3f; color: #ff7a3f; background: #FFF7F2; font-size: 12px; }
 .rec-card.selected .rec-default { border-color: #FFFFFF; color: #FFFFFF; background: rgba(255,255,255,0.24); }
 /* removed checkmark */
 
@@ -76,9 +76,9 @@
 .smart-card { background: #FFFFFF; border: 1px solid #E6ECF3; border-radius: 12px; padding: 10px; box-shadow: 0 2px 8px rgba(31,42,55,0.06); }
 .smart-textarea { width: 100%; min-height: 72px; background: #FFFFFF; border: 1px solid #E6ECF3; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; color: #1F2A37; font-size: 14px; }
 .smart-row { margin-top: 8px; display: flex; justify-content: flex-start; align-items: center; }
-.sticky-btn { background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 8px 14px; font-size: 12px; }
+.sticky-btn { background: #ff7a3f; color: #FFFFFF; border-radius: 999px; padding: 8px 14px; font-size: 12px; }
 .wx-address-btn { margin-top: 8px; width: auto; background: #07C160; color: #FFFFFF; border-radius: 999px; padding: 6px 10px; font-weight: 600; font-size: 12px; }
-.modal-primary { margin-top: 12px; width: 100%; background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; }
+.modal-primary { margin-top: 12px; width: 100%; background: #ff7a3f; color: #FFFFFF; border-radius: 999px; padding: 12px 18px; font-weight: 600; }
 .modal-secondary { margin-top: 12px; width: 100%; background: #F4F6F8; color: #1F2A37; border-radius: 999px; padding: 12px 18px; font-weight: 600; }
 .modal-actions { display: flex; gap: 10px; }
 .invite .modal-actions { margin-top: 12px; }
@@ -86,7 +86,7 @@
 .letter-top { height: 40px; background: linear-gradient(180deg, #FFF7F2 0%, #FFFFFF 100%); border-bottom: 1px solid #F2E7E2; }
 .letter-body { padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .letter-line { font-size: 14px; color: #7A8CA5; }
-.invite-name { font-size: 18px; font-weight: 700; color: #FF7A3E; padding: 6px 10px; border-radius: 8px; border: 1px dashed #FF7A3E; }
+.invite-name { font-size: 18px; font-weight: 700; color: #ff7a3f; padding: 6px 10px; border-radius: 8px; border: 1px dashed #ff7a3f; }
 .invite-input { width: 80%; border: 1px solid #E6ECF3; border-radius: 8px; padding: 8px 10px; }
 
 .wx-name-btn { margin-top: 8px; background: #07C160; color: #FFFFFF; border-radius: 999px; padding: 6px 10px; width: auto; display: inline-block; }
@@ -109,7 +109,7 @@
 .detail-box { margin-top: 6px; background: #F7FAFF; border-radius: 12px; padding: 12px; }
 .detail-text { font-size: 14px; color: #1F2A37; line-height: 1.6; }
 .rec-card.invite { background: #FFFFFF; border-color: #E6ECF3; color: #1F2A37; }
-.rec-card.invite.selected { background: #FF7A3E; color: #FFFFFF; }
+.rec-card.invite.selected { background: #ff7a3f; color: #FFFFFF; }
 .rec-card.invite .rec-tag { color: #9AA4B2; letter-spacing: 2px; }
 .rec-card.invite .rec-info .big { font-size: 20px; font-weight: 800; color: #1F2A37; }
 .rec-card.invite .rec-info .tip { font-size: 14px; color: #9AA4B2; margin-top: 4px; }
@@ -117,4 +117,4 @@
 .rec-card.invite.selected .rec-info .big { color: #FFFFFF; }
 .rec-card.invite.selected .rec-info .tip { color: rgba(255,255,255,0.85); }
 .rec-card.invite .rec-send { width: auto; height: auto; }
-.rec-send { margin-top: 10px; align-self: flex-start; background: #FF7A3E; color: #FFFFFF; border-radius: 999px; padding: 6px 10px; font-size: 12px; display: inline-block; white-space: nowrap; }
+.rec-send { margin-top: 10px; align-self: flex-start; background: #ff7a3f; color: #FFFFFF; border-radius: 999px; padding: 6px 10px; font-size: 12px; display: inline-block; white-space: nowrap; }

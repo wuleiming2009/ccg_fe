@@ -1,3 +1,6 @@
+// 开关：控制是否显示输入框上方的历史胶囊按钮。为临时运营/测试需求设计，默认关闭。
+const SHOW_HISTORY_PILLS = false
+
 Page({
   data: {
     greeting: '',
@@ -9,7 +12,7 @@ Page({
     scrollInto: '',
     showMyGifts: true,
     showGiftHistory: true,
-    hasPills: true,
+    hasPills: SHOW_HISTORY_PILLS,
     voiceMode: false,
     recording: false,
     voiceHint: '按住说话',
@@ -30,8 +33,12 @@ Page({
     const app = getApp()
     this.client = app && app.globalData && app.globalData.aiClient
     const cfg = wx.getStorageSync('userConfig') || {}
-    this.setData({ hasPills: true })
+    this.setData({ hasPills: SHOW_HISTORY_PILLS })
     this.setData({ userName: cfg.user_name || '' })
+    try {
+      const ui = require('../../config/ui')
+      this.earlyRecommendOnSecond = !!(ui && ui.directRecommendAtSecond)
+    } catch (_) { this.earlyRecommendOnSecond = false }
     if (options && options.reset === '1') {
       this.setData({ messages: [ { role: 'assistant', content: '嗨～最近过得怎么样？有没有发生什么有趣的事，或是想聊聊、需要我一起琢磨的？' } ], inputValue: '', scrollInto: 'end-anchor' })
       this.validAnswerCount = 0
@@ -195,6 +202,13 @@ Page({
     this.setData({ messages: withTyping, scrollInto: 'end-anchor' })
     wx.nextTick(() => { this.scrollToEnd() })
     setTimeout(() => { this.scrollToEnd() }, 1000)
+    if (this.earlyRecommendOnSecond) {
+      const stats = this.getDialogStats()
+      if ((stats.userCount || 0) === 1 && !this.matchStarted) {
+        this.autoMatchInChat()
+        return
+      }
+    }
     if (this.productsPending && !this.awaitingRerun) {
       this.track('cards_continue_chat_no_select', {})
       this.productsPending = false
@@ -391,19 +405,33 @@ Page({
       }
     } catch (_) {}
   }
-  ,onGoMarketFromCards() {
+  ,hideActionsFor(mid) {
+    try {
+      const msgs = (this.data.messages || []).slice()
+      let idx = -1
+      if (mid !== undefined && mid !== null) {
+        idx = msgs.findIndex(m => m && m.type === 'products' && String(m._id) === String(mid))
+      }
+      if (idx < 0) {
+        for (let i = msgs.length - 1; i >= 0; i--) { if (msgs[i] && msgs[i].type === 'products') { idx = i; break } }
+      }
+      if (idx >= 0) { msgs[idx].actionsHidden = true; this.setData({ messages: msgs }) }
+    } catch (_) {}
+  }
+  ,onGoMarketFromCards(e) {
     this.track('cards_go_market', {})
+    const mid = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.mid
+    this.hideActionsFor(mid)
     this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 600)
     this.productsPending = false
     this.bumpThreshold && this.bumpThreshold('go_market')
     wx.switchTab({ url: '/pages/market/market' })
   }
-  ,onDislikeProducts() {
+  ,onDislikeProducts(e) {
     this.track('cards_dislike', {})
+    const mid = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.mid
+    this.hideActionsFor(mid)
     const list = (this.data.messages || []).slice()
-    for (let i = list.length - 1; i >= 0; i--) {
-      if (list[i] && list[i].type === 'products') { list.splice(i, 1); break }
-    }
     list.push({ role: 'assistant', content: '明白～我们可以继续聊聊你的偏好，或者告诉我预算、场景、风格，我会更准确。' })
     this.setData({ messages: list })
     this.matchStarted = false
@@ -412,8 +440,10 @@ Page({
     this.bumpThreshold && this.bumpThreshold('dislike')
     this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 600)
   }
-  ,onAnotherBatch() {
+  ,onAnotherBatch(e) {
     this.track('cards_another_batch', {})
+    const mid = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.mid
+    this.hideActionsFor(mid)
     this.productsPending = false
     this.bumpThreshold && this.bumpThreshold('another_batch')
   }

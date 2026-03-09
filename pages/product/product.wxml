@@ -161,7 +161,7 @@
       </view>
       <view class="modal-field modal-switch">
         <text class="modal-label">设置为默认地址</text>
-        <switch class="switch-small" color="#FF7A3E" checked="{{editRecipientForm.is_default === 1}}" bindchange="onEditDefaultToggle" />
+        <switch class="switch-small" color="#ff7a3f" checked="{{editRecipientForm.is_default === 1}}" bindchange="onEditDefaultToggle" />
       </view>
     </view>
     <button class="modal-primary" bindtap="saveEditRecipient">保存更改</button>

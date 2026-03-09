@@ -10,7 +10,7 @@
 .order .title { font-size: 16px; font-weight: 700; color: #1F2A37; }
 .order .row { display: flex; justify-content: space-between; align-items: center; }
 .order .sub { font-size: 12px; color: #6B7280; }
-.order .status { font-size: 12px; color: #FF7A3E; }
+.order .status { font-size: 12px; color: #ff7a3f; }
 .order .price { font-size: 14px; color: #1F2A37; }
 .order .date { font-size: 12px; color: #9AA4B2; }
 .empty { text-align: center; color: #9AA4B2; padding: 24px 0; }

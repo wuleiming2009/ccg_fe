@@ -14,6 +14,6 @@
 .image-tag { position: absolute; right: 8px; top: 8px; background: #EFF2F6; color: #1F2A37; font-size: 12px; padding: 4px 8px; border-radius: 999px; }
 .row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
 .prod-title { font-size: 16px; font-weight: 600; color: #1F2A37; }
-.price { font-size: 14px; font-weight: 700; color: #FF7A3E; background: #FFE1D2; padding: 2px 8px; border-radius: 999px; }
+.price { font-size: 14px; font-weight: 700; color: #ff7a3f; background: #FFE1D2; padding: 2px 8px; border-radius: 999px; }
 .desc { margin-top: 6px; font-size: 13px; color: #7A8CA5; line-height: 1.6; }
-.buy-btn { margin-top: 10px; width: 100%; background: #FF7A3E; color: #FFFFFF; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.buy-btn { margin-top: 10px; width: 100%; background: #ff7a3f; color: #FFFFFF; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
