@@ -1,7 +1,7 @@
 const ui = {
   showMyGifts: false,
   showGiftHistory: false,
-  directRecommendAtSecond: true
+  directRecommendAtSecond: false
 }
 
 module.exports = ui
