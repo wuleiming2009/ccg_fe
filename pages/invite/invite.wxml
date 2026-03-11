@@ -2,7 +2,7 @@
   <view class="hero">
     <text class="title-en">INVITATIONS / 礼赴邀请</text>
     <view class="main-title">
-      <text>一位友人{{sendUserNameDisplay}}为您</text>
+      <text>{{sendUserNameDisplay}}为您</text>
       <text>准备了来自 CC GIFT 的礼赠</text>
     </view>
     <view class="notes">

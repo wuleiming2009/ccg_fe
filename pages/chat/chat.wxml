@@ -6,6 +6,7 @@
         <view class="intro-hero">
           <text class="hero-line">有些心意，</text>
           <text class="hero-line">不知道怎么表达。</text>
+          <text class="hero-subline">For Someone Special.</text>
         </view>
         
         <view class="intro-center">
