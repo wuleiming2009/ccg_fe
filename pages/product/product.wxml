@@ -1,8 +1,26 @@
 <view class="product-page">
   <view class="hero">
-    <image class="photo" src="{{img_url || image}}" mode="aspectFill"></image>
+    <block wx:if="{{pictures && pictures.length}}">
+      <swiper class="hero-swiper" indicator-dots="true" circular="true" autoplay="true" interval="3000" duration="500">
+        <swiper-item wx:for="{{pictures}}" wx:key="index">
+          <image class="photo" src="{{item}}" mode="aspectFill" bindtap="onPreviewHeroImage" data-index="{{index}}"></image>
+        </swiper-item>
+      </swiper>
+    </block>
+    <block wx:else>
+      <image class="photo" src="{{img_url || image}}" mode="aspectFill" bindtap="onPreviewHeroImage" data-index="0"></image>
+    </block>
   </view>
 
+  <view class="imgprev-mask" wx:if="{{showImgPreview}}" catchtouchmove="true" bindtap="closeImagePreview"></view>
+  <view class="imgprev" wx:if="{{showImgPreview}}">
+    <swiper class="imgprev-swiper" indicator-dots="true" circular="true" current="{{previewIndex}}">
+      <swiper-item wx:for="{{previewUrls}}" wx:key="index">
+        <image class="imgprev-image" src="{{item}}" mode="aspectFit"></image>
+      </swiper-item>
+    </swiper>
+    <view class="imgprev-close" bindtap="closeImagePreview">×</view>
+  </view>
   <view class="panel">
     <view class="meta">
       <text class="slogan">{{match_meaning || slogan}}</text>

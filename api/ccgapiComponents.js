@@ -176,6 +176,7 @@ function MarketListResp(obj) {
     list: arr.map((item) => ({
       product_id: item.product_id,
       img_url: item.img_url,
+      pictures: item.pictures || item.Pictures || item.prictures || '',
       name: item.name,
       price: money.centsToYuan(item.price),
       slogan: item.slogan || '',
@@ -209,6 +210,7 @@ function ProductInfoResp(obj) {
     info: {
       product_id: src.product_id || obj.product_id || 0,
       img_url: src.img_url || obj.img_url || '',
+      pictures: src.pictures || obj.pictures || '',
       name: src.name || obj.name || '',
       price: money.centsToYuan(toNum(src.price != null ? src.price : obj.price)),
       slogan: src.slogan || obj.slogan || '',
@@ -422,6 +424,7 @@ function OrderInfoResp(obj) {
     product: {
       product_id: toNum(p.product_id),
       img_url: p.img_url || '',
+      pictures: p.pictures || '',
       name: p.name || '',
       price: money.centsToYuan(toNum(p.price)),
       slogan: p.slogan || '',

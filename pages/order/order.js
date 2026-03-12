@@ -12,7 +12,18 @@ Page({
     order_date: '',
     create_time: '',
     showInviteConfirm: false,
-    inviteName: ''
+    inviteName: '',
+    pictures: []
+  },
+  onPreviewImage(e) {
+    try {
+      const idx = Number((e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index) || 0)
+      const arr = (Array.isArray(this.data.pictures) && this.data.pictures.length) ? this.data.pictures
+        : (this.data.product && this.data.product.img_url ? [this.data.product.img_url] : [])
+      if (!arr.length) return
+      const current = arr[idx] || arr[0]
+      wx.previewImage({ current, urls: arr })
+    } catch (_) {}
   },
   onLoad(options) {
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
@@ -36,9 +47,18 @@ Page({
   applyInfo(info) {
     const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已发货', 4: '已关闭', 5: '已退款' }
     const recipientId = Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0)
+    const product = info.product || {}
+    const picsStr = String(
+      product.pictures || product.Pictures || product.prictures || product.Pictures ||
+      info.pictures || info.Pictures || info.prictures || info.Pictures || ''
+    ).trim()
+    const pictures = picsStr
+      ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(s => !!s && /^https?:\/\//.test(s))
+      : []
     this.setData({
       order_id: info.order_id,
-      product: info.product || {},
+      product,
+      pictures,
       recipient: info.recipient || {},
       recipient_id: recipientId,
       quantity: info.quantity || 0,
@@ -98,7 +118,7 @@ Page({
     const id = Number(this.data.order_id) || 0
     const path = `/pages/invite/invite?order_id=${id}`
     const env = require('../../config/env')
-    const prodImg = (this.data.product && this.data.product.img_url) || ''
+    const prodImg = (Array.isArray(this.data.pictures) && this.data.pictures[0]) || (this.data.product && this.data.product.img_url) || ''
     const fallback = 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/4d35825d420247f8acd224f66e281cb2.png'
     const imageUrl = /^https?:\/\//.test(prodImg) ? prodImg : fallback
     return { title: '填写收礼地址邀请', path, imageUrl }

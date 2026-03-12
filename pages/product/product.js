@@ -2,6 +2,10 @@ Page({
   data: {
     product_id: 0,
     img_url: '',
+    pictures: [],
+    showImgPreview: false,
+    previewIndex: 0,
+    previewUrls: [],
     name: '',
     price: 0,
     slogan: '',
@@ -46,9 +50,12 @@ Page({
           if (!t) return ''
           return String(t).split(',').map(s => s.trim()).filter(Boolean).join(sep)
         }
+        const picsStr = String(item.pictures || '').trim()
+        const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
         this.setData({
           product_id: item.product_id || 0,
           img_url: item.img_url,
+          pictures,
           name: item.name,
           price: item.price,
           slogan: item.slogan || '',
@@ -75,9 +82,12 @@ Page({
           if (!t) return ''
           return String(t).split(',').map(s => s.trim()).filter(Boolean).join(sep)
         }
+        const picsStr = String(it.pictures || '').trim()
+        const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
         this.setData({
           product_id: it.product_id || pid,
           img_url: it.img_url,
+          pictures,
           name: it.name,
           price: it.price,
           slogan: it.slogan || '',
@@ -93,6 +103,14 @@ Page({
       })
     }
   },
+  onPreviewHeroImage(e) {
+    const idx = Number((e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index) || 0)
+    const pics = Array.isArray(this.data.pictures) ? this.data.pictures : []
+    const urls = pics.length ? pics.slice() : [this.data.img_url, this.data.image].filter(u => !!u)
+    if (!urls.length) return
+    this.setData({ showImgPreview: true, previewIndex: (idx < urls.length ? idx : 0), previewUrls: urls })
+  },
+  closeImagePreview() { this.setData({ showImgPreview: false }) },
   onInc() {
     const q = (this.data.qty || 1) + 1
     this.setData({ qty: q })

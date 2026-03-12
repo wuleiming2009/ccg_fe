@@ -44,5 +44,11 @@
       { "pagePath": "pages/chat/chat", "iconPath": "images/tabbar1.png", "selectedIconPath": "images/tabbar1_s.png" },
       { "pagePath": "pages/my/my", "iconPath": "images/tabbar3.png", "selectedIconPath": "images/tabbar3_s.png", "text": "会员管家", "color": "#666666", "selectedColor": "#ff7a3f" }
     ]
+  },
+  "requiredPrivateInfos": ["chooseAddress"],
+  "permission": {
+    "scope.address": {
+      "desc": "用于选择收货地址，填写订单收件信息"
+    }
   }
 }

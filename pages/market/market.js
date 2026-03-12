@@ -20,6 +20,7 @@ Page({
       const list = (resp.list || []).map((it, idx) => ({
           product_id: it.product_id || 0,
           img_url: it.img_url,
+          pictures: it.pictures || '',
           name: it.name,
           price: it.price,
           slogan: it.slogan || '',
