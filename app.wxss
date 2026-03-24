@@ -1,6 +1,6 @@
 /* 全局样式 */
 page {
-  background-color: #eeece5;
+  background-color: #fefaf9;
   height: 100%;
   font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
 }

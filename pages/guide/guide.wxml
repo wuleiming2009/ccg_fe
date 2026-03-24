@@ -1,0 +1,33 @@
+<view class="guide">
+  <view class="custom-nav" style="height: {{navHeight}}px; padding-top: {{statusBarHeight}}px;">
+    <image class="nav-bg" src="{{navBg}}" mode="aspectFill"></image>
+    <view class="nav-content">
+      <text class="nav-title">新手引导</text>
+    </view>
+  </view>
+  <view style="height: {{navHeight}}px;"></view>
+  <swiper class="guide-swiper" indicator-dots="false" circular="false" current="{{current}}" bindchange="onChange">
+    <swiper-item wx:for="{{images}}" wx:key="index">
+      <image class="slide" src="{{item}}" mode="widthFix" webp="true" lazy-load="false"></image>
+    </swiper-item>
+  </swiper>
+  <view class="controls">
+    <view class="dots">
+      <view wx:for="{{images}}" wx:key="i" class="dot {{index === current ? 'active' : ''}}"></view>
+    </view>
+    <block wx:if="{{current === 0}}">
+      <view class="btn-row single">
+        <button class="btn primary long" bindtap="onNext">下一步</button>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="btn-row">
+        <button class="btn ghost" bindtap="onPrev">上一步</button>
+        <button class="btn primary" bindtap="{{current === images.length - 1 ? 'onDone' : 'onNext'}}">
+          {{ current === images.length - 1 ? '开始使用' : '下一步' }}
+        </button>
+      </view>
+    </block>
+    <view class="skip" bindtap="onSkip">跳过，直接进入</view>
+  </view>
+</view>

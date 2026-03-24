@@ -1,5 +1,5 @@
-.my-page { background: #eeece5; min-height: 100vh; padding: 16px; }
-.fixed-header { position: fixed; top: 0; left: 0; right: 0; background: #eeece5; padding: 16px; height: 180px; padding-right: 88px; box-sizing: border-box; }
+.my-page { background: #fefaf9; min-height: 100vh; padding: 16px; }
+.fixed-header { position: fixed; top: 0; left: 0; right: 0; background: #fefaf9; padding: 16px; height: 180px; padding-right: 88px; box-sizing: border-box; }
 .header { display: flex; align-items: center; justify-content: space-between; }
 .header-texts { display: flex; flex-direction: column; margin-left: 16px; margin-top: 16px;}
 .greeting { font-size: 26px; color: #ff7a3f; font-weight: 400; }

@@ -1,6 +1,7 @@
 const ccgapi = require('./api/ccgapi');
 const { createClient } = require('./openai/wx-openai/index');
 const { config: aiConfig } = require('./openai/wx-openai/config');
+const env = require('./config/env');
 
 App({
   globalData: {
@@ -9,6 +10,17 @@ App({
   },
   onLaunch() {
     console.log('小程序启动')
+    try {
+      const storedSwitch = wx.getStorageSync('guideTest')
+      const guideTest = typeof storedSwitch === 'boolean' ? storedSwitch : !!(env && env.guideTest)
+      if (guideTest) { wx.reLaunch({ url: '/pages/guide/guide' }); return }
+      const guideDone = !!wx.getStorageSync('guideDone')
+      if (!guideDone) {
+        wx.reLaunch({ url: '/pages/guide/guide' })
+      } else {
+        wx.switchTab({ url: '/pages/chat/chat' })
+      }
+    } catch (_) {}
     try { this.globalData.aiClient = createClient({ provider: 'deepseek', ...aiConfig.deepseek }) } catch (e) { console.warn('AI 客户端初始化失败', e) }
     wx.login({
       async success(res) {

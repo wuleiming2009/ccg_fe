@@ -1,59 +1,64 @@
 <view class="chat-page">
   <block wx:if="{{introMode}}">
     <view class="intro-layer">
-      <image class="intro-bg" src="../../images/chat_bg.png" mode="aspectFill"></image>
       <view class="intro-container">
         <view class="intro-hero">
-          <text class="hero-line">有些心意，</text>
-          <text class="hero-line">不知道怎么表达。</text>
-          <text class="hero-subline">For Someone Special.</text>
+          <text class="brand">CC G<text class="bang">!</text>FT</text>
+          <text class="tagline">FOR SOMEONE SPECIAL</text>
+          <view class="greet-row">
+            <text class="Hi">Hi,</text><text class="name">{{userName ? userName : ''}}</text>
+          </view>
+          <view class="ask-row">
+            <text class="ask-strong">有什么</text><text class="ask-rest"> 想聊聊吗？</text>
+          </view>
         </view>
         
         <view class="intro-center">
-          <view class="prompt-line">
-            <text class="prompt-text">Hi，{{userName ? userName : ''}} 有什么想聊聊吗？</text>
-          </view>
-          <view class="input-area">
-            <view class="toggle-btn" bindtap="onToggleVoiceMode">
-              <image class="toggle-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
+          <view class="prompt-line"><text class="prompt-text"></text></view>
+          <view class="caps-input">
+            <view class="quick-caps-out">
+              <view class="cap" data-text="送闺蜜" bindtap="onQuickCapsule">送闺蜜</view>
+              <view class="cap" data-text="送长辈" bindtap="onQuickCapsule">送长辈</view>
+              <view class="cap" data-text="送爱人" bindtap="onQuickCapsule">送爱人</view>
+              <view class="cap" data-text="送客户" bindtap="onQuickCapsule">送客户</view>
+              <view class="cap" data-text="吵架后" bindtap="onQuickCapsule">吵架后</view>
+              <view class="cap" data-text="第一次见" bindtap="onQuickCapsule">第一次见</view>
             </view>
-            <block wx:if="{{!voiceMode}}">
-              <input class="input" placeholder="{{introPlaceholder}}" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onIntroInput" confirm-type="send" bindconfirm="onIntroSend" />
-            </block>
-            <block wx:else>
-              <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
-                <text class="voice-text">{{voiceHint}}</text>
+            <view class="input-area">
+              <view class="input-box">
+                <block wx:if="{{!voiceMode}}">
+                  <textarea class="input ta" placeholder="{{introPlaceholder}}" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onIntroInput" />
+                </block>
+                <block wx:else>
+                  <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
+                    <text class="voice-text">{{voiceHint}}</text>
+                  </view>
+                </block>
+                <view class="voice-btn" bindtap="onToggleVoiceMode">
+                  <image class="voice-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
+                </view>
+                <view class="send-btn circle intro-send" bindtap="onIntroSend">
+                  <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
+                </view>
               </view>
-            </block>
-            <view class="send-btn intro-send" bindtap="onIntroSend">
-              <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
             </view>
-          </view>
-          <view class="quick-caps-out">
-            <view class="cap" data-text="送闺蜜" bindtap="onQuickCapsule">送闺蜜</view>
-            <view class="cap" data-text="送长辈" bindtap="onQuickCapsule">送长辈</view>
-            <view class="cap" data-text="送爱人" bindtap="onQuickCapsule">送爱人</view>
-            <view class="cap" data-text="送客户" bindtap="onQuickCapsule">送客户</view>
           </view>
         </view>
       </view>
     </view>
   </block>
 
-  <view class="fixed-header" wx:if="{{!introMode}}">
-    <view class="header">
-      <view class="header-texts">
-        <text class="greeting">{{greeting}}</text>
-        <text class="subtext">{{welcomStr}}</text>
-      </view>
-      <view class="header-illustration">
-        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
-      </view>
-    </view>
-  </view>
+  <view class="fixed-header" wx:if="{{false}}"></view>
 
   <scroll-view wx:if="{{!introMode}}" class="chat-scroll {{hasPills ? '' : 'no-pills'}}" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
     <view class="messages">
+      <view class="conv-hero">
+        <view class="hero-texts">
+          <text class="greeting">{{greeting}}</text>
+          <text class="subtext">{{welcomStr}}</text>
+        </view>
+        <image class="hero-gift" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
+      </view>
       <block wx:for="{{messages}}" wx:key="index">
         <block wx:if="{{item.type === 'cta'}}">
           <view class="cta-wrap">
@@ -129,19 +134,21 @@
     </scroll-view>
 
     <view class="input-area">
-      <view class="toggle-btn" bindtap="onToggleVoiceMode">
-        <image class="toggle-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
-      </view>
-      <block wx:if="{{!voiceMode}}">
-        <input class="input" placeholder="请输入消息…" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
-      </block>
-      <block wx:else>
-        <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
-          <text class="voice-text">{{voiceHint}}</text>
+      <view class="input-box">
+        <block wx:if="{{!voiceMode}}">
+          <input class="input" placeholder="有问题，尽管问。" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
+        </block>
+        <block wx:else>
+          <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
+            <text class="voice-text">{{voiceHint}}</text>
+          </view>
+        </block>
+        <view class="voice-btn" bindtap="onToggleVoiceMode">
+          <image class="voice-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
         </view>
-      </block>
-      <view class="send-btn" bindtap="onSend">
-        <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
+        <view class="send-btn circle" bindtap="onSend">
+          <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
+        </view>
       </view>
     </view>
   </view>

@@ -5,11 +5,18 @@
     "miniprogram": {
       "list": [
         {
+          "name": "新人引导",
+          "pathName": "pages/guide/guide",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "收到礼物订单详情",
           "pathName": "pages/receivedOrder/receivedOrder",
           "query": "orderId=8291121152",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "订单详情",

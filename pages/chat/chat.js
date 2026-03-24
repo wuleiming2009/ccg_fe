@@ -443,9 +443,11 @@ Page({
   ,onAnotherBatch(e) {
     this.track('cards_another_batch', {})
     const mid = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.mid
+    // 隐藏当前卡片的轻操作，但不影响新卡片
     this.hideActionsFor(mid)
     this.productsPending = false
     this.bumpThreshold && this.bumpThreshold('another_batch')
+    this.autoRerunFromChat()
   }
   ,bumpThreshold(reason) {
     try {
@@ -463,9 +465,15 @@ Page({
   }
   ,autoRerunFromChat() {
     this.track('cards_auto_another_on_chat', {})
+    // 显示等待中的打字气泡
+    try {
+      const list = (this.data.messages || []).slice()
+      list.push({ typing: true })
+      this.setData({ messages: list })
+      this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 300)
+    } catch (_) {}
     this.awaitingRerun = true
     this.productsPending = false
-    this.scrollToEnd(); setTimeout(() => this.scrollToEnd(), 600)
     this.rerunMatchInChat()
   }
   ,rerunMatchInChat() {
@@ -480,6 +488,11 @@ Page({
     ccgapi.matchInChat({ messages: payloadText })
       .then((resp) => {
         console.log('match_in_chat another result', { match_id: resp && resp.match_id, products_count: Array.isArray(resp && resp.products) ? resp.products.length : 0 })
+        // 移除等待打字气泡
+        try {
+          const cleared = (this.data.messages || []).filter(m => !m.typing)
+          this.setData({ messages: cleared })
+        } catch (_) {}
         const products = Array.isArray(resp && resp.products) ? resp.products : []
         const cards = { type: 'products', products, _id: newId, current: 0 }
         const next = (this.data.messages || []).concat([cards])
@@ -493,7 +506,14 @@ Page({
         this.productsPending = true
         this.awaitingRerun = false
       })
-      .catch((e) => { console.error('match_in_chat another error', e) })
+      .catch((e) => {
+        console.error('match_in_chat another error', e)
+        // 请求失败也移除等待气泡
+        try {
+          const cleared = (this.data.messages || []).filter(m => !m.typing)
+          this.setData({ messages: cleared })
+        } catch (_) {}
+      })
   }
   ,getDialogStats() {
     const msgs = Array.isArray(this.data.messages) ? this.data.messages : []

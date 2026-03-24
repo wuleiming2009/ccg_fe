@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/guide/guide",
     "pages/chat/chat",
     "pages/wait/wait",
     "pages/result/result",
@@ -18,7 +19,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#eeece5",
+    "navigationBarBackgroundColor": "#fefaf9",
     "navigationBarTitleText": "CCG礼赠顾问",
     "navigationBarTextStyle": "black"
   },
@@ -37,7 +38,7 @@
   "tabBar": {
     "color": "#7A8CA5",
     "selectedColor": "#1F2A37",
-    "backgroundColor": "#eeece5",
+    "backgroundColor": "#fefaf9",
     "borderStyle": "black",
     "list": [
       { "pagePath": "pages/market/market", "iconPath": "images/tabbar2.png", "selectedIconPath": "images/tabbar2_s.png", "text": "礼物甄选", "color": "#666666", "selectedColor": "#ff7a3f" },

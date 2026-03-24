@@ -1,8 +1,11 @@
-.market-page { min-height: 100vh; background: #eeece5; padding: 12px; box-sizing: border-box; }
-.promo { padding: 12px 4px; margin-bottom: 8px; }
-.promo-title { display: block; text-align: center; font-size: 26px; font-weight: 600; color: #1F2A37; }
-.promo-title2 { display: block; text-align: center; font-size: 14px; font-weight: 600; color: #1F2A37; }
-.promo-divider { margin-top: 8px; height: 2px; background: #949698ff; }
+.market-page { min-height: 100vh; background: #fefaf9; padding: 12px; box-sizing: border-box; }
+.promo { padding: 14px 4px; margin-bottom: 8px; }
+.promo-title2 { display: block; text-align: center; font-size: 12px; letter-spacing: 3px; color: #bdb9b8; text-transform: uppercase; font-weight: 400; }
+.promo-title { display: block; text-align: center; font-size: 28px; font-weight: 700; color: #6B6460; letter-spacing: 1px; margin-top: 6px; }
+.promo-title .bang { color: #ff7a3f; }
+.promo-title .mid { color: #6B6460; }
+.promo-title .brand, .promo-title .cn { color: #6B6460; }
+.promo-divider { margin: 10px auto 0; width: 92%; height: 1px; background: #d0d7e2; border-radius: 1px; }
 .card { background: #FFFFFF; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 12px rgba(31,42,55,0.06); margin-bottom: 16px; }
 .hero { position: relative; height: 400px; }
 .photo { width: 100%; height: 100%; }
