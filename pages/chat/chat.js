@@ -30,6 +30,29 @@ Page({
     return { title: 'CC GIFT 礼赠顾问', path: '/pages/chat/chat' }
   },
   onLoad(options) {
+    try {
+      const env = require('../../config/env')
+      const storedSwitch = wx.getStorageSync('guideTest')
+      const envGuideTest = !!(env && env.guideTest)
+      // 环境开关优先：为 true 时强制进入引导，忽略本地存储
+      if (envGuideTest) {
+      console.log('GuideStatus/chat_enter_env_force', { envGuideTest })
+        wx.reLaunch({ url: '/pages/guide/guide' })
+        return
+      }
+      const guideTest = (typeof storedSwitch === 'boolean') ? storedSwitch : false
+      const rawDone = wx.getStorageSync('guideDone')
+      const guideDone = (rawDone === true) || (rawDone === 'true') || (rawDone === 1) || (rawDone === '1')
+      console.log('GuideStatus/chat_enter', {
+        envGuideTest,
+        rawGuideDone: rawDone,
+        resolvedGuideDone: guideDone
+      })
+      if (guideTest || !guideDone) {
+        wx.reLaunch({ url: '/pages/guide/guide' })
+        return
+      }
+    } catch (_) {}
     const app = getApp()
     this.client = app && app.globalData && app.globalData.aiClient
     const cfg = wx.getStorageSync('userConfig') || {}

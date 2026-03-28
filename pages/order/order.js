@@ -25,6 +25,18 @@ Page({
       wx.previewImage({ current, urls: arr })
     } catch (_) {}
   },
+  onCopyTransport() {
+    try {
+      const t = this.data.transport || {}
+      const text = String(t.transport_no || '').trim()
+      if (!text) { wx.showToast({ title: '无物流信息', icon: 'none' }); return }
+      wx.setClipboardData({
+        data: text,
+        success: () => wx.showToast({ title: '已复制', icon: 'none' }),
+        fail: () => wx.showToast({ title: '复制失败', icon: 'none' })
+      })
+    } catch (_) { wx.showToast({ title: '复制失败', icon: 'none' }) }
+  },
   onLoad(options) {
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
     if (ec && typeof ec.on === 'function') {
@@ -48,6 +60,7 @@ Page({
     const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已发货', 4: '已关闭', 5: '已退款' }
     const recipientId = Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0)
     const product = info.product || {}
+    const toNum = (s) => { const n = parseFloat(String(s || '').replace(/[^\d.]/g, '')); return isNaN(n) ? 0 : n }
     const picsStr = String(
       product.pictures || product.Pictures || product.prictures || product.Pictures ||
       info.pictures || info.Pictures || info.prictures || info.Pictures || ''
@@ -55,19 +68,24 @@ Page({
     const pictures = picsStr
       ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(s => !!s && /^https?:\/\//.test(s))
       : []
+    const qty = Number(info.quantity || 0)
+    const total = toNum(info.amount_total || '0.00')
+    const unit = qty > 0 ? (total / qty).toFixed(2) : (product.price || '0.00')
     this.setData({
       order_id: info.order_id,
       product,
       pictures,
       recipient: info.recipient || {},
       recipient_id: recipientId,
-      quantity: info.quantity || 0,
+      quantity: qty,
+      unit_price: unit,
       amount_total: info.amount_total || '0.00',
       status_text: statusMap[info.order_status] || info.order_status_text || '',
       order_status: (typeof info.order_status === 'number' ? info.order_status : (Number(info.order_status) || -1)),
       order_date: info.date || '',
       create_time: info.create_time || '',
-      isInvite: recipientId === 999
+      isInvite: recipientId === 999,
+      transport: info.transport || {}
     })
   },
   async onPay() {

@@ -1,7 +1,8 @@
 {
   "pages": [
-    "pages/guide/guide",
     "pages/chat/chat",
+    "pages/guide/guide",
+    "pages/confirm/confirm",
     "pages/wait/wait",
     "pages/result/result",
     "pages/history/history",
@@ -42,7 +43,7 @@
     "borderStyle": "black",
     "list": [
       { "pagePath": "pages/market/market", "iconPath": "images/tabbar2.png", "selectedIconPath": "images/tabbar2_s.png", "text": "礼物甄选", "color": "#666666", "selectedColor": "#ff7a3f" },
-      { "pagePath": "pages/chat/chat", "iconPath": "images/tabbar1.png", "selectedIconPath": "images/tabbar1_s.png" },
+      { "pagePath": "pages/chat/chat", "iconPath": "images/tabbar1.png", "selectedIconPath": "images/tabbar1_s.png", "text": "AI礼物助手", "color": "#666666", "selectedColor": "#ff7a3f" },
       { "pagePath": "pages/my/my", "iconPath": "images/tabbar3.png", "selectedIconPath": "images/tabbar3_s.png", "text": "会员管家", "color": "#666666", "selectedColor": "#ff7a3f" }
     ]
   },

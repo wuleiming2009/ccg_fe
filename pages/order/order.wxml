@@ -1,17 +1,24 @@
 <view class="order-page">
+  <view class="page-title">订单详情</view>
+  <view class="top-divider"></view>
   <view class="card recipient-card">
-    <view class="card-header">收礼人信息 / THE RECIPIENT</view>
-    <view class="rec-row">
-      <text class="rec-name">{{recipient.nickname}}</text>
-      <text class="rec-phone">{{recipient.phone}}</text>
-      <text class="rec-note">{{recipient.address}}</text>
-    </view>
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">收件人信息</text></view>
+    <block wx:if="{{isInvite}}">
+      <text class="invite-pending">待发送填址邀请</text>
+    </block>
+    <block wx:else>
+      <view class="rec-row">
+        <text class="rec-name">{{recipient.nickname}}</text>
+        <text class="rec-phone">{{recipient.phone}}</text>
+        <text class="rec-note">{{recipient.address}}</text>
+      </view>
+    </block>
   </view>
 
-  <view class="divider"></view>
+  <!-- removed divider -->
 
   <view class="card product-card">
-    <view class="card-header">选购礼赠 / THE WORK</view>
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">商品信息</text></view>
     <view class="prod-row">
       <block wx:if="{{pictures && pictures.length}}">
         <swiper class="prod-pics" indicator-dots="true" circular="true" autoplay="true" interval="3000" duration="500">
@@ -25,29 +32,54 @@
       </block>
       <view class="prod-meta">
         <text class="prod-title">{{product.name}}</text>
-        <view class="info-row">
-          <text class="label">数量</text>
-          <text class="value">{{quantity}}</text>
+        <view class="transport-row" wx:if="{{transport && transport.transport_no}}">
+          <text class="transport-text">{{transport.transport_company}} · {{transport.transport_no}}</text>
+          <text class="sep">|</text>
+          <text class="copy-link" bindtap="onCopyTransport">复制</text>
         </view>
-        <view class="info-row">
-          <text class="label">总计金额</text>
-          <text class="value strong">¥{{amount_total}}</text>
-        </view>
-        <text class="status big">{{status_text}}</text>
+        <text class="status-tag right">{{status_text}}</text>
       </view>
     </view>
-    <view class="tail">
-      <view class="tail-col">
-        <text class="label">礼赠编号</text>
-        <text class="mono">{{order_id}}</text>
+    <view class="dash-divider"></view>
+    <view class="row">
+      <text class="label">礼赠编号</text>
+      <text class="mono">{{order_id}}</text>
+    </view>
+    <view class="row">
+      <text class="label">礼赠日期</text>
+      <text class="mono">{{create_time}}</text>
+    </view>
+  </view>
+
+  <!-- removed divider -->
+
+  <view class="card bill-card">
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">选购明细</text></view>
+    <view class="bill">
+      <view class="row">
+        <text class="label">商品单价</text>
+        <text class="value">¥{{unit_price}}</text>
       </view>
-      <view class="tail-col">
-        <text class="label">礼赠日期</text>
-        <text>{{create_time}}</text>
+      <view class="row">
+        <text class="label">商品数量</text>
+        <text class="value">× {{quantity}}</text>
+      </view>
+      <view class="row">
+        <text class="label">顺丰快递</text>
+        <text class="value green">免费</text>
+      </view>
+      <view class="dash-divider"></view>
+      <view class="row">
+        <text class="label strong">总价</text>
+        <text class="value strong red">¥{{amount_total}}</text>
       </view>
     </view>
-    <button class="pay-btn" wx:if="{{order_status === 0 || status_text === '待支付'}}" bindtap="onPay">去支付</button>
-    <button class="invite-btn" wx:if="{{order_status === 1 && isInvite}}" bindtap="onInviteIdentity">发送填址邀请</button>
+  </view>
+  
+  
+  <view class="order-footer" wx:if="{{order_status === 0 || (order_status === 1 && isInvite)}}">
+    <button class="pay-btn" wx:if="{{order_status === 0}}" bindtap="onPay">去支付</button>
+    <button class="pay-btn" wx:if="{{order_status === 1 && isInvite}}" bindtap="onInviteIdentity">发送填址邀请</button>
   </view>
 </view>
 

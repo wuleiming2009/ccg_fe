@@ -1,12 +1,15 @@
 <view class="invite-page">
   <view class="hero">
-    <text class="title-en">INVITATIONS / 礼赴邀请</text>
-    <view class="main-title">
-      <text>{{sendUserNameDisplay}}为您</text>
-      <text>准备了来自 CC GIFT 的礼赠</text>
+    <text class="brand">CC G<text class="bang">!</text>FT</text>
+    <view class="gift-wrap">
+      <image class="gift-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFit"></image>
     </view>
-    <view class="notes">
-      <text class="note">我们将确保您的隐私安全。</text>
+    <view class="main-title">
+      <text class="main-cn">{{sendUserNameDisplay}} 为您准备了一份礼物</text>
+      <view class="sub-lines">
+        <text>填写你的收货地址，</text>
+        <text>礼物就会寄到你那里</text>
+      </view>
     </view>
   </view>
 
@@ -24,20 +27,35 @@
       </view>
     </view>
 
-    <button class="wx-address-btn" bindtap="onChooseAddress">微信地址簿</button>
-
-    <view class="field">
-      <text class="label">收礼人称呼 / NAME</text>
-      <input class="input" placeholder="请输入收礼人称呼，注意：这个称呼送礼人会看见哦！" placeholder-class="ph" value="{{name}}" bindinput="onName" />
+    <view class="addr-card">
+      <view class="addr-title-row">
+        <view class="addr-title-wrap">
+          <view class="addr-bar"></view>
+          <text class="addr-title">填写收货地址</text>
+        </view>
+        <text class="addr-link" catchtap="onChooseAddress">微信地址簿</text>
+      </view>
+      <view class="field">
+        <text class="label">收礼人姓名</text>
+        <input class="input" placeholder="收件人姓名" placeholder-class="ph" value="{{name}}" bindinput="onName" />
+      </view>
+      <view class="field">
+        <text class="label">手机号</text>
+        <input class="input" placeholder="收件人手机号" placeholder-class="ph" value="{{phone}}" bindinput="onPhone" />
+      </view>
+      <view class="field">
+        <text class="label">收货地址</text>
+        <input class="input" placeholder="省/市/区/街道/门牌号" placeholder-class="ph" value="{{address}}" bindinput="onAddr" />
+      </view>
     </view>
-    <view class="field">
-      <text class="label">收礼联系电话 / PHONE</text>
-      <input class="input" placeholder="请输入联系方式，我们将严格保密并对送礼人隐藏" placeholder-class="ph" value="{{phone}}" bindinput="onPhone" />
+    <view class="privacy-card">
+      <view class="privacy-header">
+        <text class="lock">🔒</text>
+        <text class="privacy-title">地址隐私保护</text>
+      </view>
+      <text class="privacy-text">您填写的地址 <text class="em">仅CCG官方可见</text>，用于发货。送礼人无法查看您的任何地址信息。物流信息也只发送给您。</text>
     </view>
-    <view class="field">
-      <text class="label">收礼配送地址 / ADDRESS</text>
-      <input class="input" placeholder="请提供完整的收礼地址，我们将严格保密并对送礼人隐藏" placeholder-class="ph" value="{{address}}" bindinput="onAddr" />
-    </view>
-    <button class="submit" bindtap="onSubmit">提交收礼信息 →</button>
+    <view class="submit" bindtap="onSubmit">确认填写，接收礼物</view>
+    <text class="submit-hint">填写后礼物将在24小时内发出</text>
   </view>
 </view>

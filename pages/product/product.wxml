@@ -23,38 +23,45 @@
   </view>
   <view class="panel">
     <view class="meta">
-      <text class="slogan">{{match_meaning || slogan}}</text>
-      <view class="row">
-        <text class="title">{{name}}</text>
+      <text class="title big">{{name}}</text>
+      <text class="keywords" wx:if="{{keywords_fmt || keywords}}">{{keywords_fmt || keywords}}</text>
+      <view class="price-row">
         <text class="price">￥{{price}}</text>
+        <text class="mkt-price" wx:if="{{has_market_price}}">￥{{market_price}}</text>
       </view>
     </view>
 
-    <view class="story">
-      <text class="story-label">故事线</text>
-      <view class="story-box">
-        <text class="story-text">“{{match_text}}”</text>
+    <view class="reason" wx:if="{{match_meaning}}">
+      <view class="reason-header">
+        <view class="reason-dot"></view>
+        <text class="reason-title">CCG管家推荐理由</text>
+      </view>
+      <text class="reason-text">{{match_meaning}}</text>
+    </view>
+
+    <view class="chips-card info-card">
+      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">产品信息</text></view>
+      <view class="info-row" wx:if="{{brand_info}}">
+        <text class="info-label">品牌</text>
+        <text class="info-value">{{brand_info}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">规格</text>
+        <text class="info-value">{{contents_fmt || contents}}</text>
       </view>
     </view>
 
-    <view class="detail">
-      <text class="detail-label">套餐内容</text>
-      <view class="detail-box">
-        <text class="detail-text">{{contents_fmt || contents}}</text>
+    <view class="chips-card" wx:if="{{suitable_for_list.length}}">
+      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">适合送给</text></view>
+      <view class="chips">
+        <view class="chip" wx:for="{{suitable_for_list}}" wx:key="index">{{item}}</view>
       </view>
     </view>
 
-    <view class="detail">
-      <text class="detail-label">适用场景</text>
-      <view class="detail-box">
-        <text class="detail-text">{{scene_fmt || scene}}</text>
-      </view>
-    </view>
-
-    <view class="detail">
-      <text class="detail-label">情绪关键词</text>
-      <view class="detail-box">
-        <text class="detail-text">{{keywords_fmt || keywords}}</text>
+    <view class="chips-card" wx:if="{{scene_list.length}}">
+      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">适用场景</text></view>
+      <view class="chips">
+        <view class="chip orange" wx:for="{{scene_list}}" wx:key="index">{{item}}</view>
       </view>
     </view>
 
@@ -67,7 +74,7 @@
       </view>
     </view>
 
-    <button class="cta" bindtap="onGift">送送礼</button>
+    <button class="cta" bindtap="onGift">立即寄送</button>
   </view>
 
   <view class="sheet-mask" wx:if="{{showCheckout}}" bindtap="onCloseSheet"></view>

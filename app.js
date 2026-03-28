@@ -13,13 +13,16 @@ App({
     try {
       const storedSwitch = wx.getStorageSync('guideTest')
       const guideTest = typeof storedSwitch === 'boolean' ? storedSwitch : !!(env && env.guideTest)
-      if (guideTest) { wx.reLaunch({ url: '/pages/guide/guide' }); return }
-      const guideDone = !!wx.getStorageSync('guideDone')
-      if (!guideDone) {
-        wx.reLaunch({ url: '/pages/guide/guide' })
-      } else {
-        wx.switchTab({ url: '/pages/chat/chat' })
-      }
+      wx.setStorageSync('guideTest', !!guideTest)
+      try { wx.removeStorageSync('guideChecked') } catch (_) {}
+      const envGuide = !!(env && env.guideTest)
+      const rawDone = wx.getStorageSync('guideDone')
+      const guideDone = (rawDone === true) || (rawDone === 'true') || (rawDone === 1) || (rawDone === '1')
+      console.log('GuideStatus/startup', {
+        envGuideTest: envGuide,
+        rawGuideDone: rawDone,
+        resolvedGuideDone: guideDone
+      })
     } catch (_) {}
     try { this.globalData.aiClient = createClient({ provider: 'deepseek', ...aiConfig.deepseek }) } catch (e) { console.warn('AI 客户端初始化失败', e) }
     wx.login({

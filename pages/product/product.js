@@ -8,6 +8,8 @@ Page({
     previewUrls: [],
     name: '',
     price: 0,
+    market_price: 0,
+    has_market_price: false,
     slogan: '',
     contents: '',
     scene: '',
@@ -17,6 +19,10 @@ Page({
     keywords_fmt: '',
     match_text: '',
     match_meaning: '',
+    suitable_for: '',
+    brand_info: '',
+    suitable_for_list: [],
+    scene_list: [],
     qty: 1,
     showCheckout: false,
     showRecipient: false,
@@ -52,16 +58,24 @@ Page({
         }
         const picsStr = String(item.pictures || '').trim()
         const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
+        const split = (t) => String(t || '').split(/[,，、\s]+/).map(s => s.trim()).filter(Boolean)
+        const mp = Number(item.market_price) || 0
         this.setData({
           product_id: item.product_id || 0,
           img_url: item.img_url,
           pictures,
           name: item.name,
           price: item.price,
+          market_price: mp,
+          has_market_price: mp > 0,
           slogan: item.slogan || '',
           contents: item.contents || '',
           scene: item.scene || '',
           keywords: item.keywords || '',
+          suitable_for: item.suitable_for || '',
+          brand_info: item.brand_info || '',
+          suitable_for_list: split(item.suitable_for),
+          scene_list: split(item.scene),
           contents_fmt: format(item.contents, ' | '),
           scene_fmt: format(item.scene, ' · '),
           keywords_fmt: format(item.keywords, ' · '),
@@ -84,16 +98,24 @@ Page({
         }
         const picsStr = String(it.pictures || '').trim()
         const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
+        const split = (t) => String(t || '').split(/[,，、\s]+/).map(s => s.trim()).filter(Boolean)
+        const mp2 = Number(it.market_price) || 0
         this.setData({
           product_id: it.product_id || pid,
           img_url: it.img_url,
           pictures,
           name: it.name,
           price: it.price,
+          market_price: mp2,
+          has_market_price: mp2 > 0,
           slogan: it.slogan || '',
           contents: it.contents || '',
           scene: it.scene || '',
           keywords: it.keywords || '',
+          suitable_for: it.suitable_for || '',
+          brand_info: it.brand_info || '',
+          suitable_for_list: split(it.suitable_for),
+          scene_list: split(it.scene),
           contents_fmt: format(it.contents, ' | '),
           scene_fmt: format(it.scene, ' · '),
           keywords_fmt: format(it.keywords, ' · '),
@@ -120,8 +142,20 @@ Page({
     if (q > 1) this.setData({ qty: q - 1 })
   },
   onGift() {
-    this.setData({ showCheckout: true })
-    this.fetchRecipients()
+    const item = {
+      product_id: this.data.product_id,
+      name: this.data.name,
+      img_url: this.data.img_url,
+      price: this.data.price,
+      market_price: this.data.market_price || 0
+    }
+    const qty = this.data.qty || 1
+    wx.navigateTo({
+      url: '/pages/confirm/confirm',
+      success: (res) => {
+        res.eventChannel && res.eventChannel.emit('order', { product: item, qty })
+      }
+    })
   },
   onCloseSheet() {
     this.setData({ showCheckout: false })

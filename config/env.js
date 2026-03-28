@@ -1,4 +1,4 @@
-const mode = "prod";
+const mode = "dev";
 const baseUrl = mode === 'dev'
   ? 'http://192.168.31.161:8888'
   : mode === 'test'

@@ -1,33 +1,35 @@
 <view class="order-page">
+  <view class="page-title">订单详情</view>
+  <view class="top-divider"></view>
   <view class="card recipient-card">
-    <view class="card-header">送礼人 / THE SENDER</view>
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">送礼人信息</text></view>
     <view class="rec-row">
       <text class="rec-name">{{send_user_name || '—'}}</text>
     </view>
   </view>
 
   <view class="card product-card">
-    <view class="card-header">收到的礼物 / RECEIVED</view>
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">商品信息</text></view>
     <view class="prod-row">
       <image class="prod-thumb" src="{{product.img_url}}" mode="aspectFill"></image>
       <view class="prod-meta">
         <text class="prod-title">{{product.name}}</text>
-        <view class="info-row">
-          <text class="label">数量</text>
-          <text class="value">{{quantity}}</text>
+        <view class="transport-row" wx:if="{{transport && transport.transport_no}}">
+          <text class="transport-text">{{transport.transport_company}} · {{transport.transport_no}}</text>
+          <text class="sep">|</text>
+          <text class="copy-link" bindtap="onCopyTransport">复制</text>
         </view>
-        <text class="status big">{{status_text}}</text>
+        <text class="status-tag right">{{status_text}}</text>
       </view>
     </view>
-    <view class="tail">
-      <view class="tail-col">
-        <text class="label">礼赠编号</text>
-        <text class="mono">{{order_id}}</text>
-      </view>
-      <view class="tail-col">
-        <text class="label">礼赠日期</text>
-        <text>{{create_time}}</text>
-      </view>
+    <view class="dash-divider"></view>
+    <view class="row">
+      <text class="label">礼赠编号</text>
+      <text class="mono">{{order_id}}</text>
+    </view>
+    <view class="row">
+      <text class="label">礼赠日期</text>
+      <text class="mono">{{create_time}}</text>
     </view>
   </view>
 </view>

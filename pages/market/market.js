@@ -23,10 +23,13 @@ Page({
           pictures: it.pictures || '',
           name: it.name,
           price: it.price,
+          market_price: it.market_price,
           slogan: it.slogan || '',
           contents: it.contents || '',
           scene: it.scene || '',
           keywords: it.keywords || '',
+          suitable_for: it.suitable_for || '',
+          brand_info: it.brand_info || it.brand_name || '',
           match_text: it.match_text,
           match_meaning: it.match_meaning,
       }))

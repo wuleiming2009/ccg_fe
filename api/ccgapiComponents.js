@@ -179,10 +179,13 @@ function MarketListResp(obj) {
       pictures: item.pictures || item.Pictures || item.prictures || '',
       name: item.name,
       price: money.centsToYuan(item.price),
+      market_price: money.centsToYuan(item.market_price),
       slogan: item.slogan || '',
       contents: item.contents || '',
       scene: item.scene || '',
       keywords: item.keywords || '',
+      suitable_for: item.suitable_for || '',
+      brand_info: item.brand_info || item.brand_name || '',
       match_text: item.match_text,
       match_meaning: item.match_meaning,
     })),
@@ -213,10 +216,13 @@ function ProductInfoResp(obj) {
       pictures: src.pictures || obj.pictures || '',
       name: src.name || obj.name || '',
       price: money.centsToYuan(toNum(src.price != null ? src.price : obj.price)),
+      market_price: money.centsToYuan(toNum(src.market_price != null ? src.market_price : obj.market_price)),
       slogan: src.slogan || obj.slogan || '',
       contents: src.contents || obj.contents || '',
       scene: src.scene || obj.scene || '',
       keywords: src.keywords || obj.keywords || '',
+      suitable_for: src.suitable_for || obj.suitable_for || '',
+      brand_info: src.brand_info || obj.brand_info || src.brand_name || obj.brand_name || '',
       match_text: src.match_text || obj.match_text || '',
       match_meaning: src.match_meaning || obj.match_meaning || '',
     }
@@ -418,6 +424,7 @@ function OrderInfoReq(input) {
 function OrderInfoResp(obj) {
   const p = obj.product || {};
   const r = obj.recipient || {};
+  const t = obj.transport || {};
   const toNum = (v) => (typeof v === 'number' ? v : (Number(v) || 0));
   return {
     order_id: toNum(obj.order_id),
@@ -445,6 +452,11 @@ function OrderInfoResp(obj) {
       address: r.address || '',
     },
     send_user_name: obj.send_user_name || '',
+    transport: {
+      transport_id: toNum(t.transport_id),
+      transport_company: t.transport_company || '',
+      transport_no: t.transport_no || '',
+    },
     create_time: obj.create_time || '',
   };
 }

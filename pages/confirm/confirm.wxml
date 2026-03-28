@@ -1,0 +1,94 @@
+<view class="confirm-page {{method === 'self_fill' ? 'self-mode' : ''}}">
+  <view class="section card gift-card">
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">礼物信息</text></view>
+    <view class="gift-row">
+      <image class="thumb" src="{{product.img_url}}" mode="aspectFill"></image>
+      <view class="gift-info">
+        <text class="g-name">{{product.name}}</text>
+        <text class="g-price">¥{{product.price}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section card info-card">
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">收礼人信息</text></view>
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">收货方式</text></view>
+    <view class="methods">
+      <view class="method recipient {{method === 'recipient_fill' ? 'selected' : ''}}" bindtap="onSelectMethod" data-val="recipient_fill">
+        <view class="lock-ico">
+          <view class="lock-top"></view>
+          <view class="lock-body"><view class="keyhole"></view></view>
+        </view>
+        <text class="m-title">收礼人填写</text>
+        <text class="m-sub">对方安心填写，无压力</text>
+      </view>
+      <view class="method {{method === 'self_fill' ? 'selected' : ''}}" bindtap="onSelectMethod" data-val="self_fill">
+        <view class="pin"></view>
+        <text class="m-title">我知道地址</text>
+        <text class="m-sub">自己填写收货地址</text>
+      </view>
+    </view>
+    <view class="privacy" wx:if="{{method !== 'self_fill'}}">
+      <text class="lock">🔒</text>
+      <view class="p-texts">
+        <text class="p-title">隐私守护 · 无压力收礼</text>
+        <text class="p-desc">支付后生成专属链接，发给对方自主填写。收礼人的地址仅 CCG 官方可见，您全程不接触，对方完全不用担心地址被转发或泄露。</text>
+      </view>
+    </view>
+    <block wx:if="{{method === 'self_fill'}}">
+      <view class="smart-card">
+        <textarea class="smart-textarea" placeholder="粘贴或输入文本，智能拆分姓名、电话和地址" placeholder-class="ph" value="{{rawText}}" bindinput="onRawInput" auto-height="true" />
+      </view>
+      <button class="sticky-btn" bindtap="onPasteRecognize">粘贴并识别</button>
+      <view class="addr-tools">
+        <text class="addr-book" bindtap="onChooseAddress">微信地址簿</text>
+      </view>
+
+      <view class="field">
+        <text class="label">收礼人称呼</text>
+        <input class="input" placeholder="请输入收礼人称呼" placeholder-class="ph" value="{{name}}" bindinput="onName" />
+      </view>
+      <view class="field">
+        <text class="label">联系电话</text>
+        <input class="input" placeholder="请输入联系方式" placeholder-class="ph" value="{{phone}}" bindinput="onPhone" />
+      </view>
+      <view class="field">
+        <text class="label">详细地址</text>
+        <input class="input" placeholder="请输入完整地址" placeholder-class="ph" value="{{address}}" bindinput="onAddr" />
+      </view>
+    </block>
+  </view>
+
+  <view class="section card bill-card">
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">费用明细</text></view>
+    <view class="bill">
+      <view class="row">
+        <text class="b-label">礼物价格</text>
+        <text class="b-val">¥{{product.price}}</text>
+      </view>
+      <view class="row">
+        <text class="b-label">数量</text>
+        <text class="b-val">× {{qty}}</text>
+      </view>
+      <view class="row">
+        <text class="b-label">定制祝福语</text>
+        <text class="b-val green">免费</text>
+      </view>
+      <view class="row">
+        <text class="b-label">顺丰包装运费</text>
+        <text class="b-val green">免费</text>
+      </view>
+      <view class="divider"></view>
+      <view class="row total">
+        <text class="b-label strong">实付金额</text>
+        <text class="b-val strong">¥{{total}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-divider"></view>
+  <view class="footer">
+    <button class="cta" wx:if="{{method === 'self_fill'}}" bindtap="onPay">确认支付</button>
+    <button class="cta" wx:else bindtap="onPay">付款后，邀请收礼人填写地址 🔒</button>
+  </view>
+</view>

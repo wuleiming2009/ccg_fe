@@ -9,7 +9,8 @@ Page({
     status_text: '',
     recipient: {},
     send_user_name: '',
-    create_time: ''
+    create_time: '',
+    transport: {}
   },
   onLoad(query) {
     const ec = this.getOpenerEventChannel && this.getOpenerEventChannel()
@@ -47,7 +48,20 @@ Page({
       status_text: text,
       recipient: info.recipient || {},
       send_user_name: info.send_user_name || '',
-      create_time: info.create_time || ''
+      create_time: info.create_time || '',
+      transport: info.transport || {}
     })
+  },
+  onCopyTransport() {
+    try {
+      const t = this.data.transport || {}
+      const text = String(t.transport_no || '').trim()
+      if (!text) { wx.showToast({ title: '无物流信息', icon: 'none' }); return }
+      wx.setClipboardData({
+        data: text,
+        success: () => wx.showToast({ title: '已复制', icon: 'none' }),
+        fail: () => wx.showToast({ title: '复制失败', icon: 'none' })
+      })
+    } catch (_) { wx.showToast({ title: '复制失败', icon: 'none' }) }
   }
 })

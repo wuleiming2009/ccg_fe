@@ -5,11 +5,18 @@
     "miniprogram": {
       "list": [
         {
+          "name": "分享填址邀请页",
+          "pathName": "pages/invite/invite",
+          "query": "order_id= 9799697408",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "新人引导",
           "pathName": "pages/guide/guide",
           "query": "",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "收到礼物订单详情",
@@ -22,13 +29,6 @@
           "name": "订单详情",
           "pathName": "pages/order/order",
           "query": "orderId=3491168256",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "分享填址邀请页",
-          "pathName": "pages/invite/invite",
-          "query": "order_id=3491168256",
           "launchMode": "default",
           "scene": null
         },
