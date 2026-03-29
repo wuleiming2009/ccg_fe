@@ -23,9 +23,6 @@ Page({
     prodCurrent: 0,
     selectedProductIndex: 0
   },
-  onShow() {
-    wx.showShareMenu({ withShareTicket: true })
-  },
   onShareAppMessage() {
     return { title: 'CC GIFT 礼赠顾问', path: '/pages/chat/chat' }
   },
@@ -87,13 +84,25 @@ Page({
     this.setData({ introPlaceholder: ph })
   },
   onShow() {
+    this._shown = true
     const name = (this.data.userName || '').trim()
     const prefix = name ? `Hi，${name} ` : 'Hi，'
+    wx.showShareMenu({ withShareTicket: true })
     this.setData({ greeting: prefix + this.getGreeting() })
     const ccgapi = require('../../api/ccgapi');
+    const reqId = Date.now()
+    this._welcomeReqId = reqId
     ccgapi.welcomeString({}).then((resp) => {
+      if (!this._shown) return
+      if (this._welcomeReqId !== reqId) return
       this.setData({ welcomStr: resp.str })
-    })
+    }).catch(() => {})
+  },
+  onHide() {
+    this._shown = false
+  },
+  onUnload() {
+    this._shown = false
   },
   initVoice() {
     try {

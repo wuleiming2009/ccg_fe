@@ -1,16 +1,27 @@
 Page({
   data: { name: '', phone: '', wx_nickname: '', showWxAuth: false, greeting: '', welcomStr: '', showNameEdit: false, initial: '小', showContact: false, contactQrUrl: 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/r_wechat_qrcode.jpg', sentCount: 0, receivedCount: 0, avatar: '' },
   onLoad() {
+    this._alive = true
+    this._ready = false
+    this._pendingUpdates = []
+    const safeSetData = (obj) => {
+      if (!this._alive || !obj) return
+      if (this._ready) {
+        this.setData(obj)
+      } else {
+        this._pendingUpdates.push(obj)
+      }
+    }
     const cfg = wx.getStorageSync('userConfig') || {}
     const nm = cfg.user_name || ''
-    this.setData({ name: nm, initial: this.getInitial(nm) })
+    safeSetData({ name: nm, initial: this.getInitial(nm) })
     // 尝试从服务端获取
     const ccgapi = require('../../api/ccgapi')
     ccgapi.userInfo({}).then((resp) => {
       const name = resp.user_name || nm
       const wxPhone = resp.wx_phone || ''
       const phone = resp.phone || wxPhone || ''
-      const avatar = resp.avatar || ''
+      safeSetData({ name, phone, showWxAuth: !(wxPhone && String(wxPhone).trim()), initial: this.getInitial(name), avatar })
       this.setData({ name, phone, showWxAuth: !(wxPhone && String(wxPhone).trim()), initial: this.getInitial(name), avatar })
       const cur = wx.getStorageSync('userConfig') || {}
       cur.user_name = name
@@ -20,31 +31,41 @@ Page({
       wx.setStorageSync('userConfig', cur)
     }).catch(() => {})
   },
+  onReady() {
+    this._ready = true
+    if (this._pendingUpdates && this._pendingUpdates.length) {
+      const merged = this._pendingUpdates.reduce((acc, cur) => Object.assign(acc, cur || {}), {})
+      this._pendingUpdates = []
+      if (this._alive) this.setData(merged)
+    }
+  },
   onShow() {
+    this._alive = true
     const name = (this.data.name || '').trim()
     const prefix = name ? `Hi，${name} ` : 'Hi，'
     this.setData({ greeting: prefix + this.getGreeting() })
     const ccgapi = require('../../api/ccgapi');
     ccgapi.welcomeString({}).then((resp) => {
-      this.setData({ welcomStr: resp.str })
+      if (this._alive) this.setData({ welcomStr: resp.str })
     })
     ccgapi.myPage({}).then((resp) => {
       const nm = resp.user_name || this.data.name || ''
       const av = resp.user_avata || ''
       const sc = (typeof resp.send_order_count === 'number' ? resp.send_order_count : (Number(resp.send_order_count) || 0))
       const rc = (typeof resp.receive_order_count === 'number' ? resp.receive_order_count : (Number(resp.receive_order_count) || 0))
-      this.setData({ name: nm, initial: this.getInitial(nm), avatar: av, sentCount: sc, receivedCount: rc })
+      if (this._alive) this.setData({ name: nm, initial: this.getInitial(nm), avatar: av, sentCount: sc, receivedCount: rc })
       const cur = wx.getStorageSync('userConfig') || {}
       cur.user_name = nm
       if (av) cur.user_avata = av
       wx.setStorageSync('userConfig', cur)
     }).catch(() => {})
   },
+  onHide() { this._alive = false },
+  onUnload() { this._alive = false },
   getGreeting() {
     const hour = new Date().getHours()
     if (hour >= 5 && hour < 12) return '上午好'
     if (hour >= 12 && hour < 18) return '下午好'
-    return '晚上好'
   },
   getInitial(n) {
     const t = String(n || '').trim()

@@ -10,6 +10,12 @@
 .hero { position: relative; height: 400px; }
 .photo { width: 100%; height: 100%; }
 .tag { position: absolute; right: 12px; top: 12px; background: #EFF2F6; color: #7A8CA5; font-size: 12px; padding: 4px 8px; border-radius: 999px; letter-spacing: 1px; }
+.likes-badge { position: absolute; left: 12px; top: 12px; height: 24px; min-width: 24px; padding: 0 8px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.75); backdrop-filter: blur(6px); }
+.likes-heart { font-size: 14px; line-height: 1; }
+.likes-count { font-size: 12px; margin-left: 5px; }
+.likes-badge.cold .likes-heart { color: rgba(255,255,255,0.95); text-shadow: 0 1px 6px rgba(0,0,0,0.30); }
+.likes-badge.hot { background: rgba(255,255,255,0.86); }
+.likes-badge.hot .likes-heart, .likes-badge.hot .likes-count { color: #FF4D4F; }
 .info { display: flex; justify-content: space-between; align-items: center; padding: 12px 12px 2px 20px; }
 .title { font-size: 16px; font-weight: 700; color: #1F2A37; }
 .price { font-size: 16px; font-weight: 700; color: #1F2A37; }

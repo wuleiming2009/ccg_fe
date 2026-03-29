@@ -26,8 +26,14 @@
       <text class="title big">{{name}}</text>
       <text class="keywords" wx:if="{{keywords_fmt || keywords}}">{{keywords_fmt || keywords}}</text>
       <view class="price-row">
-        <text class="price">￥{{price}}</text>
-        <text class="mkt-price" wx:if="{{has_market_price}}">￥{{market_price}}</text>
+        <view class="price-left">
+          <text class="price">￥{{price}}</text>
+          <text class="mkt-price" wx:if="{{has_market_price}}">￥{{market_price}}</text>
+        </view>
+        <view class="likes-row">
+          <text class="likes-heart">♥</text>
+          <text class="likes-text">{{likes}} 人点赞</text>
+        </view>
       </view>
     </view>
 
@@ -74,7 +80,15 @@
       </view>
     </view>
 
-    <button class="cta" bindtap="onGift">立即寄送</button>
+    <view class="bottom-actions">
+      <view class="like-box" bindtap="onToggleLike">
+        <view class="like-btn {{user_like === 1 ? 'liked' : 'unliked'}}">
+          <text class="like-heart">♥</text>
+        </view>
+        <text class="like-count">{{likes}}</text>
+      </view>
+      <button class="cta cta-mini" bindtap="onGift">立即寄送</button>
+    </view>
   </view>
 
   <view class="sheet-mask" wx:if="{{showCheckout}}" bindtap="onCloseSheet"></view>

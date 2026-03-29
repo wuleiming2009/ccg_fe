@@ -44,8 +44,23 @@ Page({
     askUserName: '',
     askPhone: '',
     askWxPhone: '',
+    likes: 0,
+    user_like: 0,
   },
   onLoad(options) {
+    this._alive = true
+    this._shown = true
+    this._ready = false
+    this._pendingUpdates = []
+    const safeSetData = (obj) => {
+      if (!this._alive || !obj) return
+      if (this._ready && this._shown) {
+        this.setData(obj)
+      } else {
+        this._pendingUpdates.push(obj)
+      }
+    }
+    this.safeSetData = safeSetData
     let ec = null
     if (typeof this.getOpenerEventChannel === 'function') {
       try { ec = this.getOpenerEventChannel() } catch (e) { ec = null }
@@ -60,8 +75,14 @@ Page({
         const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
         const split = (t) => String(t || '').split(/[,，、\s]+/).map(s => s.trim()).filter(Boolean)
         const mp = Number(item.market_price) || 0
-        this.setData({
-          product_id: item.product_id || 0,
+        const pidFromItem = item.product_id || 0
+        if (pidFromItem) {
+          this._pid = pidFromItem
+          this.fetchLikes(pidFromItem)
+          this.fetchUserLikeStatus(pidFromItem)
+        }
+        safeSetData({
+          product_id: pidFromItem,
           img_url: item.img_url,
           pictures,
           name: item.name,
@@ -74,6 +95,8 @@ Page({
           keywords: item.keywords || '',
           suitable_for: item.suitable_for || '',
           brand_info: item.brand_info || '',
+          likes: Number(item.likes) || 0,
+          user_like: Number(item.user_like) || 0,
           suitable_for_list: split(item.suitable_for),
           scene_list: split(item.scene),
           contents_fmt: format(item.contents, ' | '),
@@ -86,11 +109,15 @@ Page({
     }
     const cfg = wx.getStorageSync('userConfig') || {}
     const nm = cfg && (cfg.user_name || '')
-    this.setData({ inviteSenderName: nm })
+    safeSetData({ inviteSenderName: nm })
     const pid = Number(options && (options.pid || options.product_id)) || 0
     if (pid) {
+      this._pid = pid
+      this.fetchLikes(pid)
+      this.fetchUserLikeStatus(pid)
       const ccgapi = require('../../api/ccgapi')
       ccgapi.productInfo({ product_id: pid }).then((infoResp) => {
+        if (!this._alive) return
         const it = infoResp.info || {}
         const format = (t, sep) => {
           if (!t) return ''
@@ -100,8 +127,14 @@ Page({
         const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
         const split = (t) => String(t || '').split(/[,，、\s]+/).map(s => s.trim()).filter(Boolean)
         const mp2 = Number(it.market_price) || 0
-        this.setData({
-          product_id: it.product_id || pid,
+        const pid2 = it.product_id || pid
+        if (pid2) {
+          this._pid = pid2
+          this.fetchLikes(pid2)
+          this.fetchUserLikeStatus(pid2)
+        }
+        safeSetData({
+          product_id: pid2,
           img_url: it.img_url,
           pictures,
           name: it.name,
@@ -122,9 +155,78 @@ Page({
           match_text: it.match_text,
           match_meaning: it.match_meaning,
         })
-      })
+      }).catch(() => {})
     }
   },
+  fetchLikes(productId) {
+    const pid = Number(productId) || 0
+    if (!pid) return
+    const reqId = Date.now()
+    this._likesReqId = reqId
+    const ccgapi = require('../../api/ccgapi')
+    ccgapi.productLikes({ product_id: pid }).then((resp) => {
+      if (!this._alive) return
+      if (this._likesReqId !== reqId) return
+      const likes = Number(resp && resp.likes) || 0
+      if (typeof this.safeSetData === 'function') this.safeSetData({ likes })
+      else if (this._ready && this._shown) this.setData({ likes })
+    }).catch(() => {})
+  },
+  fetchUserLikeStatus(productId) {
+    const pid = Number(productId) || 0
+    if (!pid) return
+    const reqId = Date.now()
+    this._userLikeReqId = reqId
+    const ccgapi = require('../../api/ccgapi')
+    ccgapi.userProductLike({ product_id: pid }).then((resp) => {
+      if (!this._alive) return
+      if (this._userLikeReqId !== reqId) return
+      const like = Number(resp && resp.like) || 0
+      if (typeof this.safeSetData === 'function') this.safeSetData({ user_like: like })
+      else if (this._ready && this._shown) this.setData({ user_like: like })
+    }).catch(() => {})
+  },
+  onToggleLike() {
+    const pid = Number(this.data.product_id || this._pid) || 0
+    if (!pid) return
+    const cur = Number(this.data.user_like) || 0
+    if (cur === 1) {
+      wx.showModal({
+        title: '取消点赞',
+        content: '确认取消点赞吗？',
+        confirmText: '取消点赞',
+        cancelText: '再想想',
+        success: (res) => {
+          if (!res.confirm) return
+          this.toggleLikeRequest(pid)
+        }
+      })
+      return
+    }
+    this.toggleLikeRequest(pid)
+  },
+  toggleLikeRequest(pid) {
+    const reqId = Date.now()
+    this._toggleLikeReqId = reqId
+    const ccgapi = require('../../api/ccgapi')
+    ccgapi.setProductLike({ product_id: pid }).then(() => {
+      if (!this._alive) return
+      if (this._toggleLikeReqId !== reqId) return
+      this.fetchUserLikeStatus(pid)
+      this.fetchLikes(pid)
+    }).catch(() => {})
+  },
+  onReady() {
+    this._ready = true
+    if (this._pendingUpdates && this._pendingUpdates.length) {
+      const merged = this._pendingUpdates.reduce((acc, cur) => Object.assign(acc, cur || {}), {})
+      this._pendingUpdates = []
+      if (this._alive && this._shown) this.setData(merged)
+    }
+  },
+  onShow() { this._shown = true },
+  onHide() { this._shown = false },
+  onUnload() { this._alive = false; this._shown = false },
   onPreviewHeroImage(e) {
     const idx = Number((e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index) || 0)
     const pics = Array.isArray(this.data.pictures) ? this.data.pictures : []

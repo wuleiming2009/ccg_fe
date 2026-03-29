@@ -147,6 +147,30 @@ function productInfo(req) {
   });
 }
 
+function setProductLike(req) {
+  const payload = ccgapiComponents.SetProductLikeReq(req);
+  return request.post('/product/v1/set_like', payload).then((resp) => {
+    const out = ccgapiComponents.SetProductLikeResp(resp);
+    return out;
+  });
+}
+
+function productLikes(req) {
+  const payload = ccgapiComponents.ProductLikesReq(req);
+  return request.post('/product/v1/product_likes', payload).then((resp) => {
+    const out = ccgapiComponents.ProductLikesResp(resp);
+    return out;
+  });
+}
+
+function userProductLike(req) {
+  const payload = ccgapiComponents.UserProductLikeReq(req);
+  return request.post('/product/v1/user_product_like', payload).then((resp) => {
+    const out = ccgapiComponents.UserProductLikeResp(resp);
+    return out;
+  });
+}
+
 /**
  * 添加收礼人
  * @param {ccgapiComponents.RecipientAddReq} req
@@ -366,6 +390,9 @@ module.exports = {
   matchInfo,
   marketList,
   productInfo,
+  setProductLike,
+  productLikes,
+  userProductLike,
   recipientAdd,
   recipientEdit,
   recipientDel,

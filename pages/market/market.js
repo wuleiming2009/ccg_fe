@@ -9,9 +9,9 @@ Page({
     palette: ['#8CB4B4','#BFD6D6','#A6C8C8','#8FAFAD','#9EC3BE']
   },
   onLoad() {
-    this.fetchPage(1)
     wx.showShareMenu({ withShareTicket: true })
   },
+  onReady() { this.fetchPage(1) },
   async fetchPage(p) {
     if (this.data.loading) return
     this.setData({ loading: true })
@@ -30,6 +30,7 @@ Page({
           keywords: it.keywords || '',
           suitable_for: it.suitable_for || '',
           brand_info: it.brand_info || it.brand_name || '',
+          likes: Number(it.likes) || 0,
           match_text: it.match_text,
           match_meaning: it.match_meaning,
       }))

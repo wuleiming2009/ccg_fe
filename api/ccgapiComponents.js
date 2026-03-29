@@ -171,6 +171,7 @@ function MarketListReq(input) {
  */
 function MarketListResp(obj) {
   const arr = Array.isArray(obj.list) ? obj.list : (Array.isArray(obj.products) ? obj.products : [])
+  const toNum = (v) => (typeof v === 'number' ? v : (Number(v) || 0));
   return { 
     page: obj.page || 1,
     list: arr.map((item) => ({
@@ -186,6 +187,7 @@ function MarketListResp(obj) {
       keywords: item.keywords || '',
       suitable_for: item.suitable_for || '',
       brand_info: item.brand_info || item.brand_name || '',
+      likes: toNum(item.likes),
       match_text: item.match_text,
       match_meaning: item.match_meaning,
     })),
@@ -228,6 +230,13 @@ function ProductInfoResp(obj) {
     }
   };
 }
+
+function SetProductLikeReq(input) { return { product_id: input.product_id }; }
+function SetProductLikeResp(obj) { return { success: obj.success || '' }; }
+function ProductLikesReq(input) { return { product_id: input.product_id }; }
+function ProductLikesResp(obj) { return { likes: (typeof obj.likes === 'number' ? obj.likes : (Number(obj.likes) || 0)) }; }
+function UserProductLikeReq(input) { return { product_id: input.product_id }; }
+function UserProductLikeResp(obj) { return { like: (typeof obj.like === 'number' ? obj.like : (Number(obj.like) || 0)) }; }
 
 /**
  * @typedef {Object} RecipientAddReq
@@ -541,6 +550,12 @@ module.exports = {
     MarketListResp,
     ProductInfoReq,
     ProductInfoResp,
+    SetProductLikeReq,
+    SetProductLikeResp,
+    ProductLikesReq,
+    ProductLikesResp,
+    UserProductLikeReq,
+    UserProductLikeResp,
     RecipientAddReq,
     RecipientAddResp,
     RecipientEditReq,

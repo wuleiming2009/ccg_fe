@@ -1,5 +1,5 @@
-const mode = "dev";
-const baseUrl = mode === 'dev'
+const mode = "prod";
+const baseUrl = mode === 'prod'
   ? 'http://192.168.31.161:8888'
   : mode === 'test'
   ? 'https://ccgapi-test.x-four.cn'

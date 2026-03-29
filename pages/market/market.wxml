@@ -9,6 +9,10 @@
   <view class="card" wx:for="{{items}}" wx:key="index" bindtap="onOpenDetail" data-index="{{index}}">
     <view class="hero">
       <image class="photo" src="{{item.img_url}}" mode="aspectFill"></image>
+      <view class="likes-badge {{item.likes > 0 ? 'hot' : 'cold'}}">
+        <text class="likes-heart">♥</text>
+        <text class="likes-count" wx:if="{{item.likes > 0}}">{{item.likes}}</text>
+      </view>
     </view>
     <view class="info">
       <text class="title">{{item.name}}</text>
