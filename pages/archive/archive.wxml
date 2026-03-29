@@ -1,9 +1,8 @@
 <view class="archive-page">
-  <view class="toolbar">
-    <view class="spacer"></view>
-    <view class="sort" bindtap="onChangeSort">
-      <text class="sort-text">{{sortMode === 'recipient' ? '按收礼人排序' : '按订单排序'}} ⌄</text>
-    </view>
+  <view class="tabs">
+    <block wx:for="{{tabs}}" wx:key="tab">
+      <view class="tab {{activeTab === item ? 'active' : ''}}" bindtap="onTabChange" data-tab="{{item}}">{{item}}</view>
+    </block>
   </view>
 
   <view class="list" wx:if="{{sortMode === 'recipient'}}">
@@ -50,22 +49,35 @@
     </block>
   </view>
   <view class="list" wx:else>
-    <block wx:if="{{orders.length > 0}}">
-      <block wx:for="{{orders}}" wx:key="order_id">
-        <view class="order order-col" bindtap="onOpenOrder" data-id="{{item.order_id}}">
-          <view class="order-top">
-            <text class="recipient">收礼人：{{item.recipient}}</text>
+    <block wx:if="{{filteredOrders.length > 0}}">
+      <block wx:for="{{filteredOrders}}" wx:key="order_id">
+        <view class="card order-card" bindtap="onOpenOrder" data-id="{{item.order_id}}">
+          <view class="order-header">
+            <text class="order-code">订单号 {{item.order_id}}</text>
+            <text class="order-status">{{item.order_status_text}}</text>
           </view>
-          <view class="order-main">
+          <view class="dash-divider"></view>
+          <view class="order-body">
             <image class="thumb" src="{{item.img_url}}" mode="aspectFill"></image>
             <view class="meta">
               <text class="title">{{item.name}}</text>
               <view class="row">
-                <text class="sub">数量：{{item.qty}}</text>
-                <text class="status">{{item.order_status_text}}</text>
+                <text class="label">送给</text>
+                <text class="value">{{item.recipient}}</text>
               </view>
-              <text class="price">订单金额：¥{{item.price}}</text>
-            <text class="date">创建时间：{{item.create_time}}</text>
+              <view class="row">
+                <text class="label">数量</text>
+                <text class="value">× {{item.qty}}</text>
+              </view>
+              <view class="row">
+                <text class="label">金额</text>
+                <text class="value">¥{{item.price}}</text>
+              </view>
+              <view class="dash-divider"></view>
+              <view class="row">
+                <text class="label">创建时间</text>
+                <text class="value">{{item.create_time}}</text>
+              </view>
             </view>
           </view>
         </view>

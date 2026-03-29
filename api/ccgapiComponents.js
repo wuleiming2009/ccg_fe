@@ -492,7 +492,10 @@ function PaymentPrepayResp(obj) {
  * @property {number} page
  */
 function OrderListByTimeReq(input) {
-  return { page: input.page };
+  const out = { page: input.page };
+  if (input.order_status != null) out.order_status = input.order_status;
+  if (input.is_invite != null) out.is_invite = input.is_invite;
+  return out;
 }
 
 /**
@@ -505,6 +508,17 @@ function OrderListByTimeResp(obj) {
   return {
     page: obj.page || 1,
     list: arr.map((item) => OrderInfoResp(item)),
+  };
+}
+
+// 我的页面数据
+function MyPageReq(input) { return {}; }
+function MyPageResp(obj) {
+  return {
+    user_name: obj.user_name || '',
+    user_avata: obj.user_avata || '',
+    send_order_count: (typeof obj.send_order_count === 'number' ? obj.send_order_count : (Number(obj.send_order_count) || 0)),
+    receive_order_count: (typeof obj.receive_order_count === 'number' ? obj.receive_order_count : (Number(obj.receive_order_count) || 0)),
   };
 }
 
@@ -549,6 +563,12 @@ module.exports = {
     RecipientListByOrdersResp,
   OrderListByTimeReq,
   OrderListByTimeResp,
+  MyPageReq,
+  MyPageResp,
+  CosPostPolicyReq,
+  CosPostPolicyResp,
+  UserCosPutSignReq,
+  UserCosPutSignResp,
   UserInfoReq,
   UserInfoResp,
   SetInfoReq,
@@ -595,17 +615,24 @@ function UserInfoResp(obj) {
   return {
     user_name: obj.user_name || '',
     phone: obj.phone || '',
-    wx_nickname: obj.wx_nickname || '',
-    wx_phone: obj.wx_phone || ''
+    wx_phone: obj.wx_phone || '',
+    avatar: obj.avatar || '',
+    gender: (typeof obj.gender === 'number' ? obj.gender : (Number(obj.gender) || 0)),
+    birthday: obj.birthday || '',
+    city: obj.city || '',
+    signature: obj.signature || ''
   };
 }
 function SetInfoReq(input) {
   const out = {}
   if (input && input.user_name != null && String(input.user_name).trim() !== '') out.user_name = input.user_name
   if (input && input.phone != null && String(input.phone).trim() !== '') out.phone = input.phone
-  if (input && input.wx_nickname != null && String(input.wx_nickname).trim() !== '') out.wx_nickname = input.wx_nickname
   if (input && input.wx_phone != null && String(input.wx_phone).trim() !== '') out.wx_phone = input.wx_phone
-  if (input && input.wx_phone_code != null && String(input.wx_phone_code).trim() !== '') out.wx_phone_code = input.wx_phone_code
+  if (input && input.avatar != null && String(input.avatar).trim() !== '') out.avatar = input.avatar
+  if (input && input.gender != null) { const g = Number(input.gender); if (!isNaN(g)) out.gender = g }
+  if (input && input.birthday != null && String(input.birthday).trim() !== '') out.birthday = input.birthday
+  if (input && input.city != null && String(input.city).trim() !== '') out.city = input.city
+  if (input && input.signature != null && String(input.signature).trim() !== '') out.signature = input.signature
   return out;
 }
 function SetInfoResp(obj) { return { success: obj.success || '' }; }
@@ -674,7 +701,9 @@ function MatchInChatResp(obj) {
  * @property {number} page
  */
 function RecipientOrdersListReq(input) {
-  return { page: input.page || 1 };
+  const out = { page: input.page || 1 };
+  if (input.order_status != null) out.order_status = input.order_status;
+  return out;
 }
 
 /**
@@ -689,3 +718,22 @@ function RecipientOrdersListResp(obj) {
     list: arr.map((item) => OrderInfoResp(item)),
   };
 }
+
+function CosPostPolicyReq(input) {
+  return {
+    file_name: input.file_name,
+    content_type: input.content_type
+  };
+}
+function CosPostPolicyResp(obj) {
+  return {
+    url: obj.url || '',
+    form: obj.form || {},
+    resource_url: obj.resource_url || '',
+    key: obj.key || ''
+  };
+}
+
+// 获取 COS PUT 签名
+function UserCosPutSignReq(input) { return { path: input.path }; }
+function UserCosPutSignResp(obj) { return { sign: obj.sign || '' }; }

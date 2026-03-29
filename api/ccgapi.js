@@ -221,6 +221,40 @@ function recipientListByOrders(req) {
 }
 
 /**
+ *  @doc "我的页面数据接口"
+ * @param {ccgapiComponents.MyPageReq} req
+ * @returns {Promise<ccgapiComponents.MyPageResp>}
+ */
+function myPage(req) {
+  const payload = ccgapiComponents.MyPageReq(req);
+  return request.post('/user/v1/my_page', payload).then((resp) => {
+    const out = ccgapiComponents.MyPageResp(resp);
+    return out;
+  });
+}
+
+function cosPostPolicy(req) {
+  const payload = ccgapiComponents.CosPostPolicyReq(req);
+  return request.post('/misc/v1/cos_post_policy', payload).then((resp) => {
+    const out = ccgapiComponents.CosPostPolicyResp(resp);
+    return out;
+  });
+}
+
+/**
+ *  @doc "cos上传签名"
+ * @param {ccgapiComponents.UserCosPutSignReq} req
+ * @returns {Promise<ccgapiComponents.UserCosPutSignResp>}
+ */
+function userCosPutSign(req) {
+  const payload = ccgapiComponents.UserCosPutSignReq(req);
+  return request.post('/user/v1/user_cos_put_sign', payload).then((resp) => {
+    const out = ccgapiComponents.UserCosPutSignResp(resp);
+    return out;
+  });
+}
+
+/**
  *  @doc "新建订单"
  * @param {ccgapiComponents.OrderNewReq} req
  * @returns {Promise<ccgapiComponents.OrderNewResp>}
@@ -347,6 +381,9 @@ module.exports = {
   recipientOrderList,
   setOrderRecipient
   ,getOrderStatus
+  ,myPage
+  ,cosPostPolicy
+  ,userCosPutSign
 };
 /**
  * 检查订单状态

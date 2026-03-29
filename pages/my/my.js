@@ -1,5 +1,5 @@
 Page({
-  data: { name: '', phone: '', wx_nickname: '', showWxAuth: false, greeting: '', welcomStr: '', showNameEdit: false, initial: '小', showContact: false, contactQrUrl: 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/r_wechat_qrcode.jpg' },
+  data: { name: '', phone: '', wx_nickname: '', showWxAuth: false, greeting: '', welcomStr: '', showNameEdit: false, initial: '小', showContact: false, contactQrUrl: 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/r_wechat_qrcode.jpg', sentCount: 0, receivedCount: 0, avatar: '' },
   onLoad() {
     const cfg = wx.getStorageSync('userConfig') || {}
     const nm = cfg.user_name || ''
@@ -8,15 +8,15 @@ Page({
     const ccgapi = require('../../api/ccgapi')
     ccgapi.userInfo({}).then((resp) => {
       const name = resp.user_name || nm
-      const nick = resp.wx_nickname || ''
       const wxPhone = resp.wx_phone || ''
       const phone = resp.phone || wxPhone || ''
-      this.setData({ name, phone, wx_nickname: nick, showWxAuth: !(wxPhone && String(wxPhone).trim()), initial: this.getInitial(name) })
+      const avatar = resp.avatar || ''
+      this.setData({ name, phone, showWxAuth: !(wxPhone && String(wxPhone).trim()), initial: this.getInitial(name), avatar })
       const cur = wx.getStorageSync('userConfig') || {}
       cur.user_name = name
-      cur.wx_nickname = nick
       cur.phone = phone
       cur.wx_phone = wxPhone
+      if (avatar) cur.user_avata = avatar
       wx.setStorageSync('userConfig', cur)
     }).catch(() => {})
   },
@@ -28,6 +28,17 @@ Page({
     ccgapi.welcomeString({}).then((resp) => {
       this.setData({ welcomStr: resp.str })
     })
+    ccgapi.myPage({}).then((resp) => {
+      const nm = resp.user_name || this.data.name || ''
+      const av = resp.user_avata || ''
+      const sc = (typeof resp.send_order_count === 'number' ? resp.send_order_count : (Number(resp.send_order_count) || 0))
+      const rc = (typeof resp.receive_order_count === 'number' ? resp.receive_order_count : (Number(resp.receive_order_count) || 0))
+      this.setData({ name: nm, initial: this.getInitial(nm), avatar: av, sentCount: sc, receivedCount: rc })
+      const cur = wx.getStorageSync('userConfig') || {}
+      cur.user_name = nm
+      if (av) cur.user_avata = av
+      wx.setStorageSync('userConfig', cur)
+    }).catch(() => {})
   },
   getGreeting() {
     const hour = new Date().getHours()
@@ -52,7 +63,7 @@ Page({
     cfg.user_name = t
     wx.setStorageSync('userConfig', cfg)
     const ccgapi = require('../../api/ccgapi')
-    ccgapi.setInfo({ user_name: t, wx_nickname: this.data.wx_nickname }).then(() => {
+    ccgapi.setInfo({ user_name: t }).then(() => {
       wx.showToast({ title: '已保存', icon: 'none' })
       this.setData({ showNameEdit: false })
     }).catch(() => {
@@ -75,12 +86,12 @@ Page({
         this.setData({ phone: plainPhone, showWxAuth: false })
         const ccgapi = require('../../api/ccgapi')
         const currentName = String(this.data.name || '').trim()
-        const payload = { wx_phone: plainPhone, phone: plainPhone, user_name: currentName || this.data.wx_nickname, wx_nickname: this.data.wx_nickname }
+        const payload = { wx_phone: plainPhone, phone: plainPhone }
+        if (currentName) payload.user_name = currentName
         ccgapi.setInfo(payload).then(() => {
           const cur = wx.getStorageSync('userConfig') || {}
           cur.phone = plainPhone
           cur.wx_phone = plainPhone
-          if (!currentName && this.data.wx_nickname) cur.user_name = this.data.wx_nickname
           wx.setStorageSync('userConfig', cur)
           wx.showToast({ title: '已获取手机号', icon: 'none' })
         }).catch(() => {
@@ -95,7 +106,8 @@ Page({
           if (phone) {
             this.setData({ phone })
             const currentName = String(this.data.name || '').trim()
-            const payload = { wx_phone: phone, phone, user_name: currentName || this.data.wx_nickname, wx_nickname: this.data.wx_nickname }
+            const payload = { wx_phone: phone, phone }
+            if (currentName) payload.user_name = currentName
             return ccgapi.setInfo(payload)
           } else {
             wx.showToast({ title: '未解码到手机号', icon: 'none' })
@@ -104,7 +116,6 @@ Page({
           const cur = wx.getStorageSync('userConfig') || {}
           cur.phone = this.data.phone || cur.phone || ''
           if (this.data.phone) cur.wx_phone = this.data.phone
-          if (!cur.user_name && this.data.wx_nickname) cur.user_name = this.data.wx_nickname
           wx.setStorageSync('userConfig', cur)
           this.setData({ showWxAuth: false })
           wx.showToast({ title: '已获取手机号', icon: 'none' })
@@ -123,6 +134,12 @@ Page({
   },
   onOpenReceived() {
     wx.navigateTo({ url: '/pages/received/received' })
+  },
+  onOpenHistory() {
+    wx.navigateTo({ url: '/pages/history/history' })
+  },
+  onOpenSettings() {
+    wx.navigateTo({ url: '/pages/profile/profile' })
   },
   onContact() { this.setData({ showContact: true }) },
   onCloseContact() { this.setData({ showContact: false }) }

@@ -1,0 +1,55 @@
+<view class="profile-page">
+  <scroll-view class="content" scroll-y="true">
+    <view class="avatar-box" bindtap="onChooseAvatar">
+      <image class="avatar-large" src="{{avatar || defaultAvatar}}" mode="aspectFill"></image>
+      <text class="avatar-tip">点击更换头像</text>
+      <text wx:if="{{hasPendingAvatarChange}}" class="avatar-cancel" catchtap="onCancelAvatar">撤销更换</text>
+    </view>
+
+    <view class="card">
+      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">基本信息</text></view>
+      <view class="field">
+        <text class="label">昵称</text>
+        <input class="input" placeholder="请输入昵称" value="{{user_name}}" bindinput="onNameInput" />
+      </view>
+      <view class="field">
+        <text class="label">性别</text>
+        <view class="gender-row">
+          <view class="pill {{gender === 2 ? 'active' : ''}}" bindtap="onChooseGender" data-g="2">女</view>
+          <view class="pill {{gender === 1 ? 'active' : ''}}" bindtap="onChooseGender" data-g="1">男</view>
+          <view class="pill {{gender === 0 ? 'active' : ''}}" bindtap="onChooseGender" data-g="0">不透露</view>
+        </view>
+      </view>
+      <view class="field">
+        <text class="label">生日</text>
+        <picker mode="date" value="{{birthday || '2000-01-01'}}" bindchange="onBirthdayChange">
+          <view class="picker">{{birthday || '请选择日期'}}</view>
+        </picker>
+      </view>
+      <view class="field">
+        <text class="label">所在城市</text>
+        <picker mode="region" bindchange="onRegionChange">
+          <view class="picker">{{regionText || city || '请选择城市'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">联系方式</text></view>
+      <view class="field">
+        <text class="label">手机号</text>
+        <input class="input" placeholder="请输入手机号" value="{{phone}}" type="number" maxlength="13" bindinput="onPhoneInput" />
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">个性签名（选填）</text></view>
+      <view class="field">
+        <textarea class="textarea" placeholder="请输入签名" value="{{signature}}" maxlength="140" bindinput="onSignatureInput" />
+      </view>
+    </view>
+    <view class="footer">
+      <button class="save-btn" bindtap="onSave">保存修改</button>
+    </view>
+  </scroll-view>
+</view>

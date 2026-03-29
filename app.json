@@ -16,6 +16,7 @@
     "pages/received/received",
     "pages/receivedOrder/receivedOrder",
     "pages/my/my",
+    "pages/profile/profile",
     "pages/order/order"
   ],
   "window": {

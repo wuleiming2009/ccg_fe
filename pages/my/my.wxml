@@ -1,38 +1,44 @@
 <view class="my-page">
-  <view class="fixed-header">
-    <view class="header">
-      <view class="header-texts">
-        <text class="greeting">{{greeting}}</text>
-        <text class="subtext">{{welcomStr}}</text>
-      </view>
-      <view class="header-illustration">
-        <image class="avatar-image" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
-      </view>
+  <view class="header-lite" bindtap="onOpenSettings">
+    <image class="avatar" src="{{avatar || 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png'}}" mode="aspectFill"></image>
+    <view class="hi-wrap">
+      <text class="hi-text">hi ，{{name || '未命名'}}</text>
+      <text class="hi-arrow">›</text>
     </view>
   </view>
-
-  <view class="profile-card">
-    <view class="card-top">
-      <text class="card-label">MEMBER PROFILE</text>
-      <view class="btns">
-        <button wx:if="{{showWxAuth}}" class="pill-btn wx-pill pill-sm" open-type="getPhoneNumber" bindgetphonenumber="onGetPhone">微信授权</button>
-        <button class="pill-btn edit-pill pill-sm" bindtap="onEditName">修改名称</button>
-      </view>
+  <view class="stats">
+    <view class="stat-card" bindtap="onOpenArchive">
+      <text class="stat-num">{{sentCount}}</text>
+      <text class="stat-label">送出的心意</text>
     </view>
-    <view class="card-main">
-      <view class="avatar-placeholder"><text class="avatar-initial">{{initial}}</text></view>
-      <view class="name-info">
-        <text class="member-name">{{name || '未命名'}}</text>
-        <text class="member-tier">白金级礼赠会员</text>
-        <text class="member-contact">联系方式：{{phone || '未绑定'}}</text>
-      </view>
+    <view class="stat-card" bindtap="onOpenReceived">
+      <text class="stat-num">{{receivedCount}}</text>
+      <text class="stat-label">收到的礼物</text>
     </view>
   </view>
-
-  <view class="actions">
-    <view class="big-btn" bindtap="onOpenArchive"><text class="big-btn-text">查看礼赠订单</text><text class="chev">></text></view>
-    <view class="big-btn" bindtap="onOpenReceived"><text class="big-btn-text">查看收到的礼物</text><text class="chev">></text></view>
-    <view class="big-btn" bindtap="onContact"><text class="big-btn-text">合作咨询</text><text class="chev">></text></view>
+  <view class="section-title">我的服务</view>
+  <view class="service-list">
+    <view class="service-item" bindtap="onOpenHistory">
+      <view class="svc-left">
+        <text class="svc-title">历史咨询记录</text>
+        <text class="svc-sub">多次对话 · 接着聊</text>
+      </view>
+      <text class="svc-right">›</text>
+    </view>
+    <view class="service-item" bindtap="onOpenSettings">
+      <view class="svc-left">
+        <text class="svc-title">设置</text>
+        <text class="svc-sub">通知 · 隐私 · 账号</text>
+      </view>
+      <text class="svc-right">›</text>
+    </view>
+    <view class="service-item" bindtap="onContact">
+      <view class="svc-left">
+        <text class="svc-title">联系我们</text>
+        <text class="svc-sub">扫码添加 · 合作 / 咨询 / 定制</text>
+      </view>
+      <text class="svc-right">›</text>
+    </view>
   </view>
 
   <view wx:if="{{showNameEdit}}" class="modal-mask" bindtap="onCloseModal"></view>

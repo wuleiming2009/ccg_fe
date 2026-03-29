@@ -1,16 +1,10 @@
 const ccgapi = require('../../api/ccgapi')
 
 Page({
-  data: { recipients: [], sortMode: 'recipient', orders: [], orderPage: 1, orderHasMore: true },
+  data: { recipients: [], sortMode: 'order', orders: [], orderPage: 1, orderHasMore: true, tabs: ['全部','运输中','已完成','隐私单'], activeTab: '全部', filteredOrders: [] },
   onLoad() {
-    const saved = wx.getStorageSync('archiveSort') || 'recipient'
-    this.setData({ sortMode: saved })
-    if (saved === 'order') {
-      this.setData({ orders: [], orderPage: 1, orderHasMore: true })
-      this.fetchOrdersByTime()
-    } else {
-      this.fetchRecipientsByOrders()
-    }
+    this.setData({ orders: [], orderPage: 1, orderHasMore: true })
+    this.fetchOrdersByTime()
   },
   async fetchRecipientsByOrders() {
     try {
@@ -113,7 +107,12 @@ Page({
   async fetchOrdersByTime() {
     try {
       const page = this.data.orderPage || 1
-      const resp = await ccgapi.orderListByTime({ page })
+      const tab = this.data.activeTab
+      const req = { page }
+      if (tab === '运输中') req.order_status = 3
+      else if (tab === '已完成') req.order_status = 4
+      else if (tab === '隐私单') req.is_invite = 1
+      const resp = await ccgapi.orderListByTime(req)
       const list = (resp.list || []).map((o) => ({
         order_id: String(o.order_id || ''),
         img_url: String((o.product && o.product.img_url) || '').replace(/`/g, '').trim(),
@@ -123,20 +122,27 @@ Page({
         recipient: (o.recipient && (o.recipient.nickname || o.recipient.phone)) || '',
         date: o.date || o.time || o.created_at || '',
         create_time: o.create_time || o.created_at || o.date || '',
+        order_status: Number(o.order_status || 0),
         order_status_text: (function(s){
           if (s === 0) return '待支付'
           if (s === 1) return '已支付'
           if (s === 2) return '已取消'
-          if (s === 3) return '已关闭'
-          if (s === 4) return '已退款'
+          if (s === 3) return '已发货'
+          if (s === 4) return '已关闭'
+          if (s === 5) return '已退款'
           return ''
-        })(o.order_status)
+        })(Number(o.order_status || 0))
       }))
       const merged = (this.data.orders || []).concat(list)
-      this.setData({ orders: merged, orderPage: page + 1, orderHasMore: list.length > 0 })
+      this.setData({ orders: merged, filteredOrders: merged, orderPage: page + 1, orderHasMore: list.length > 0 })
     } catch (e) {
       wx.showToast({ title: '订单获取失败', icon: 'none' })
     }
+  },
+  onTabChange(e) {
+    const val = String(e.currentTarget.dataset.tab || '全部')
+    this.setData({ activeTab: val, orders: [], filteredOrders: [], orderPage: 1 })
+    this.fetchOrdersByTime()
   },
   onLoadMoreOrders() { this.fetchOrdersByTime() },
   onFilterInput(e) {
@@ -150,5 +156,10 @@ Page({
     const q = val.trim().toLowerCase()
     arr[idx].filtered = q ? raw.filter(o => (o.code || '').toLowerCase().includes(q) || (o.name || '').toLowerCase().includes(q)) : raw
     this.setData({ recipients: arr })
+  },
+  onReachBottom() {
+    if (this.data.sortMode === 'order' && this.data.orderHasMore) {
+      this.fetchOrdersByTime()
+    }
   }
 })
