@@ -1,6 +1,6 @@
 <view class="my-page">
   <view class="header-lite" bindtap="onOpenSettings">
-    <image class="avatar" src="{{avatar || 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png'}}" mode="aspectFill"></image>
+    <image class="avatar" src="{{avatar || 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/default_head_img.png'}}" mode="aspectFill"></image>
     <view class="hi-wrap">
       <text class="hi-text">hi ，{{name || '未命名'}}</text>
       <text class="hi-arrow">›</text>

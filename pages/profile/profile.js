@@ -13,7 +13,7 @@ Page({
     prevAvatar: '',
     hasPendingAvatarChange: false,
     uploadingAvatar: false,
-    defaultAvatar: 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png',
+    defaultAvatar: 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/default_head_img.png',
     region: [],
     regionText: ''
   },

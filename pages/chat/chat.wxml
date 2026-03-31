@@ -57,7 +57,6 @@
           <text class="greeting">{{greeting}}</text>
           <text class="subtext">{{welcomStr}}</text>
         </view>
-        <image class="hero-gift" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFill"></image>
       </view>
       <block wx:for="{{messages}}" wx:key="index">
         <block wx:if="{{item.type === 'cta'}}">
