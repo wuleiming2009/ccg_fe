@@ -36,27 +36,100 @@
       </view>
     </view>
     <block wx:if="{{method === 'self_fill'}}">
-      <view class="smart-card">
-        <textarea class="smart-textarea" placeholder="粘贴或输入文本，智能拆分姓名、电话和地址" placeholder-class="ph" value="{{rawText}}" bindinput="onRawInput" auto-height="true" />
+      <view class="rec-head">
+        <view class="rec-head-left">
+          <text class="rec-head-hint">左右滑动切换地址</text>
+        </view>
+        <text class="rec-head-add" catchtap="openRecipient">+新增收礼人</text>
       </view>
-      <button class="sticky-btn" bindtap="onPasteRecognize">粘贴并识别</button>
-      <view class="addr-tools">
-        <text class="addr-book" bindtap="onChooseAddress">微信地址簿</text>
-      </view>
-
-      <view class="field">
-        <text class="label">收礼人称呼</text>
-        <input class="input" placeholder="请输入收礼人称呼" placeholder-class="ph" value="{{name}}" bindinput="onName" />
-      </view>
-      <view class="field">
-        <text class="label">联系电话</text>
-        <input class="input" placeholder="请输入联系方式" placeholder-class="ph" value="{{phone}}" bindinput="onPhone" />
-      </view>
-      <view class="field">
-        <text class="label">详细地址</text>
-        <input class="input" placeholder="请输入完整地址" placeholder-class="ph" value="{{address}}" bindinput="onAddr" />
+      <view class="rec-swiper">
+        <block wx:if="{{recipients && recipients.length}}">
+          <swiper class="rec-list" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" previous-margin="60rpx" next-margin="60rpx" current="{{recCurrent}}" bindchange="onRecSwiperChange">
+            <swiper-item wx:for="{{recipients}}" wx:for-index="idx" wx:key="id">
+              <view class="rec-card {{selectedRecId === item.id ? 'selected' : ''}}" bindtap="selectRecipient" data-id="{{item.id}}">
+                <view class="rec-top">
+                  <text class="rec-tag">RECIPIENT {{(idx + 1) < 10 ? ('0' + (idx + 1)) : (idx + 1)}}</text>
+                </view>
+                <view class="rec-actions">
+                  <view class="rec-edit" catchtap="onEditRecipient" data-id="{{item.id}}">✎</view>
+                  <view class="rec-del" catchtap="onDeleteRecipient" data-id="{{item.id}}">×</view>
+                </view>
+                <view class="rec-info">
+                  <text class="rec-name">{{item.name}}</text>
+                  <text class="rec-phone">{{item.phone}}</text>
+                  <text class="rec-addr">{{item.address}}</text>
+                </view>
+                <text class="rec-default" wx:if="{{item.is_default}}">默认</text>
+              </view>
+            </swiper-item>
+          </swiper>
+        </block>
+        <block wx:else>
+          <view class="rec-card empty" catchtap="openRecipient">
+            <view class="rec-empty">
+              <text class="rec-empty-add">新增收礼人</text>
+            </view>
+          </view>
+        </block>
       </view>
     </block>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showRecipient}}" bindtap="closeRecipient"></view>
+  <view class="modal" wx:if="{{showRecipient}}">
+    <view class="modal-header">
+      <text class="modal-title">新增收礼人</text>
+      <view class="modal-close" bindtap="closeRecipient">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="smart-card">
+        <textarea class="smart-textarea" placeholder="粘贴或输入文本，智能拆分姓名、电话和地址" placeholder-class="ph" value="{{recipientRawText}}" bindinput="onRecRawInput" auto-height="true" />
+      </view>
+      <button class="sticky-btn" bindtap="onRecPasteRecognize">粘贴并识别</button>
+      <view class="addr-tools">
+        <text class="addr-book" bindtap="onRecChooseAddress">微信地址簿</text>
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">收礼人称呼</text>
+        <input class="modal-input" placeholder="请输入" placeholder-class="ph" value="{{recipientForm.nickname}}" bindinput="onRecName" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">联系电话</text>
+        <input class="modal-input" placeholder="请输入" placeholder-class="ph" value="{{recipientForm.phone}}" bindinput="onRecPhone" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">详细地址</text>
+        <input class="modal-input" placeholder="请输入完整地址" placeholder-class="ph" value="{{recipientForm.address}}" bindinput="onRecAddr" />
+      </view>
+    </view>
+    <button class="modal-primary" bindtap="saveRecipient">确认保存</button>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showEditRecipient}}" bindtap="closeEditRecipient"></view>
+  <view class="modal" wx:if="{{showEditRecipient}}">
+    <view class="modal-header">
+      <text class="modal-title">编辑收礼人</text>
+      <view class="modal-close" bindtap="closeEditRecipient">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="modal-field">
+        <text class="modal-label">收礼人称呼</text>
+        <input class="modal-input" placeholder="请输入" placeholder-class="ph" value="{{editRecipientForm.nickname}}" bindinput="onEditName" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">联系电话</text>
+        <input class="modal-input" placeholder="请输入" placeholder-class="ph" value="{{editRecipientForm.phone}}" bindinput="onEditPhone" />
+      </view>
+      <view class="modal-field">
+        <text class="modal-label">详细地址</text>
+        <input class="modal-input" placeholder="请输入完整地址" placeholder-class="ph" value="{{editRecipientForm.address}}" bindinput="onEditAddr" />
+      </view>
+      <view class="modal-field modal-switch">
+        <text class="modal-label">设置为默认地址</text>
+        <switch class="switch-small" color="#ff7a3f" checked="{{editRecipientForm.is_default === 1}}" bindchange="onEditDefaultToggle" />
+      </view>
+    </view>
+    <button class="modal-primary" bindtap="saveEditRecipient">保存更改</button>
   </view>
 
   <view class="section card bill-card">

@@ -146,9 +146,9 @@
         <view class="voice-btn" bindtap="onToggleVoiceMode">
           <image class="voice-img" src="{{voiceMode ? '../../images/text.png' : '../../images/voice.png'}}" mode="aspectFit"></image>
         </view>
-        <view class="send-btn circle" bindtap="onSend">
-          <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
-        </view>
+      </view>
+      <view class="send-btn circle outside" bindtap="onSend">
+        <image class="send-img" src="../../images/send.png" mode="aspectFit"></image>
       </view>
     </view>
   </view>
