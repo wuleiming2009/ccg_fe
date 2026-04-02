@@ -359,7 +359,7 @@
 }
 .input.ta {
 	line-height: 1.5;
-  left: 26rpx;
+	left: 26rpx;
 	top: 36rpx;
 }
 .send-btn {
@@ -547,7 +547,7 @@
 	font-size: 60rpx;
 	color: #6d6158;
 }
- .Hi {
+.Hi {
 	/* color: #6b6460;
 	font-size: 36px;
 	font-weight: 400;
@@ -555,7 +555,7 @@
 	font-size: 36rpx;
 	font-weight: 500;
 	color: #333333; */
-  margin-right: 10rpx;
+	margin-right: 10rpx;
 }
 /*.name {
 	color: #6b6460;
@@ -628,6 +628,7 @@
 	align-items: center;
 	justify-content: center;
 	box-sizing: border-box;
+	
 }
 .caps-input {
 	width: 100%;
@@ -675,7 +676,7 @@
 }
 .quick-caps-out .cap {
 	/* display: inline-flex; width: auto; min-width: 80px; text-align: center; */
-	padding: 20rpx 32rpx;
+	padding: 0rpx 32rpx;
 	background: #ffffff;
 	border: 2rpx solid #b3b3b3;
 	border-radius: 80rpx;
@@ -684,6 +685,8 @@
 	justify-content: center;
 	transition: all 0.3s ease;
 	color: #6d6158;
+  font-size: 23rpx;
+  height: 66rpx;
 }
 .quick-caps-out .cap.active {
 	color: #ff7a3f;
