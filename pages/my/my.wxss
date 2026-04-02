@@ -1,4 +1,4 @@
-.my-page { background: #fef3ef; min-height: 100vh; padding: 16px; }
+.my-page { background: #fef3ef; min-height: 100vh; padding: 16px; padding-bottom: 120rpx; }
 .header-lite { display: flex; align-items: center; gap: 12px; }
 .avatar { width: 88px; height: 88px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(31,42,55,0.06); }
 .hi-wrap { display: flex; align-items: baseline; gap: 6px; }

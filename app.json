@@ -38,9 +38,10 @@
     }
   },
   "tabBar": {
-    "color": "#7A8CA5",
-    "selectedColor": "#1F2A37",
-    "backgroundColor": "#fefaf9",
+    "custom": true,
+    "color": "#666666",
+    "selectedColor": "#FF7A3F",
+    "backgroundColor": "#FEFAF8",
     "borderStyle": "black",
     "list": [
       { "pagePath": "pages/market/market", "iconPath": "images/tabbar2.png", "selectedIconPath": "images/tabbar2_s.png", "text": "礼物甄选", "color": "#666666", "selectedColor": "#ff7a3f" },

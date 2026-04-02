@@ -11,6 +11,13 @@ Page({
   onLoad() {
     wx.showShareMenu({ withShareTicket: true })
   },
+  onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 0
+      })
+    }
+  },
   onReady() { this.fetchPage(1) },
   async fetchPage(p) {
     if (this.data.loading) return

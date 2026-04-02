@@ -59,6 +59,13 @@ Page({
       if (av) cur.user_avata = av
       wx.setStorageSync('userConfig', cur)
     }).catch(() => {})
+    
+    // 更新tabBar选中状态
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 2
+      })
+    }
   },
   onHide() { this._alive = false },
   onUnload() { this._alive = false },

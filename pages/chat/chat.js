@@ -97,6 +97,13 @@ Page({
       if (this._welcomeReqId !== reqId) return
       this.setData({ welcomStr: resp.str })
     }).catch(() => {})
+    
+    // 更新tabBar选中状态
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 1
+      })
+    }
   },
   onHide() {
     this._shown = false
