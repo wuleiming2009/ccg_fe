@@ -184,16 +184,16 @@
   position: absolute;
   right: 7px;
   bottom: 55px;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 24px;
+  border-radius: 20px;
 }
-.voice-img { width: 40px; height: 40px; }
-.fixed-footer .voice-btn { top: 50%; transform: translateY(-50%); bottom: auto; right: 10px; width: 32px; height: 32px; border-radius: 16px; }
-.fixed-footer .voice-img { width: 34px; height: 34px; }
+.voice-img { width: 32px; height: 32px; }
+.fixed-footer .voice-btn { top: 50%; transform: translateY(-50%); bottom: auto; right: 10px; width: 28px; height: 28px; border-radius: 14px; }
+.fixed-footer .voice-img { width: 26px; height: 26px; }
 .fixed-footer .voice-input { left: 0; right: 0; top: 0; bottom: 0; border-radius: 19px; display: flex; align-items: center; padding: 0 46px 0 14px; }
 .voice-input {
   position: absolute;
@@ -231,8 +231,8 @@
 .fixed-footer .input { position: static; width: 100%; height: 38px; line-height: 38px; }
 .input.ta { line-height: 1.5; }
 .send-btn {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -242,12 +242,12 @@
 }
 .send-btn.circle {
   background: transparent;
-  border-radius: 24px;
+  border-radius: 20px;
 }
 .intro-send { right: 7px; bottom: 10px; top: auto; transform: none; }
-.fixed-footer .send-btn { width: 40px; height: 40px; border-radius: 20px; flex: none; position: relative; right: auto; bottom: auto; align-self: center; }
+.fixed-footer .send-btn { width: 36px; height: 36px; border-radius: 18px; flex: none; position: relative; right: auto; bottom: auto; align-self: center; }
 .fixed-footer .send-btn.circle.outside { background: #FF6B36; }
-.fixed-footer .send-img { width: 34px; height: 34px; }
+.fixed-footer .send-img { width: 28px; height: 28px; }
 .fixed-footer .voice-btn { z-index: 3; }
 .fixed-footer .send-btn { z-index: 3; }
 .header-texts {
@@ -362,7 +362,7 @@
 .history-scroll { width: 100%; overflow: hidden; position: relative; z-index: 2; }
 .history-pills { justify-content: flex-start; width: max-content; }
 .toggle-img { width: 26px; height: 26px; }
-.send-img { width: 40px; height: 40px; }
+.send-img { width: 32px; height: 32px; }
 
 /* 商品卡片横向选择 */
 .prod-hint { font-size: 12px; color: #9AA4B2; margin: 2px 0 0 8px; }
