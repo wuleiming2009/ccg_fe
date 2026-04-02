@@ -3,27 +3,30 @@
     <view class="intro-layer">
       <view class="intro-container">
         <view class="intro-hero">
-          <text class="brand">CC G<text class="bang">!</text>FT</text>
-          <text class="tagline">FOR SOMEONE SPECIAL</text>
+          <view class="intro-hero-title">
+            <image class="intro-hero-title-img" src="../../images/home_title.png"></image>
+          </view>
+          <!-- <view class="brand">
+            CC G
+            <view class="bang">!</view>
+            FT
+          </view>
+          <text class="tagline">FOR SOMEONE SPECIAL</text> -->
           <view class="greet-row">
-            <text class="Hi">Hi,</text><text class="name">{{userName ? userName : ''}}</text>
+            <text class="Hi">Hi</text>
+            <text class="name">{{userName ? userName : ''}}</text>
           </view>
           <view class="ask-row">
-            <text class="ask-strong">有什么</text><text class="ask-rest"> 想聊聊吗？</text>
+            <image class="intro-hero-title-img" src="../../images/home_desc.png"></image>
+            <!-- <text class="ask-strong">有什么</text>
+            <text class="ask-rest">想聊聊吗？</text> -->
           </view>
         </view>
-        
         <view class="intro-center">
-          <view class="prompt-line"><text class="prompt-text"></text></view>
+          <view class="prompt-line">
+            <text class="prompt-text"></text>
+          </view>
           <view class="caps-input">
-            <view class="quick-caps-out">
-              <view class="cap" data-text="送闺蜜" bindtap="onQuickCapsule">送闺蜜</view>
-              <view class="cap" data-text="送长辈" bindtap="onQuickCapsule">送长辈</view>
-              <view class="cap" data-text="送爱人" bindtap="onQuickCapsule">送爱人</view>
-              <view class="cap" data-text="送客户" bindtap="onQuickCapsule">送客户</view>
-              <view class="cap" data-text="吵架后" bindtap="onQuickCapsule">吵架后</view>
-              <view class="cap" data-text="第一次见" bindtap="onQuickCapsule">第一次见</view>
-            </view>
             <view class="input-area">
               <view class="input-box">
                 <block wx:if="{{!voiceMode}}">
@@ -42,14 +45,20 @@
                 </view>
               </view>
             </view>
+            <view class="quick-caps-out">
+              <view class="cap" data-text="送闺蜜" bindtap="onQuickCapsule">送闺蜜</view>
+              <view class="cap" data-text="送长辈" bindtap="onQuickCapsule">送长辈</view>
+              <view class="cap" data-text="送爱人" bindtap="onQuickCapsule">送爱人</view>
+              <view class="cap" data-text="送客户" bindtap="onQuickCapsule">送客户</view>
+              <view class="cap" data-text="吵架后" bindtap="onQuickCapsule">吵架后</view>
+              <view class="cap" data-text="第一次见" bindtap="onQuickCapsule">第一次见</view>
+            </view>
           </view>
         </view>
       </view>
     </view>
   </block>
-
   <view class="fixed-header" wx:if="{{false}}"></view>
-
   <scroll-view wx:if="{{!introMode}}" class="chat-scroll {{hasPills ? '' : 'no-pills'}}" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollInto}}">
     <view class="messages">
       <view class="conv-hero">
@@ -88,9 +97,15 @@
             </swiper-item>
           </swiper>
           <view class="light-actions" wx:if="{{!item.actionsHidden}}">
-            <button class="light-btn orange" bindtap="onGoMarketFromCards" data-mid="{{item._id}}">去礼物甄选</button>
-            <button class="light-btn gray" bindtap="onDislikeProducts" data-mid="{{item._id}}">不感兴趣</button>
-            <button class="light-btn outline" bindtap="onAnotherBatch" data-mid="{{item._id}}">换一批</button>
+            <button class="light-btn orange" bindtap="onGoMarketFromCards" data-mid="{{item._id}}">
+              去礼物甄选
+            </button>
+            <button class="light-btn gray" bindtap="onDislikeProducts" data-mid="{{item._id}}">
+              不感兴趣
+            </button>
+            <button class="light-btn outline" bindtap="onAnotherBatch" data-mid="{{item._id}}">
+              换一批
+            </button>
           </view>
           <view id="prod-anchor-{{item._id}}" class="end-anchor"></view>
         </block>
@@ -112,7 +127,6 @@
       <view id="end-anchor" class="end-anchor"></view>
     </view>
   </scroll-view>
-
   <view wx:if="{{!introMode}}" class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
     <view class="footer-bg"></view>
     <scroll-view wx:if="{{hasPills}}" class="history-scroll" scroll-x="true" show-scrollbar="false">
@@ -131,7 +145,6 @@
         </view>
       </view>
     </scroll-view>
-
     <view class="input-area">
       <view class="input-box">
         <block wx:if="{{!voiceMode}}">
