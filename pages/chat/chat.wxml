@@ -68,16 +68,7 @@
         </view>
       </view>
       <block wx:for="{{messages}}" wx:key="index">
-        <block wx:if="{{item.type === 'cta'}}">
-          <view class="cta-wrap">
-            <button class="cta-btn" bindtap="onStartMatch">
-              <text class="gift-icon">🎁</text>
-              <text class="btn-text">开启礼物匹配 →</text>
-            </button>
-            <text class="cta-caption">已了解你的心意，准备好为您推荐</text>
-          </view>
-        </block>
-        <block wx:elif="{{item.type === 'products'}}">
+        <block wx:if="{{item.type === 'products'}}">
           <swiper class="prod-list" previous-margin="92rpx" next-margin="92rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{item.current || 0}}" data-mid="{{item._id}}" bindchange="onProdSwiperChange">
             <swiper-item wx:for="{{item.products}}" wx:for-item="prod" wx:for-index="pidx" wx:key="pidx">
               <view class="prod-card {{(item.current || 0) == pidx ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{pidx}}">
