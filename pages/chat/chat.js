@@ -66,7 +66,8 @@ Page({
 		this.setData({ userName: cfg.user_name || "" });
 		try {
 			const ui = require("../../config/ui");
-			this.earlyRecommendOnSecond = !!(ui && ui.directRecommendAtSecond);
+			const env = require("../../config/env");
+			this.earlyRecommendOnSecond = !!(ui && ui.directRecommendAtSecond) || !!(env && env.quickMatch);
 		} catch (_) {
 			this.earlyRecommendOnSecond = false;
 		}
