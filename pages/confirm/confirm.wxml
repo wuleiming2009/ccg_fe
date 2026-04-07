@@ -1,6 +1,9 @@
 <view class="confirm-page {{method === 'self_fill' ? 'self-mode' : ''}}">
   <view class="section card gift-card">
-    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">礼物信息</text></view>
+    <view class="sec-h">
+      <view class="sec-bar"></view>
+      <text class="sec-title">礼物信息</text>
+    </view>
     <view class="gift-row">
       <image class="thumb" src="{{product.img_url}}" mode="aspectFill"></image>
       <view class="gift-info">
@@ -9,30 +12,32 @@
       </view>
     </view>
   </view>
-
   <view class="section card info-card">
-    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">收礼人信息</text></view>
-    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">收货方式</text></view>
+    <view class="sec-h">
+      <view class="sec-bar"></view>
+      <text class="sec-title">收礼人信息</text>
+    </view>
+    <view class="sec-h">
+      <view class="sec-bar"></view>
+      <text class="sec-title">收货方式</text>
+    </view>
     <view class="methods">
       <view class="method recipient {{method === 'recipient_fill' ? 'selected' : ''}}" bindtap="onSelectMethod" data-val="recipient_fill">
-        <view class="lock-ico">
-          <view class="lock-top"></view>
-          <view class="lock-body"><view class="keyhole"></view></view>
-        </view>
-        <text class="m-title">收礼人填写</text>
-        <text class="m-sub">对方安心填写，无压力</text>
+        <image class="address-icon" src="../../images/lock_icon.png"></image>
+        <view class="m-title">收礼人填写</view>
+        <view class="m-sub">对方安心填写，无压力</view>
       </view>
       <view class="method {{method === 'self_fill' ? 'selected' : ''}}" bindtap="onSelectMethod" data-val="self_fill">
-        <view class="pin"></view>
-        <text class="m-title">我知道地址</text>
-        <text class="m-sub">自己填写收货地址</text>
+        <image class="address-icon" src="../../images/address_icon.png"></image>
+        <view class="m-title">我知道地址</view>
+        <view class="m-sub">自己填写收货地址</view>
       </view>
     </view>
     <view class="privacy" wx:if="{{method !== 'self_fill'}}">
-      <text class="lock">🔒</text>
+      <image class="lock-icon" src="../../images/lock_icon.png"></image>
       <view class="p-texts">
-        <text class="p-title">隐私守护 · 无压力收礼</text>
-        <text class="p-desc">支付后生成专属链接，发给对方自主填写。收礼人的地址仅 CCG 官方可见，您全程不接触，对方完全不用担心地址被转发或泄露。</text>
+        <view class="p-title">隐私守护 · 无压力收礼</view>
+        <view class="p-desc">支付后生成专属链接，收礼人自主填写地址，收件信息用于发货，仅官方可见，全程隐私保密。</view>
       </view>
     </view>
     <block wx:if="{{method === 'self_fill'}}">
@@ -48,7 +53,9 @@
             <swiper-item wx:for="{{recipients}}" wx:for-index="idx" wx:key="id">
               <view class="rec-card {{selectedRecId === item.id ? 'selected' : ''}}" bindtap="selectRecipient" data-id="{{item.id}}">
                 <view class="rec-top">
-                  <text class="rec-tag">RECIPIENT {{(idx + 1) < 10 ? ('0' + (idx + 1)) : (idx + 1)}}</text>
+                  <text class="rec-tag">
+                    RECIPIENT {{(idx + 1) < 10 ? ('0' + (idx + 1)) : (idx + 1)}}
+                  </text>
                 </view>
                 <view class="rec-actions">
                   <view class="rec-edit" catchtap="onEditRecipient" data-id="{{item.id}}">✎</view>
@@ -74,7 +81,6 @@
       </view>
     </block>
   </view>
-
   <view class="modal-mask" wx:if="{{showRecipient}}" bindtap="closeRecipient"></view>
   <view class="modal" wx:if="{{showRecipient}}">
     <view class="modal-header">
@@ -104,7 +110,6 @@
     </view>
     <button class="modal-primary" bindtap="saveRecipient">确认保存</button>
   </view>
-
   <view class="modal-mask" wx:if="{{showEditRecipient}}" bindtap="closeEditRecipient"></view>
   <view class="modal" wx:if="{{showEditRecipient}}">
     <view class="modal-header">
@@ -131,9 +136,11 @@
     </view>
     <button class="modal-primary" bindtap="saveEditRecipient">保存更改</button>
   </view>
-
   <view class="section card bill-card">
-    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">费用明细</text></view>
+    <view class="sec-h">
+      <view class="sec-bar"></view>
+      <text class="sec-title">费用明细</text>
+    </view>
     <view class="bill">
       <view class="row">
         <text class="b-label">礼物价格</text>
@@ -158,10 +165,14 @@
       </view>
     </view>
   </view>
-
   <view class="footer-divider"></view>
   <view class="footer">
     <button class="cta" wx:if="{{method === 'self_fill'}}" bindtap="onPay">确认支付</button>
-    <button class="cta" wx:else bindtap="onPay">付款后，邀请收礼人填写地址 🔒</button>
+    <button class="cta" wx:else bindtap="onPay">
+      <view class="cta-content">
+        <text>付款后，邀请收礼人填写地址</text>
+        <image class="cta-lock" src="../../images/lock_icon.png"></image>
+      </view>
+    </button>
   </view>
 </view>

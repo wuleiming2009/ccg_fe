@@ -29,12 +29,13 @@
 	font-weight: 400;
 }
 .subtext {
-	margin-top: 32rpx;
+	margin-top: 25rpx;
 	font-size: 44rpx;
 	color: #ff7a3f;
 	width: auto;
 	max-width: 100%;
 	word-break: break-word;
+	
 }
 .header-illustration {
 	position: absolute;
@@ -75,8 +76,9 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0 24rpx 0;
+	padding: 70rpx 24rpx 0;
 	gap: 24rpx;
+	margin-bottom: 42rpx;
 }
 .conv-hero .hero-texts {
 	display: flex;

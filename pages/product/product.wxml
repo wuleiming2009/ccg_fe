@@ -22,10 +22,10 @@
   </view>
   <view class="panel">
     <view class="meta">
-      <text class="title big">{{name}}</text>
-      <text class="keywords" wx:if="{{keywords_fmt || keywords}}">
+      <view class="title big">{{name}}</view>
+      <view class="keywords" wx:if="{{keywords_fmt || keywords}}">
         {{keywords_fmt || keywords}}
-      </text>
+      </view>
       <view class="price-row">
         <view class="price-left">
           <text class="price">￥{{price}}</text>

@@ -2,7 +2,7 @@
   <view class="header-lite" bindtap="onOpenSettings">
     <image class="avatar" src="{{avatar || 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/default_head_img.png'}}" mode="aspectFill"></image>
     <view class="hi-wrap">
-      <text class="hi-text">hi ，{{name || '未命名'}}</text>
+      <text class="hi-text">hi  {{name || '未命名'}}</text>
       <text class="hi-arrow">›</text>
     </view>
   </view>
@@ -40,7 +40,6 @@
       <text class="svc-right">›</text>
     </view>
   </view>
-
   <view wx:if="{{showNameEdit}}" class="modal-mask" bindtap="onCloseModal"></view>
   <view wx:if="{{showNameEdit}}" class="modal">
     <text class="modal-title">修改名称</text>
@@ -50,7 +49,6 @@
       <button class="modal-btn dark" bindtap="onSaveName">保存</button>
     </view>
   </view>
-
   <view wx:if="{{showContact}}" class="modal-mask" bindtap="onCloseContact"></view>
   <view wx:if="{{showContact}}" class="modal">
     <text class="modal-title">合作咨询</text>
