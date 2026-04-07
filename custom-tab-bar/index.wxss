@@ -21,20 +21,37 @@
   justify-content: center;
   flex: 1;
   height: 100%;
+  width: 33%;
+}
+
+.icon-box {
+   width: 40rpx;
+  height: 40rpx;
+  margin-bottom: 4rpx;
+  overflow: visible; 
 }
 
 .tab-icon {
-  width: 40rpx;
-  height: 40rpx;
-  margin-bottom: 4rpx;
+ display: block;
+  width: 100%;
+  height: 100%;
+  /* 保持比例，不拉伸变形 */
+  object-fit: contain;
 }
 
-.tab-icon-center {
+.icon-box-center {
   width: 74rpx;
   height: 56rpx;
   margin-bottom: 0;
   transform: translateY(-5rpx);
 }
+
+/* .tab-icon-center {
+  width: 74rpx;
+  height: 56rpx;
+  margin-bottom: 0;
+  transform: translateY(-5rpx);
+} */
 
 .tab-text {
   font-size: 20rpx;

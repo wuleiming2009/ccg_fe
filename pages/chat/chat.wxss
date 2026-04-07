@@ -171,7 +171,8 @@
 	position: fixed;
 	left: 0;
 	right: 0;
-	bottom: 98rpx;
+	bottom: calc(98rpx + constant(safe-area-inset-bottom));
+	bottom: calc(98rpx + env(safe-area-inset-bottom));
 	background: transparent;
 	padding: 16rpx 24rpx 0;
 	box-sizing: border-box;

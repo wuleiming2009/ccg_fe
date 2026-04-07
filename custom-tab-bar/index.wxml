@@ -1,15 +1,20 @@
 <view class="tab-bar">
   <view class="tab-item {{selected === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0" data-path="/pages/market/market">
-    <image class="tab-icon" src="{{selected === 0 ? '../images/tabbar2_s.png' : '../images/tabbar2.png'}}"></image>
+    <view class="icon-box">
+      <image class="tab-icon" src="{{selected === 0 ? '../images/tabbar2_s.png' : '../images/tabbar2.png'}}"></image>
+    </view>
+    <!-- <image class="tab-icon" src="{{selected === 0 ? '../images/tabbar2_s.png' : '../images/tabbar2.png'}}"></image> -->
     <text class="tab-text">礼物集市</text>
   </view>
-  
   <view class="tab-item {{selected === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1" data-path="/pages/chat/chat">
-    <image class="tab-icon tab-icon-center" src="{{selected === 1 ? '../images/tabbar1_s2.png' : '../images/tabbar12.png'}}"></image>
+    <view class="icon-box icon-box-center">
+      <image class="tab-icon tab-icon-center" src="{{selected === 1 ? '../images/tabbar1_s2.png' : '../images/tabbar12.png'}}"></image>
+    </view>
   </view>
-  
   <view class="tab-item {{selected === 2 ? 'active' : ''}}" bindtap="switchTab" data-index="2" data-path="/pages/my/my">
-    <image class="tab-icon" src="{{selected === 2 ? '../images/tabbar3_s.png' : '../images/tabbar3.png'}}"></image>
+    <view class="icon-box">
+      <image class="tab-icon" src="{{selected === 2 ? '../images/tabbar3_s.png' : '../images/tabbar3.png'}}"></image>
+    </view>
     <text class="tab-text">会员管家</text>
   </view>
 </view>
