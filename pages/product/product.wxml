@@ -11,7 +11,6 @@
       <image class="photo" src="{{img_url || image}}" mode="aspectFill" bindtap="onPreviewHeroImage" data-index="0"></image>
     </block>
   </view>
-
   <view class="imgprev-mask" wx:if="{{showImgPreview}}" catchtouchmove="true" bindtap="closeImagePreview"></view>
   <view class="imgprev" wx:if="{{showImgPreview}}">
     <swiper class="imgprev-swiper" indicator-dots="true" circular="true" current="{{previewIndex}}">
@@ -24,19 +23,20 @@
   <view class="panel">
     <view class="meta">
       <text class="title big">{{name}}</text>
-      <text class="keywords" wx:if="{{keywords_fmt || keywords}}">{{keywords_fmt || keywords}}</text>
+      <text class="keywords" wx:if="{{keywords_fmt || keywords}}">
+        {{keywords_fmt || keywords}}
+      </text>
       <view class="price-row">
         <view class="price-left">
           <text class="price">￥{{price}}</text>
           <text class="mkt-price" wx:if="{{has_market_price}}">￥{{market_price}}</text>
         </view>
         <view class="likes-row">
-          <text class="likes-heart">♥</text>
+          <image class="likes-heart" src="../../images/like_icon.png"></image>
           <text class="likes-text">{{likes}} 人点赞</text>
         </view>
       </view>
     </view>
-
     <view class="reason" wx:if="{{match_meaning}}">
       <view class="reason-header">
         <view class="reason-dot"></view>
@@ -44,33 +44,39 @@
       </view>
       <text class="reason-text">{{match_meaning}}</text>
     </view>
-
-    <view class="chips-card info-card">
-      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">产品信息</text></view>
+    <view class="chips-card" wx:if="{{suitable_for_list.length}}">
+      <view class="sec-h">
+        <view class="sec-bar"></view>
+        <text class="sec-title">适合送给</text>
+      </view>
+      <view class="chips">
+        <view class="chip" wx:for="{{suitable_for_list}}" wx:key="index">{{item}}</view>
+      </view>
+    </view>
+    <view class="chips-card info-card" wx:if="{{scene_list.length || brand_info || contents_fmt_list.length || contents}}">
+      <view wx:if="{{scene_list.length}}">
+        <view class="chips">
+          <view class="chip orange" wx:for="{{scene_list}}" wx:key="index">{{item}}</view>
+        </view>
+      </view>
+      <view class="sec-h">
+        <view class="sec-bar"></view>
+        <text class="sec-title">产品信息</text>
+      </view>
       <view class="info-row" wx:if="{{brand_info}}">
         <text class="info-label">品牌</text>
         <text class="info-value">{{brand_info}}</text>
       </view>
       <view class="info-row">
         <text class="info-label">规格</text>
-        <text class="info-value">{{contents_fmt || contents}}</text>
+        <view class="info-value">
+          <view class="info-value-text" wx:for="{{contents_fmt_list}}" wx:key="index">
+            {{item}}
+          </view>
+          <!-- {{contents_fmt || contents}} -->
+        </view>
       </view>
     </view>
-
-    <view class="chips-card" wx:if="{{suitable_for_list.length}}">
-      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">适合送给</text></view>
-      <view class="chips">
-        <view class="chip" wx:for="{{suitable_for_list}}" wx:key="index">{{item}}</view>
-      </view>
-    </view>
-
-    <view class="chips-card" wx:if="{{scene_list.length}}">
-      <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">适用场景</text></view>
-      <view class="chips">
-        <view class="chip orange" wx:for="{{scene_list}}" wx:key="index">{{item}}</view>
-      </view>
-    </view>
-
     <view class="quantity">
       <text class="quantity-label">数量</text>
       <view class="qty-controls">
@@ -79,18 +85,16 @@
         <view class="qty-btn" bindtap="onInc">+</view>
       </view>
     </view>
-
     <view class="bottom-actions">
       <view class="like-box" bindtap="onToggleLike">
         <view class="like-btn {{user_like === 1 ? 'liked' : 'unliked'}}">
-          <text class="like-heart">♥</text>
+          <image class="like-heart" src="{{user_like === 1 ? '../../images/like_icon.png' : '../../images/unlike_icon.png'}}"></image>
         </view>
         <text class="like-count">{{likes}}</text>
       </view>
       <button class="cta cta-mini" bindtap="onGift">立即寄送</button>
     </view>
   </view>
-
   <view class="sheet-mask" wx:if="{{showCheckout}}" bindtap="onCloseSheet"></view>
   <view class="sheet" wx:if="{{showCheckout}}">
     <view class="sheet-header">
@@ -113,13 +117,14 @@
               <text class="rec-name big">支付后发送填址邀请</text>
               <text class="rec-addr tip">适合匿名赠礼或不确定地址场景</text>
             </view>
-            
           </view>
         </swiper-item>
         <swiper-item wx:for="{{recipients}}" wx:key="id">
           <view class="rec-card {{selectedRecId === item.id ? 'selected' : ''}}" bindtap="selectRecipient" data-id="{{item.id}}">
             <view class="rec-top">
-              <text class="rec-tag">RECIPIENT {{index + 1 < 10 ? ('0' + (index + 1)) : (index + 1)}} </text>
+              <text class="rec-tag">
+                RECIPIENT {{index + 1 < 10 ? ('0' + (index + 1)) : (index + 1)}}
+              </text>
               <view class="rec-actions" wx:if="{{selectedRecId === item.id}}">
                 <view class="rec-edit" catchtap="onEditRecipient" data-id="{{item.id}}">✎</view>
                 <view class="rec-del" catchtap="onDeleteRecipient" data-id="{{item.id}}">✖</view>
@@ -145,7 +150,6 @@
     </view>
     <button class="sheet-primary" bindtap="onFinalize">确认支付</button>
   </view>
-
   <!-- 新增收礼人弹窗 -->
   <view class="modal-mask" wx:if="{{showRecipient}}" bindtap="closeRecipient"></view>
   <view class="modal" wx:if="{{showRecipient}}">
@@ -161,7 +165,6 @@
         </view>
       </view>
       <button class="wx-address-btn" bindtap="onRecChooseAddress">微信地址簿</button>
-
       <view class="modal-field">
         <text class="modal-label">收礼人称呼</text>
         <input class="modal-input" placeholder="请输入" placeholder-class="ph" value="{{recipientForm.nickname}}" bindinput="onRecName" />
@@ -178,85 +181,85 @@
     <button class="modal-primary" bindtap="saveRecipient">确认保存</button>
   </view>
 </view>
-  <!-- 编辑收礼人弹窗 -->
-  <view class="modal-mask" wx:if="{{showEditRecipient}}" bindtap="closeEditRecipient"></view>
-  <view class="modal" wx:if="{{showEditRecipient}}">
-    <view class="modal-header">
-      <text class="modal-title">编辑收礼人</text>
-      <view class="modal-close" bindtap="closeEditRecipient">×</view>
-    </view>
-    <view class="modal-body">
-      <view class="modal-field">
-        <text class="modal-label">收礼人称呼</text>
-        <input class="modal-input" placeholder="请输入" value="{{editRecipientForm.nickname}}" bindinput="onEditName" />
-      </view>
-      <view class="modal-field">
-        <text class="modal-label">联系电话</text>
-        <input class="modal-input" placeholder="请输入" value="{{editRecipientForm.phone}}" bindinput="onEditPhone" />
-      </view>
-      <view class="modal-field">
-        <text class="modal-label">详细地址</text>
-        <input class="modal-input" placeholder="请输入完整地址" value="{{editRecipientForm.address}}" bindinput="onEditAddr" />
-      </view>
-      <view class="modal-field modal-switch">
-        <text class="modal-label">设置为默认地址</text>
-        <switch class="switch-small" color="#ff7a3f" checked="{{editRecipientForm.is_default === 1}}" bindchange="onEditDefaultToggle" />
-      </view>
-    </view>
-    <button class="modal-primary" bindtap="saveEditRecipient">保存更改</button>
+<!-- 编辑收礼人弹窗 -->
+<view class="modal-mask" wx:if="{{showEditRecipient}}" bindtap="closeEditRecipient"></view>
+<view class="modal" wx:if="{{showEditRecipient}}">
+  <view class="modal-header">
+    <text class="modal-title">编辑收礼人</text>
+    <view class="modal-close" bindtap="closeEditRecipient">×</view>
   </view>
-
-  <view class="modal-mask" wx:if="{{showInviteConfirm}}" bindtap="onInviteCancel"></view>
-  <view class="modal invite" wx:if="{{showInviteConfirm}}">
-    <view class="modal-header">
-      <text class="modal-title">发送填址邀请</text>
-      <view class="modal-close" bindtap="onInviteCancel">×</view>
+  <view class="modal-body">
+    <view class="modal-field">
+      <text class="modal-label">收礼人称呼</text>
+      <input class="modal-input" placeholder="请输入" value="{{editRecipientForm.nickname}}" bindinput="onEditName" />
     </view>
-    <view class="modal-body">
-      <view class="letter">
-        <view class="letter-top"></view>
-        <view class="letter-body">
-          <text class="letter-line">将使用称呼</text>
-          <block wx:if="{{!inviteEditing}}">
-            <text class="invite-name" bindtap="onInviteToggleEdit">{{inviteSenderName || '称呼'}}</text>
-          </block>
-          <block wx:else>
-            <input class="invite-input" value="{{inviteSenderName}}" bindinput="onInviteNameInput" confirm-type="done" />
-          </block>
-          <text class="letter-line">发送礼物邀请</text>
+    <view class="modal-field">
+      <text class="modal-label">联系电话</text>
+      <input class="modal-input" placeholder="请输入" value="{{editRecipientForm.phone}}" bindinput="onEditPhone" />
+    </view>
+    <view class="modal-field">
+      <text class="modal-label">详细地址</text>
+      <input class="modal-input" placeholder="请输入完整地址" value="{{editRecipientForm.address}}" bindinput="onEditAddr" />
+    </view>
+    <view class="modal-field modal-switch">
+      <text class="modal-label">设置为默认地址</text>
+      <switch class="switch-small" color="#ff7a3f" checked="{{editRecipientForm.is_default === 1}}" bindchange="onEditDefaultToggle" />
+    </view>
+  </view>
+  <button class="modal-primary" bindtap="saveEditRecipient">保存更改</button>
+</view>
+<view class="modal-mask" wx:if="{{showInviteConfirm}}" bindtap="onInviteCancel"></view>
+<view class="modal invite" wx:if="{{showInviteConfirm}}">
+  <view class="modal-header">
+    <text class="modal-title">发送填址邀请</text>
+    <view class="modal-close" bindtap="onInviteCancel">×</view>
+  </view>
+  <view class="modal-body">
+    <view class="letter">
+      <view class="letter-top"></view>
+      <view class="letter-body">
+        <text class="letter-line">将使用称呼</text>
+        <block wx:if="{{!inviteEditing}}">
+          <text class="invite-name" bindtap="onInviteToggleEdit">{{inviteSenderName || '称呼'}}</text>
+        </block>
+        <block wx:else>
+          <input class="invite-input" value="{{inviteSenderName}}" bindinput="onInviteNameInput" confirm-type="done" />
+        </block>
+        <text class="letter-line">发送礼物邀请</text>
+      </view>
+    </view>
+  </view>
+  <view class="modal-actions">
+    <button class="modal-secondary" bindtap="onInviteCancel">取消</button>
+    <button class="modal-primary" bindtap="onInviteConfirm">确认发送</button>
+  </view>
+</view>
+<!-- 下单前补全信息弹窗 -->
+<view class="modal-mask" wx:if="{{showUserInfoAsk}}" bindtap="onAskCancel"></view>
+<view class="modal ask" wx:if="{{showUserInfoAsk}}">
+  <view class="modal-header">
+    <text class="modal-title">完善信息让我们更好的为您服务</text>
+    <view class="modal-close" bindtap="onAskCancel">×</view>
+  </view>
+  <view class="modal-body">
+    <view class="ask-row">
+      <view class="modal-info">
+        <text class="modal-label">当前信息</text>
+        <view class="ask-field">
+          <text class="ask-label">称呼</text>
+          <input class="ask-input" placeholder="请输入称呼" value="{{askUserName}}" bindinput="onAskNameInput" />
+        </view>
+        <view class="ask-field">
+          <text class="ask-label">手机号</text>
+          <text class="ask-value">{{askWxPhone || '未绑定'}}</text>
         </view>
       </view>
-    </view>
-    <view class="modal-actions">
-      <button class="modal-secondary" bindtap="onInviteCancel">取消</button>
-      <button class="modal-primary" bindtap="onInviteConfirm">确认发送</button>
-    </view>
-  </view>
-
-  <!-- 下单前补全信息弹窗 -->
-  <view class="modal-mask" wx:if="{{showUserInfoAsk}}" bindtap="onAskCancel"></view>
-  <view class="modal ask" wx:if="{{showUserInfoAsk}}">
-    <view class="modal-header">
-      <text class="modal-title">完善信息让我们更好的为您服务</text>
-      <view class="modal-close" bindtap="onAskCancel">×</view>
-    </view>
-    <view class="modal-body">
-      <view class="ask-row">
-        <view class="modal-info">
-          <text class="modal-label">当前信息</text>
-          <view class="ask-field">
-            <text class="ask-label">称呼</text>
-            <input class="ask-input" placeholder="请输入称呼" value="{{askUserName}}" bindinput="onAskNameInput" />
-          </view>
-          <view class="ask-field">
-            <text class="ask-label">手机号</text>
-            <text class="ask-value">{{askWxPhone || '未绑定'}}</text>
-          </view>
-        </view>
-        <button wx:if="{{!askWxPhone}}" class="wx-all-btn small" open-type="getPhoneNumber" bindgetphonenumber="onAskGetPhone">微信授权</button>
-      </view>
-    </view>
-    <view class="modal-actions">
-      <button class="modal-primary" bindtap="onAskConfirm">确认</button>
+      <button wx:if="{{!askWxPhone}}" class="wx-all-btn small" open-type="getPhoneNumber" bindgetphonenumber="onAskGetPhone">
+        微信授权
+      </button>
     </view>
   </view>
+  <view class="modal-actions">
+    <button class="modal-primary" bindtap="onAskConfirm">确认</button>
+  </view>
+</view>
