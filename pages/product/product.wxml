@@ -32,7 +32,7 @@
           <text class="mkt-price" wx:if="{{has_market_price}}">￥{{market_price}}</text>
         </view>
         <view class="likes-row">
-          <image class="likes-heart" src="../../images/like_icon.png"></image>
+          <image class="likes-heart" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/like_icon.png"></image>
           <text class="likes-text">{{likes}} 人点赞</text>
         </view>
       </view>
@@ -88,7 +88,7 @@
     <view class="bottom-actions">
       <view class="like-box" bindtap="onToggleLike">
         <view class="like-btn {{user_like === 1 ? 'liked' : 'unliked'}}">
-          <image class="like-heart" src="{{user_like === 1 ? '../../images/like_icon.png' : '../../images/unlike_icon.png'}}"></image>
+          <image class="like-heart" src="{{user_like === 1 ? 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/like_icon.png' : 'https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/unlike_icon.png'}}"></image>
         </view>
         <text class="like-count">{{likes}}</text>
       </view>

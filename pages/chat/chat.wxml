@@ -4,7 +4,7 @@
       <view class="intro-container">
         <view class="intro-hero">
           <view class="intro-hero-title">
-            <image class="intro-hero-title-img" src="../../images/home_title.png"></image>
+            <image class="intro-hero-title-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/home_title.png"></image>
           </view>
           <!-- <view class="brand">
             CC G
@@ -17,7 +17,7 @@
             <text class="name">{{userName ? userName : ''}}</text>
           </view>
           <view class="ask-row">
-            <image class="intro-hero-title-img" src="../../images/home_desc.png"></image>
+            <image class="intro-hero-title-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/home_desc.png"></image>
             <!-- <text class="ask-strong">有什么</text>
             <text class="ask-rest">想聊聊吗？</text> -->
           </view>
@@ -69,13 +69,13 @@
       </view>
       <block wx:for="{{messages}}" wx:key="index">
         <block wx:if="{{item.type === 'products'}}">
-          <swiper class="prod-list" previous-margin="92rpx" next-margin="92rpx" circular="false" indicator-dots="false" duration="300" easing-function="easeInOutCubic" current="{{item.current || 0}}" data-mid="{{item._id}}" bindchange="onProdSwiperChange">
-            <swiper-item wx:for="{{item.products}}" wx:for-item="prod" wx:for-index="pidx" wx:key="pidx">
+          <swiper class="prod-list" previous-margin="108rpx" next-margin="108rpx" circular="true" indicator-dots="{{false}}" duration="400" easing-function="ease" current="{{item.current || 0}}" data-mid="{{item._id}}" bindchange="onProdSwiperChange">
+            <swiper-item wx:for="{{item.products}}" wx:for-item="prod" wx:for-index="pidx" wx:key="pidx" class="{{(item.current || 0) == pidx ? 'swiper-selected' : ''}}">
               <view class="prod-card {{(item.current || 0) == pidx ? 'selected' : ''}}" bindtap="selectProduct" data-index="{{pidx}}">
                 <view class="header-band">
                   <view class="band-texts">
-                    <text class="band-title">{{prod.name}}</text>
-                    <text class="band-sub">{{prod.match_meaning || ''}}</text>
+                    <view class="band-title">{{prod.name}}</view>
+                    <view class="band-sub">{{prod.match_meaning || ''}}</view>
                   </view>
                 </view>
                 <view class="image-area">

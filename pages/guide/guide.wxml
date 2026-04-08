@@ -1,12 +1,14 @@
-<view class="guide">
+<view class="guide" style="background: {{guideBg}}">
   <view class="custom-nav" style="height: {{navHeight}}px; padding-top: {{statusBarHeight}}px;">
-    <image class="nav-bg" src="{{navBg}}" mode="aspectFill"></image>
+    <!-- <image class="nav-bg" src="{{navBg}}" mode="aspectFill"></image> -->
     <view class="nav-content">
-      <text class="nav-title">新手引导</text>
+      <text class="nav-title">
+        <!-- 新手引导 -->
+      </text>
     </view>
   </view>
   <view style="height: {{navHeight}}px;"></view>
-  <swiper class="guide-swiper" indicator-dots="false" circular="false" current="{{current}}" bindchange="onChange">
+  <swiper class="guide-swiper" indicator-dots="{{false}}" circular="{{false}}" current="{{current}}" bindchange="onChange">
     <swiper-item wx:for="{{images}}" wx:key="index">
       <image class="slide" src="{{item}}" mode="widthFix" webp="true" lazy-load="false"></image>
     </swiper-item>

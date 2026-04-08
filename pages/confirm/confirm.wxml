@@ -23,18 +23,18 @@
     </view>
     <view class="methods">
       <view class="method recipient {{method === 'recipient_fill' ? 'selected' : ''}}" bindtap="onSelectMethod" data-val="recipient_fill">
-        <image class="address-icon" src="../../images/lock_icon.png"></image>
+        <image class="address-icon" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/lock_icon.png"></image>
         <view class="m-title">收礼人填写</view>
         <view class="m-sub">对方安心填写，无压力</view>
       </view>
       <view class="method {{method === 'self_fill' ? 'selected' : ''}}" bindtap="onSelectMethod" data-val="self_fill">
-        <image class="address-icon" src="../../images/address_icon.png"></image>
+        <image class="address-icon" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/address_icon.png"></image>
         <view class="m-title">我知道地址</view>
         <view class="m-sub">自己填写收货地址</view>
       </view>
     </view>
     <view class="privacy" wx:if="{{method !== 'self_fill'}}">
-      <image class="lock-icon" src="../../images/lock_icon.png"></image>
+      <image class="lock-icon" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/lock_icon.png"></image>
       <view class="p-texts">
         <view class="p-title">隐私守护 · 无压力收礼</view>
         <view class="p-desc">支付后生成专属链接，收礼人自主填写地址，收件信息用于发货，仅官方可见，全程隐私保密。</view>
@@ -171,7 +171,7 @@
     <button class="cta" wx:else bindtap="onPay">
       <view class="cta-content">
         <text>付款后，邀请收礼人填写地址</text>
-        <image class="cta-lock" src="../../images/lock_icon.png"></image>
+        <image class="cta-lock" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/lock_icon.png"></image>
       </view>
     </button>
   </view>
