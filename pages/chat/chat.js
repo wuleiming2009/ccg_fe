@@ -36,35 +36,37 @@ Page({
 			const env = require("../../config/env");
 			const storedSwitch = wx.getStorageSync("guideTest");
 			const envGuideTest = !!(env && env.guideTest);
-			// 环境开关优先：为 true 时强制进入引导，忽略本地存储
 			if (envGuideTest) {
 				console.log("GuideStatus/chat_enter_env_force", { envGuideTest });
 				wx.reLaunch({ url: "/pages/guide/guide" });
 				return;
 			}
-			const guideTest =
-				typeof storedSwitch === "boolean" ? storedSwitch : false;
+			const guideTest = typeof storedSwitch === "boolean" ? storedSwitch : false;
 			const rawDone = wx.getStorageSync("guideDone");
-			const guideDone =
-				rawDone === true ||
-				rawDone === "true" ||
-				rawDone === 1 ||
-				rawDone === "1";
-			console.log("GuideStatus/chat_enter", {
-				envGuideTest,
-				rawGuideDone: rawDone,
-				resolvedGuideDone: guideDone,
-			});
+			const guideDone = rawDone === true || rawDone === "true" || rawDone === 1 || rawDone === "1";
+			console.log("GuideStatus/chat_enter", { envGuideTest, rawGuideDone: rawDone, resolvedGuideDone: guideDone });
 			if (guideTest || !guideDone) {
 				wx.reLaunch({ url: "/pages/guide/guide" });
 				return;
 			}
 		} catch (_) {}
+
 		const app = getApp();
 		this.client = app && app.globalData && app.globalData.aiClient;
 		const cfg = wx.getStorageSync("userConfig") || {};
-		this.setData({ hasPills: SHOW_HISTORY_PILLS });
-		this.setData({ userName: cfg.user_name || "" });
+		this.setData({ hasPills: SHOW_HISTORY_PILLS, userName: cfg.user_name || "" });
+
+		const lastMatchId = wx.getStorageSync('lastMatchId');
+		if (lastMatchId) {
+			wx.removeStorageSync('lastMatchId');
+			this.loadMatchHistory(lastMatchId);
+			return;
+		}
+
+		if (options && options.match_id) {
+			this.loadMatchHistory(options.match_id);
+			return;
+		}
 		try {
 			const ui = require("../../config/ui");
 			const env = require("../../config/env");
@@ -117,8 +119,19 @@ Page({
 		const ph = placeholders[Math.floor(Math.random() * placeholders.length)];
 		this.setData({ introPlaceholder: ph });
 	},
-	onShow() {
-		// 更新tabBar选中状态
+	onTabItemTap(e) {
+		console.log('tab tap', JSON.stringify(e));
+	},
+onShow() {
+		const lastMatchId = wx.getStorageSync('lastMatchId');
+		if (lastMatchId) {
+			wx.removeStorageSync('lastMatchId');
+			this.loadMatchHistory(lastMatchId);
+			return;
+		}
+		if (this.data.introMode === false && !lastMatchId) {
+			return;
+		}
 		if (typeof this.getTabBar === "function" && this.getTabBar()) {
 			wx.nextTick(() => {
 				this.getTabBar().setData({
@@ -773,12 +786,35 @@ Page({
 		}
 	},
 	selectProduct(e) {
-		const idx =
-			e &&
-			e.currentTarget &&
-			e.currentTarget.dataset &&
-			e.currentTarget.dataset.index;
+		const idx = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index;
 		const i = Number(idx) || 0;
 		this.setData({ selectedProductIndex: i, prodCurrent: i });
+	},
+	async loadMatchHistory(matchId) {
+		const ccgapi = require("../../api/ccgapi");
+		try {
+			const resp = await ccgapi.matchInfo({ match_id: matchId });
+			const msgs = typeof resp.messages === 'string' ? resp.messages : JSON.stringify(resp.messages || { records: [] });
+			let messages = [];
+			try {
+				const parsed = JSON.parse(msgs);
+				if (parsed.records && Array.isArray(parsed.records)) {
+					messages = parsed.records.filter(m => m.role === 'user' || m.role === 'assistant').map(m => {
+						let content = m.content || '';
+						if (content === '...' || content === '...') {
+							content = '系统历史推荐商品';
+						}
+						return { role: m.role, content };
+					});
+				}
+			} catch (e) {
+				messages = [];
+			}
+			if (messages.length > 0) {
+				this.setData({ messages, introMode: false });
+			}
+		} catch (e) {
+			console.error('loadMatchHistory error:', e);
+		}
 	},
 });

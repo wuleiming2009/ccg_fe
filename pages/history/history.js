@@ -77,11 +77,9 @@ Page({
   },
   onViewResult(e) {
     const id = Number(e.currentTarget.dataset.id)
-    wx.navigateTo({
-      url: '/pages/history_result/history_result',
-      success: (res) => {
-        res.eventChannel && res.eventChannel.emit('matchId', id)
-      }
+    wx.setStorageSync('lastMatchId', id)
+    wx.switchTab({
+      url: '/pages/chat/chat'
     })
   }
 })
