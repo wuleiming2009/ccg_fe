@@ -16,6 +16,7 @@
           <view class="tags">
             <view class="tag tag-{{item.tag1Color}}">{{item.tag1}}</view>
             <view class="tag tag-{{item.tag2Color}}">{{item.tag2}}</view>
+            <view class="tag tag-{{item.tag3Color}}" wx:if="{{item.tag3}}">{{item.tag3}}</view>
           </view>
           <text class="date">{{item.date}}</text>
         </view>

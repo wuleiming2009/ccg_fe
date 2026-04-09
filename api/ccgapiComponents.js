@@ -111,9 +111,14 @@ function MatchListResp(obj) {
       match_id: item.match_id,
       img_url: item.img_url,
       name: item.name,
-      price: money.centsToYuan(item.price),
+      price: item.price,
       match_text: item.match_text,
-      Time: item.Time || item.time || item.date,
+      time: item.time || item.Time || item.date,
+      tag: item.tag,
+      order_id: item.order_id,
+      order_status: item.order_status,
+      order_product_name: item.order_product_name,
+      order_product_price: item.order_product_price,
     })),
   };
 }
