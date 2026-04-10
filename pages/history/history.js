@@ -29,20 +29,26 @@ Page({
     try {
       const resp = await ccgapi.matchList({ page: p })
       const list = (resp.list || []).map((it, idx) => {
-        const demand = it.match_text || '想挑选一份合适的礼物'
-        const product = it.name || '管家推荐礼物'
-        const status = it.status || 'pending'
-        const isDone = status === '已下单' || status === '已加购'
+        const orderId = it.order_id || 0
+        const orderStatus = it.order_status || 0
+        const hasOrder = orderId > 0
+        const product = hasOrder ? it.order_product_name : (it.name || '管家推荐礼物')
+        const price = hasOrder ? (it.order_product_price / 100) : ((it.price || 0) / 100)
+        const status = hasOrder ? (orderStatus === 1 ? '已加购' : '已下单') : 'pending'
+        const isDone = hasOrder && (orderStatus === 1 || orderStatus === 2)
+        const tags = it.tag ? it.tag.split(',').filter(t => t) : []
         return {
           match_id: it.match_id,
-          date: it.Time ? it.Time.substring(0, 10) : '',
-          price: it.price || 0,
-          demand: demand,
+          date: it.time ? it.time.substring(0, 10) : '',
+          price: price,
+          demand: it.match_text || '想挑选一份合适的礼物',
           product: product,
-          tag1: getRandomTag(),
-          tag2: getRandomTag(),
+          tag1: tags[0] || getRandomTag(),
+          tag2: tags[1] || getRandomTag(),
+          tag3: tags[2] || '',
           tag1Color: getTagColor(idx * 2),
           tag2Color: getTagColor(idx * 2 + 1),
+          tag3Color: getTagColor(idx * 2 + 2),
           status: status,
           statusIcon: isDone ? '✓' : '·',
           statusText: isDone ? status : '未下单',
@@ -71,11 +77,9 @@ Page({
   },
   onViewResult(e) {
     const id = Number(e.currentTarget.dataset.id)
-    wx.navigateTo({
-      url: '/pages/history_result/history_result',
-      success: (res) => {
-        res.eventChannel && res.eventChannel.emit('matchId', id)
-      }
+    wx.setStorageSync('lastMatchId', id)
+    wx.switchTab({
+      url: '/pages/chat/chat'
     })
   }
 })
