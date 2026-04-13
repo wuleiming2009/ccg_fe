@@ -41,7 +41,7 @@ Page({
           match_id: it.match_id,
           date: it.time ? it.time.substring(0, 10) : '',
           price: price,
-          demand: it.match_text || '想挑选一份合适的礼物',
+          demand: it.summary || it.match_text || '想挑选一份合适的礼物',
           product: product,
           tag1: tags[0] || getRandomTag(),
           tag2: tags[1] || getRandomTag(),

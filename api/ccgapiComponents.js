@@ -113,6 +113,7 @@ function MatchListResp(obj) {
       name: item.name,
       price: item.price,
       match_text: item.match_text,
+      summary: item.summary,
       time: item.time || item.Time || item.date,
       tag: item.tag,
       order_id: item.order_id,
