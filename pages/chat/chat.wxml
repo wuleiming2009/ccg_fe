@@ -80,7 +80,7 @@
                 </view>
                 <view class="image-area">
                   <image class="card-image" src="{{prod.img_url}}" mode="aspectFill"></image>
-                  <view class="pill-btn overlay" data-index="{{pidx}}" bindtap="onOpenProduct">
+                  <view class="pill-btn overlay" data-mid="{{item._id}}" data-index="{{pidx}}" bindtap="onOpenProduct">
                     <text>打开心意</text>
                   </view>
                 </view>
@@ -120,6 +120,10 @@
   </scroll-view>
   <view wx:if="{{!introMode}}" class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
     <view class="footer-bg"></view>
+    <view class="quick-actions">
+      <view class="action-pill" bindtap="onNewChat">新聊天</view>
+      <view class="action-pill" bindtap="onQuickRecommend">立即推荐</view>
+    </view>
     <scroll-view wx:if="{{hasPills}}" class="history-scroll" scroll-x="true" show-scrollbar="false">
       <view class="secondary-actions history-pills">
         <view class="pill lite">

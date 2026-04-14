@@ -16,7 +16,7 @@
   <view wx:if="{{completed}}" class="completed-card">
     <text class="completed-title">已填写礼赠地址</text>
     <text class="completed-note">感谢您已提交收货信息，礼物正在路上～</text>
-    <button class="completed-btn" bindtap="onGoChat">去聊天</button>
+    <button class="completed-btn" bindtap="onGoChat">去回礼</button>
   </view>
 
   <view wx:if="{{!completed}}" class="form">

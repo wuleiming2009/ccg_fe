@@ -41,7 +41,7 @@ Page({
         title: '地址填写成功',
         content: '等待礼物的到来吧～',
         showCancel: false,
-        confirmText: '去聊天',
+        confirmText: '去回礼',
         success: (res) => {
           if (res.confirm) {
             wx.switchTab({ url: '/pages/chat/chat' })

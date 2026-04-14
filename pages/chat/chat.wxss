@@ -250,6 +250,25 @@
 	color: #ff7a3f;
 }
 
+.quick-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-bottom: 4px;
+	position: relative;
+	z-index: 2;
+}
+.fixed-footer.no-pills .quick-actions {
+	margin-bottom: 8px;
+}
+.action-pill {
+	padding: 6px 14px;
+	background: #F4F6F8;
+	border-radius: 999px;
+	font-size: 13px;
+	color: #1F2A37;
+}
+
 /* 输入区域 */
 .input-area {
 	position: relative;

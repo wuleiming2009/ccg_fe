@@ -6,6 +6,10 @@
     </text>
     <view class="promo-divider"></view>
   </view>
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索商品名称" value="{{keyword}}" bindinput="onKeywordInput" bindconfirm="onSearch" confirm-type="search" />
+    <view class="search-btn" bindtap="onSearch">搜索</view>
+  </view>
   <view class="card" wx:for="{{items}}" wx:key="index" bindtap="onOpenDetail" data-index="{{index}}">
     <view class="hero">
       <image class="photo" src="{{item.img_url}}" mode="aspectFill"></image>

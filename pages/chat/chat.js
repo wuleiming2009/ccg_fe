@@ -270,6 +270,24 @@ onShow() {
 		this.setData({ inputValue: e.detail.value });
 	},
 	onIntroFocus() {},
+	onNewChat() {
+		this.setData({ 
+			introMode: true, 
+			messages: [{ role: "assistant", content: "嗨～最近过得怎么样？有没有发生什么有趣的事，或是想聊聊、需要我一起琢磨的？" }] 
+		});
+	},
+	onQuickRecommend() {
+		const text = '推荐一下合适的礼物';
+		const msgs = this.data.messages.concat([{ role: "user", content: text }]);
+		this.setData({ messages: msgs, inputValue: "", scrollInto: "end-anchor" });
+		const withTyping = this.data.messages.concat([
+			{ role: "assistant", content: "...", typing: true },
+		]);
+		this.setData({ messages: withTyping, scrollInto: "end-anchor" });
+		wx.nextTick(() => { this.scrollToEnd(); });
+		setTimeout(() => { this.scrollToEnd(); }, 1000);
+		this.autoMatchInChat();
+	},
 	onIntroSend() {
 		if (this.data.introMode) {
 			const animation = wx.createAnimation({
@@ -572,17 +590,13 @@ onShow() {
 			});
 	},
 	onOpenProduct(e) {
-		const idx =
-			e &&
-			e.currentTarget &&
-			e.currentTarget.dataset &&
-			e.currentTarget.dataset.index;
+		const mid = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.mid;
+		const idx = e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.index;
 		const i = Number(idx) || 0;
 		const cardsMsg = (this.data.messages || []).find(
-			(m) => m && m.type === "products",
+			(m) => m && m.type === "products" && String(m._id) === String(mid),
 		);
-		const arr =
-			cardsMsg && Array.isArray(cardsMsg.products) ? cardsMsg.products : [];
+		const arr = cardsMsg && Array.isArray(cardsMsg.products) ? cardsMsg.products : [];
 		const p = arr[i];
 		if (!p) {
 			console.log("open product miss", { index: i });

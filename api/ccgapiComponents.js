@@ -171,6 +171,18 @@ function MarketListReq(input) {
 }
 
 /**
+ * @typedef {Object} ProductSearchReq
+ * @property {string} keyword
+ * @property {number} page
+ */
+function ProductSearchReq(input) {
+  return { 
+    keyword: input.keyword,
+    page: input.page,
+  };
+}
+
+/**
  * @typedef {Object} MarketListResp
  * @property {number} page
  * @property {Array} list
@@ -554,6 +566,7 @@ module.exports = {
     MatchInfoResp,
     MarketListReq,
     MarketListResp,
+    ProductSearchReq,
     ProductInfoReq,
     ProductInfoResp,
     SetProductLikeReq,

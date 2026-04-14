@@ -134,6 +134,14 @@ function marketList(req) {
   });
 }
 
+function productSearch(req) {
+  const payload = ccgapiComponents.ProductSearchReq(req);
+  return request.post('/product/v1/search', payload).then((resp) => {
+    const out = ccgapiComponents.MarketListResp(resp);
+    return out;
+  });
+}
+
 /**
  * 获取集市商品详情
  * @param {ccgapiComponents.ProductInfoReq} req
@@ -389,6 +397,7 @@ module.exports = {
   matchList, 
   matchInfo,
   marketList,
+  productSearch,
   productInfo,
   setProductLike,
   productLikes,
