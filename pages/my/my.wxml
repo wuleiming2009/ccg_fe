@@ -52,7 +52,8 @@
   <view wx:if="{{showContact}}" class="modal-mask" bindtap="onCloseContact"></view>
   <view wx:if="{{showContact}}" class="modal">
     <text class="modal-title">合作咨询</text>
-    <image class="qr-img" src="{{contactQrUrl}}" mode="aspectFit"></image>
+    <image class="qr-img" src="{{contactQrUrl}}" mode="aspectFit" show-menu-by-longpress></image>
+    <text class="qr-hint">长按识别二维码</text>
     <view class="modal-actions">
       <button class="modal-btn light" bindtap="onCloseContact">关闭</button>
     </view>
