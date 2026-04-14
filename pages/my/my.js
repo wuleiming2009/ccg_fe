@@ -10,7 +10,7 @@ Page({
 		initial: "小",
 		showContact: false,
 		contactQrUrl:
-			"https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/r_wechat_qrcode.jpg",
+			"https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/qrcode_for_gh_7873c69f5027_258.jpg",
 		sentCount: 0,
 		receivedCount: 0,
 		avatar: "",

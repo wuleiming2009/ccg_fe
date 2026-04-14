@@ -77,6 +77,18 @@
   </view>
   
   
+  <view class="card service-card">
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">关注服务号</text></view>
+    <view class="service-qr">
+      <image class="qr-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/qrcode_for_gh_7873c69f5027_258.jpg" mode="aspectFit" show-menu-by-longpress></image>
+      <view class="service-tips">
+        <text class="tip-item">跟踪送礼过程</text>
+        <text class="tip-item">有问题可在线咨询</text>
+        <text class="tip-hint">长按二维码即可关注</text>
+      </view>
+    </view>
+  </view>
+
   <view class="order-footer" wx:if="{{order_status === 0 || (order_status === 1 && isInvite)}}">
     <button class="pay-btn" wx:if="{{order_status === 0}}" bindtap="onPay">去支付</button>
     <button class="pay-btn" wx:if="{{order_status === 1 && isInvite}}" bindtap="onInviteIdentity">发送填址邀请</button>
