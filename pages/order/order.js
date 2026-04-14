@@ -92,15 +92,6 @@ Page({
     try {
       const id = Number(this.data.order_id) || 0
       if (!id) { wx.showToast({ title: '订单无效', icon: 'none' }); return }
-      try {
-        const env = require('../../config/env')
-        const TEMPLATE_ID = env && env.orderMsgTemplateId
-        if (TEMPLATE_ID && wx.requestSubscribeMessage) {
-          await new Promise((resolve) => {
-            wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], complete: () => resolve() })
-          })
-        }
-      } catch (_) {}
       wx.showLoading({ title: '拉起支付…', mask: true })
       const prepay = await ccgapi.paymentPrepay({ order_id: id })
       wx.hideLoading()

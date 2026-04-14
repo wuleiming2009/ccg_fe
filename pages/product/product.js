@@ -453,15 +453,6 @@ Page({
   async onFinalize() {
     try {
       const ccgapi = require('../../api/ccgapi')
-      try {
-        const env = require('../../config/env')
-        const TEMPLATE_ID = env && env.orderMsgTemplateId
-        if (TEMPLATE_ID && wx.requestSubscribeMessage) {
-          await new Promise((resolve) => {
-            wx.requestSubscribeMessage({ tmplIds: [TEMPLATE_ID], complete: () => resolve() })
-          })
-        }
-      } catch (_) {}
       if (!this._skipInfoCheckOnce) {
         const uc = wx.getStorageSync('userConfig') || {}
         const nm = String(uc.user_name || '').trim()
