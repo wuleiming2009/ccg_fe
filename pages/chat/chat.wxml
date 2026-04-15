@@ -46,9 +46,10 @@
               </view>
             </view>
             <view class="quick-caps-out">
-              <view class="cap" data-text="送闺蜜" bindtap="onQuickCapsule">送闺蜜</view>
-              <view class="cap" data-text="送长辈" bindtap="onQuickCapsule">送长辈</view>
+              <view class="cap" data-text="送自己" bindtap="onQuickCapsule">送自己</view>
               <view class="cap" data-text="送爱人" bindtap="onQuickCapsule">送爱人</view>
+              <view class="cap" data-text="送长辈" bindtap="onQuickCapsule">送长辈</view>
+              <view class="cap" data-text="送闺蜜" bindtap="onQuickCapsule">送闺蜜</view>
               <view class="cap" data-text="送客户" bindtap="onQuickCapsule">送客户</view>
               <view class="cap" data-text="吵架后" bindtap="onQuickCapsule">吵架后</view>
               <view class="cap" data-text="第一次见" bindtap="onQuickCapsule">第一次见</view>
@@ -121,6 +122,7 @@
   <view wx:if="{{!introMode}}" class="fixed-footer {{hasPills ? '' : 'no-pills'}}">
     <view class="footer-bg"></view>
     <view class="quick-actions">
+      <text class="ai-tip">内容由AI技术生成</text>
       <view class="action-pill" bindtap="onNewChat">新聊天</view>
       <view class="action-pill" bindtap="onHistory">历史咨询</view>
       <view class="action-pill" bindtap="onQuickRecommend">立即推荐</view>

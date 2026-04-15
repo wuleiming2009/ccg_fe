@@ -252,11 +252,19 @@
 
 .quick-actions {
 	display: flex;
-	justify-content: flex-end;
+	align-items: center;
 	gap: 16rpx;
 	margin-bottom: 8rpx;
 	position: relative;
 	z-index: 2;
+}
+.quick-actions .action-pill:first-of-type {
+	margin-left: auto;
+}
+.ai-tip {
+	font-size: 11px;
+	color: #B0B0B0;
+	flex-shrink: 0;
 }
 .fixed-footer.no-pills .quick-actions {
 	/* margin-bottom: 8px; */
