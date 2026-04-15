@@ -57,8 +57,8 @@
 	box-sizing: border-box;
 }
 .chat-scroll.no-pills {
-	padding-bottom: calc(290rpx + constant(safe-area-inset-bottom));
-	padding-bottom: calc(290rpx + env(safe-area-inset-bottom));
+	padding-bottom: calc(280rpx + constant(safe-area-inset-bottom));
+	padding-bottom: calc(280rpx + env(safe-area-inset-bottom));
 }
 
 /* 气泡与标签 */
@@ -181,7 +181,7 @@
 	z-index: 1000;
 }
 .fixed-footer.no-pills {
-	height: 190rpx;
+	height: 180rpx;
 	padding-top: 0;
 	padding-bottom: 0;
 	display: flex;
@@ -253,20 +253,25 @@
 .quick-actions {
 	display: flex;
 	justify-content: flex-end;
-	gap: 8px;
-	margin-bottom: 4px;
+	gap: 16rpx;
+	margin-bottom: 8rpx;
 	position: relative;
 	z-index: 2;
 }
 .fixed-footer.no-pills .quick-actions {
-	margin-bottom: 8px;
+	/* margin-bottom: 8px; */
 }
 .action-pill {
-	padding: 6px 14px;
-	background: #F4F6F8;
-	border-radius: 999px;
-	font-size: 13px;
-	color: #1F2A37;
+	/* height: 80rpx; */
+	padding: 8rpx 20rpx;
+	border-radius: 999rpx;
+	background: #ffffff;
+	color: #666666;
+	font-size: 22rpx;
+	box-shadow: 0 4rpx 12rpx rgba(31, 42, 55, 0.08);
+	border: 2rpx solid #bdb9b8;
+	display: inline-flex;
+	align-items: center;
 }
 
 /* 输入区域 */
