@@ -1,5 +1,5 @@
 /* 页面背景与容器 */
-.chat-page { background: #fefaf9; background: #fefaf8; min-height: 100vh; font-family: Inter, Inter; padding-bottom: 120rpx; }
+.chat-page { background: #fefaf9; background: #fefaf8; min-height: 100vh; font-family: Inter, Inter;}
 
 .fixed-header {
 	position: fixed;
@@ -57,8 +57,8 @@
 	box-sizing: border-box;
 }
 .chat-scroll.no-pills {
-	padding-bottom: calc(210rpx + constant(safe-area-inset-bottom));
-	padding-bottom: calc(210rpx + env(safe-area-inset-bottom));
+	padding-bottom: calc(290rpx + constant(safe-area-inset-bottom));
+	padding-bottom: calc(290rpx + env(safe-area-inset-bottom));
 }
 
 /* 气泡与标签 */
