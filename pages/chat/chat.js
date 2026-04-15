@@ -276,6 +276,9 @@ onShow() {
 			messages: [{ role: "assistant", content: "嗨～最近过得怎么样？有没有发生什么有趣的事，或是想聊聊、需要我一起琢磨的？" }] 
 		});
 	},
+	onHistory() {
+		wx.navigateTo({ url: '/pages/history/history' });
+	},
 	onQuickRecommend() {
 		const text = '推荐一下合适的礼物';
 		const msgs = this.data.messages.concat([{ role: "user", content: text }]);

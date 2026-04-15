@@ -122,6 +122,7 @@
     <view class="footer-bg"></view>
     <view class="quick-actions">
       <view class="action-pill" bindtap="onNewChat">新聊天</view>
+      <view class="action-pill" bindtap="onHistory">历史咨询</view>
       <view class="action-pill" bindtap="onQuickRecommend">立即推荐</view>
     </view>
     <scroll-view wx:if="{{hasPills}}" class="history-scroll" scroll-x="true" show-scrollbar="false">
