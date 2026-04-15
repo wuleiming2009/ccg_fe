@@ -181,7 +181,7 @@
 	z-index: 1000;
 }
 .fixed-footer.no-pills {
-	height: 120rpx;
+	height: 190rpx;
 	padding-top: 0;
 	padding-bottom: 0;
 	display: flex;
