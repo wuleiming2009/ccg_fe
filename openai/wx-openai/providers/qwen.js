@@ -1,7 +1,6 @@
-const { http } = require('../core/http')
+const { http, httpStream } = require('../core/http')
 
 async function chat({ apiKey, model = 'qwen-turbo', messages = [], temperature = 0.7, top_p = 1, baseUrl = 'https://dashscope.aliyuncs.com' }) {
-  // Ali Qwen OpenAI-compatible endpoint
   const url = baseUrl + '/compatible-mode/v1/chat/completions'
   const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey }
   const data = { model, messages, temperature, top_p, stream: false }
@@ -11,4 +10,11 @@ async function chat({ apiKey, model = 'qwen-turbo', messages = [], temperature =
   return { content, raw: resp }
 }
 
-module.exports = { chat }
+function chatStream({ apiKey, model = 'qwen-turbo', messages = [], temperature = 0.7, top_p = 1, baseUrl = 'https://dashscope.aliyuncs.com', onChunk, onComplete, onError }) {
+  const url = baseUrl + '/compatible-mode/v1/chat/completions'
+  const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey }
+  const data = { model, messages, temperature, top_p, stream: true }
+  return httpStream({ url, method: 'POST', headers, data, onChunk, onComplete, onError })
+}
+
+module.exports = { chat, chatStream }

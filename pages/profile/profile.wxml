@@ -1,16 +1,15 @@
 <view class="profile-page">
   <scroll-view class="content" scroll-y="true">
-    <view class="avatar-box" bindtap="onChooseAvatar">
+    <button class="avatar-btn" bindchooseavatar="onChooseAvatar" open-type="chooseAvatar">
       <image class="avatar-large" src="{{avatar || defaultAvatar}}" mode="aspectFill"></image>
       <text class="avatar-tip">点击更换头像</text>
-      <text wx:if="{{hasPendingAvatarChange}}" class="avatar-cancel" catchtap="onCancelAvatar">撤销更换</text>
-    </view>
+    </button>
 
     <view class="card">
       <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">基本信息</text></view>
       <view class="field">
         <text class="label">昵称</text>
-        <input class="input" placeholder="请输入昵称" value="{{user_name}}" bindinput="onNameInput" />
+        <input class="input" placeholder="请输入昵称" value="{{user_name}}" type="nickname" bindinput="onNameInput" bindblur="onNameInput" />
       </view>
       <view class="field">
         <text class="label">性别</text>

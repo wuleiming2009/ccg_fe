@@ -389,26 +389,21 @@ onShow() {
 			this.autoMatchInChat();
 			return;
 		}
-		try {
+try {
 			if (!this.client) {
 				wx.showToast({ title: "AI未初始化", icon: "none" });
 				return;
 			}
-			const resp = await this.client.chat({
-				messages: this.buildChatMessages(msgs),
-			});
-			const list = this.data.messages.slice();
-			const typingIndex = list.length - 1;
-			const raw = resp.content || "（无回复）";
-			const parsed = this.extractMeta(raw);
-			list[typingIndex] = {
-				role: "assistant",
-				content: this.sanitize(parsed.visible),
-			};
-			this.setData({ messages: list, scrollInto: "end-anchor" });
-			this.updateProgress(parsed.meta, text);
-			this.logProgress(parsed.meta);
-			this.updateCTAVisibility(parsed.meta);
+			const chatMessages = this.buildChatMessages(msgs);
+			if (this.client.chatStream) {
+				console.log('[流式] 开始请求');
+				await this.streamEffect(chatMessages, text);
+			} else {
+				console.log('[完整] 开始请求');
+				const resp = await this.client.chat({ messages: chatMessages });
+				const raw = resp.content || "（无回复）";
+				await this.typewriterEffect(raw, text);
+			}
 		} catch (e) {
 			wx.showToast({ title: "发送失败", icon: "none" });
 			console.error("chat send error", e);
@@ -425,24 +420,89 @@ onShow() {
 			.map((m) => ({ role: m.role, content: m.content }));
 		return [{ role: "system", content: this.personaPrompt }].concat(dialog);
 	},
-	sanitize(text) {
+sanitize(text) {
 		return String(text)
 			.replace(/（[^）]{1,20}）/g, "")
 			.replace(/\([^)]{1,20}\)/g, "")
 			.replace(/<meta>[\s\S]*?<\/meta>/gi, "")
 			.trim();
 	},
-	extractMeta(text) {
-		const m = /<meta>([\s\S]*?)<\/meta>/i.exec(String(text));
-		if (!m) return { visible: String(text), meta: null };
-		let meta = null;
-		try {
-			meta = JSON.parse(m[1]);
-		} catch (e) {
-			meta = null;
+	extractMeta(raw) {
+		const text = String(raw || "");
+		const metaMatch = text.match(/<meta>([\s\S]*?)<\/meta>/i);
+		let meta = {};
+		let visible = text;
+		if (metaMatch) {
+			try { meta = JSON.parse(metaMatch[1]); } catch (e) {}
+			visible = text.replace(/<meta>[\s\S]*?<\/meta>/gi, "").trim();
 		}
-		const visible = String(text).replace(m[0], "");
 		return { visible, meta };
+	},
+	streamEffect(chatMessages, lastUserText) {
+		return new Promise((resolve, reject) => {
+			let fullContent = '';
+			const list = this.data.messages.slice();
+			const typingIndex = list.length - 1;
+			const userText = lastUserText || '';
+			list[typingIndex] = { role: "assistant", content: '' };
+			this.setData({ messages: list, scrollInto: "end-anchor" });
+			wx.nextTick(() => { this.scrollToEnd(); });
+
+			this.client.chatStream({
+				messages: chatMessages,
+				onChunk: (chunk) => {
+					console.log('[流式] onChunk:', chunk);
+					fullContent += chunk;
+					const pendingMeta = fullContent.endsWith('<meta>') || fullContent.endsWith('<meta') || (fullContent.includes('<meta>') && !fullContent.includes('</meta>'));
+					if (pendingMeta) {
+						console.log('[流式] pending meta, skip');
+						return;
+					}
+					const parsed = this.extractMeta(fullContent);
+					const displayText = parsed.visible.trim();
+					if (!displayText) return;
+					const updatedList = this.data.messages.slice();
+					updatedList[typingIndex] = { role: "assistant", content: displayText };
+					this.setData({ messages: updatedList });
+					wx.nextTick(() => { this.scrollToEnd(); });
+				},
+				onComplete: () => {
+					console.log('[流式] onComplete, full:', fullContent);
+					const parsed = this.extractMeta(fullContent);
+					const displayText = parsed.visible.trim();
+					if (displayText) {
+						const updatedList = this.data.messages.slice();
+						updatedList[typingIndex] = { role: "assistant", content: displayText };
+						this.setData({ messages: updatedList });
+					}
+					this.updateProgress(parsed.meta, userText);
+					this.logProgress(parsed.meta);
+					this.updateCTAVisibility(parsed.meta);
+					resolve();
+				},
+				onError: (err) => {
+					console.log('[流式] onError:', err);
+					wx.showToast({ title: "发送失败", icon: "none" });
+					reject(err);
+				}
+			});
+		});
+	},
+	async typewriterEffect(raw, text) {
+		const parsed = this.extractMeta(raw);
+		const content = this.sanitize(parsed.visible);
+		const list = this.data.messages.slice();
+		const typingIndex = list.length - 1;
+		const chars = content.split('');
+		for (let i = 0; i < chars.length; i++) {
+			list[typingIndex] = { role: "assistant", content: chars.slice(0, i + 1).join('') };
+			this.setData({ messages: list });
+			wx.nextTick(() => { this.scrollToEnd(); });
+			await new Promise(r => setTimeout(r, 30));
+		}
+		this.updateProgress(parsed.meta, text);
+		this.logProgress(parsed.meta);
+		this.updateCTAVisibility(parsed.meta);
 	},
 	updateProgress(meta, lastUserText) {
 		if (meta && typeof meta.valid_answer_count === "number") {

@@ -55,25 +55,18 @@ Page({
     const city = Array.isArray(arr) && arr.length ? (arr[1] || arr[0] || '') : ''
     this.setData({ region: arr, regionText: city, city })
   },
-  onChooseAvatar() {
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: (res) => {
-        const path = (res.tempFilePaths && res.tempFilePaths[0]) || ''
-        if (!path) return
-        this.setData({ prevAvatar: this.data.avatar || '', avatar: path, hasPendingAvatarChange: true })
-        const ext = (path.split('.').pop() || 'jpg').toLowerCase()
-        const name = 'avatar_' + Date.now() + '.' + ext
-        const ct = this.guessCT(ext)
-        if (COS_FRONTEND.enabled && COS_FRONTEND.bucket && COS_FRONTEND.region) {
-          this.putCosWithSign(path, ext, name, ct)
-          return
-        }
-        this.putViaPolicy(path, name, ct)
-      }
-    })
+  onChooseAvatar(e) {
+    const path = e.detail.avatarUrl
+    if (!path) return
+    this.setData({ prevAvatar: this.data.avatar || '', avatar: path, hasPendingAvatarChange: true })
+    const ext = (path.split('.').pop() || 'jpg').toLowerCase()
+    const name = 'avatar_' + Date.now() + '.' + ext
+    const ct = this.guessCT(ext)
+    if (COS_FRONTEND.enabled && COS_FRONTEND.bucket && COS_FRONTEND.region) {
+      this.putCosWithSign(path, ext, name, ct)
+      return
+    }
+    this.putViaPolicy(path, name, ct)
   },
   putViaPolicy(path, name, ct) {
     this.setData({ uploadingAvatar: true })
