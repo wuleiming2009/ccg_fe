@@ -448,7 +448,16 @@ Page({
   onShareAppMessage() {
     const pid = Number(this.data.product_id) || 0
     const path = pid ? (`/pages/product/product?pid=${pid}`) : '/pages/market/market'
-    return { title: 'CC GIFT 礼物详情', path }
+    let imageUrl = ''
+    const pics = this.data.pictures
+    if (Array.isArray(pics) && pics.length) {
+      imageUrl = pics[0]
+    } else if (typeof pics === 'string' && pics.trim()) {
+      const first = pics.split(/[,，]/)[0]
+      imageUrl = first.trim()
+    }
+    if (!imageUrl) imageUrl = this.data.img_url
+    return { title: 'CC GIFT 礼物详情', path, imageUrl }
   },
   async onFinalize() {
     try {
