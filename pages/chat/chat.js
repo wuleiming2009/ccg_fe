@@ -125,6 +125,8 @@ this.questions = qs;
 		console.log('tab tap', JSON.stringify(e));
 	},
 onShow() {
+		const app = getApp();
+		this.client = app && app.globalData && app.globalData.aiClient;
 		const lastMatchId = wx.getStorageSync('lastMatchId');
 		if (lastMatchId) {
 			wx.removeStorageSync('lastMatchId');
@@ -389,6 +391,8 @@ onShow() {
 			this.autoMatchInChat();
 			return;
 		}
+		const app = getApp();
+		this.client = app && app.globalData && app.globalData.aiClient;
 try {
 			if (!this.client) {
 				wx.showToast({ title: "AI未初始化", icon: "none" });

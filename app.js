@@ -53,6 +53,8 @@ App({
               getApp().globalData.aiClient = createClient({ provider: 'qwen', ...aiConfig.qwen })
             } else if (model === 'deepseek') {
               getApp().globalData.aiClient = createClient({ provider: 'deepseek', ...aiConfig.deepseek })
+            } else if (model === 'doubao') {
+              getApp().globalData.aiClient = createClient({ provider: 'doubao', ...aiConfig.doubao })
             }
           } catch (e) { console.warn('根据model切换AI失败', e) }
         } catch (e) {
