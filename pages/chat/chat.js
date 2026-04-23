@@ -95,17 +95,19 @@ Page({
 			Array.isArray(cfg.questions) && cfg.questions.length
 				? cfg.questions
 				: questions;
-		this.questions = qs;
-		this.qThreshold = Math.ceil((qs.length || 0) * 0.8);
+this.questions = qs;
+		this.qThreshold = 3;
 		this.defaultQThreshold = this.qThreshold;
 		const qList = qs.map((q, i) => `${i + 1}. ${q}`).join("；");
-		this.personaPrompt = `${PERSONA_PROMPT} 请以自然中文表达，不要输出括号或其他标记的语气/动作词，如（关切的）（轻声的）。逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。请始终以朋友口吻聊天，不要在聊天中提供任何商品或礼物建议，也不要直白说明"送礼"的需求或推荐流程。
+		this.personaPrompt = `${PERSONA_PROMPT}
+
+请逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。
 
 重要规则：
 1. 每次回复必须在末尾附带<meta>标签，包含：valid_answer（用户回答是否有效，true/false）、valid_answer_count（有效回答累计数量）、cta_hint（是否应推荐礼物，true/false）
 2. valid_answer判断标准：用户回答了具体信息（如人物、关系、预算、场景、礼物风格偏好）则为true，回复"不知道/随便/不需要"等为false
 3. cta_hint判断标准：当用户已提供足够信息（至少2-3个有效回答）时，cta_hint应为true，提示可以开始推荐
-4. 格式示例：<meta>{"valid_answer":true,"valid_answer_count":3,"cta_hint":true</meta>
+4. 格式示例：<meta>{"valid_answer":true,"valid_answer_count":3,"cta_hint":true}</meta>
 5. 不要让用户看到<meta>标签，只在文本最后插入`;
 
 		this.validAnswerCount = 0;
@@ -379,11 +381,9 @@ onShow() {
 			this.scrollToEnd();
 			setTimeout(() => this.scrollToEnd(), 600);
 		}
-		const preEligible =
-			(this.validAnswerCount || 0) + (this.isNormalAnswer(text) ? 1 : 0) >=
-			(this.qThreshold || 0);
+		this.updateProgress(null, text);
+		const preEligible = (this.validAnswerCount || 0) >= (this.qThreshold || 0);
 		if (preEligible && !this.matchStarted) {
-			this.updateProgress(null, text);
 			this.logProgress(null);
 			this.scrollToEnd();
 			this.autoMatchInChat();
@@ -505,15 +505,14 @@ sanitize(text) {
 		this.updateCTAVisibility(parsed.meta);
 	},
 	updateProgress(meta, lastUserText) {
-		if (meta && typeof meta.valid_answer_count === "number") {
-			this.validAnswerCount = Math.max(0, meta.valid_answer_count);
-			return;
-		}
 		if (meta && meta.valid_answer === true) {
 			this.validAnswerCount = (this.validAnswerCount || 0) + 1;
 			return;
 		}
-		// Fallback: heuristic check
+		if (meta && typeof meta.valid_answer_count === "number") {
+			this.validAnswerCount = Math.max(this.validAnswerCount || 0, meta.valid_answer_count);
+			return;
+		}
 		if (this.isNormalAnswer(lastUserText)) {
 			this.validAnswerCount = (this.validAnswerCount || 0) + 1;
 		}
@@ -521,7 +520,7 @@ sanitize(text) {
 	isNormalAnswer(text) {
 		const t = String(text || "").trim();
 		if (!t) return false;
-		if (t.length < 3) return false;
+		if (t.length < 2) return false;
 		const genericExact = [
 			"不知道",
 			"不太清楚",
@@ -531,9 +530,15 @@ sanitize(text) {
 			"没有",
 			"不需要",
 			"算了",
+			"都行",
+			"无所谓",
+			"你决定",
+			"随缘",
+			"不清楚",
+			"不知道哇",
+			"不知道呀",
 		];
 		if (genericExact.includes(t)) return false;
-		// Reject only emoji/punct
 		if (/^[\p{P}\p{Z}\p{S}]+$/u.test(t)) return false;
 		return true;
 	},
@@ -594,6 +599,18 @@ sanitize(text) {
 		if (this.matchStarted) return;
 		this.matchStarted = true;
 		this.autoMatchTriggered = true;
+		const say = {
+			role: "assistant",
+			content: "我了解到你的想法了，找了一些礼物给你看看...",
+		};
+		const list = this.data.messages.slice();
+		const typingIndex = list.length - 1;
+		if (typingIndex >= 0 && list[typingIndex] && list[typingIndex].typing) {
+			list[typingIndex] = say;
+		} else {
+			list.push(say);
+		}
+		this.setData({ messages: list, scrollInto: "end-anchor" });
 		const ccgapi = require("../../api/ccgapi");
 		const records = (this.data.messages || [])
 			.filter((m) => m.role === "user" || m.role === "assistant")
@@ -618,10 +635,6 @@ sanitize(text) {
 				const products = Array.isArray(resp && resp.products)
 					? resp.products
 					: [];
-				const say = {
-					role: "assistant",
-					content: "我了解到你的想法了，找了一些礼物给你看看。",
-				};
 				this.prodSeq = (this.prodSeq || 0) + 1;
 				const cards = {
 					type: "products",
@@ -629,15 +642,12 @@ sanitize(text) {
 					_id: this.prodSeq,
 					current: 0,
 				};
-				const list = this.data.messages.slice();
-				const typingIndex = list.length - 1;
-				if (typingIndex >= 0 && list[typingIndex] && list[typingIndex].typing) {
-					list[typingIndex] = say;
-				} else {
-					list.push(say);
+				const updatedList = this.data.messages.slice();
+				const idx = updatedList.findIndex((m) => m.content === "我了解到你的想法了，找了一些礼物给你看看...");
+				if (idx >= 0) {
+					updatedList[idx] = { role: "assistant", content: "我了解到你的想法了，找了一些礼物给你看看。" };
 				}
-				this.setData({ messages: list });
-				const next = (this.data.messages || []).concat([cards]);
+				const next = updatedList.concat([cards]);
 				const prodAnchor = `prod-anchor-${cards._id}`;
 				this.setData({ messages: next });
 				wx.nextTick(() => {
