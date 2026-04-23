@@ -479,7 +479,6 @@ sanitize(text) {
 						updatedList[typingIndex] = { role: "assistant", content: displayText };
 						this.setData({ messages: updatedList });
 					}
-					this.updateProgress(parsed.meta, userText);
 					this.logProgress(parsed.meta);
 					this.updateCTAVisibility(parsed.meta);
 					resolve();
@@ -504,22 +503,22 @@ sanitize(text) {
 			wx.nextTick(() => { this.scrollToEnd(); });
 			await new Promise(r => setTimeout(r, 30));
 		}
-		this.updateProgress(parsed.meta, text);
 		this.logProgress(parsed.meta);
 		this.updateCTAVisibility(parsed.meta);
 	},
 	updateProgress(meta, lastUserText) {
+		const before = this.validAnswerCount || 0;
 		if (meta && meta.valid_answer === true) {
-			this.validAnswerCount = (this.validAnswerCount || 0) + 1;
-			return;
-		}
-		if (meta && typeof meta.valid_answer_count === "number") {
-			this.validAnswerCount = Math.max(this.validAnswerCount || 0, meta.valid_answer_count);
+			this.validAnswerCount = before + 1;
+			console.log('[updateProgress] AI said valid_answer=true, count:', before, '->', this.validAnswerCount, 'userText:', lastUserText);
 			return;
 		}
 		if (this.isNormalAnswer(lastUserText)) {
-			this.validAnswerCount = (this.validAnswerCount || 0) + 1;
+			this.validAnswerCount = before + 1;
+			console.log('[updateProgress] isNormalAnswer=true, count:', before, '->', this.validAnswerCount, 'userText:', lastUserText);
+			return;
 		}
+		console.log('[updateProgress] no increment, userText:', lastUserText);
 	},
 	isNormalAnswer(text) {
 		const t = String(text || "").trim();
@@ -552,7 +551,7 @@ sanitize(text) {
 		const anyCTA = msgs.some((m) => m.type === "cta");
 		const lastIsCTA = msgs.length > 0 && msgs[msgs.length - 1].type === "cta";
 		const validCount = this.validAnswerCount || 0;
-		if (!anyCTA && validCount >= this.qThreshold) {
+		if (!anyCTA && validCount >= this.qThreshold && !lastIsCTA) {
 			console.log("auto-match check", {
 				reason: "threshold",
 				validCount,
@@ -561,15 +560,6 @@ sanitize(text) {
 			});
 			this.autoMatchInChat();
 			return;
-		}
-		if (meta && meta.cta_hint === true && !lastIsCTA) {
-			console.log("auto-match check", {
-				reason: "cta_hint",
-				validCount,
-				qThreshold: this.qThreshold,
-				matchStarted: !!this.matchStarted,
-			});
-			this.autoMatchInChat();
 		}
 	},
 	logProgress(meta) {
