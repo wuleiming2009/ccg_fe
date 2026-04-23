@@ -281,6 +281,11 @@
 	display: inline-flex;
 	align-items: center;
 }
+.action-pill.primary {
+	background: #ff7a3f;
+	color: #ffffff;
+	border-color: #ff7a3f;
+}
 
 /* 输入区域 */
 .input-area {
