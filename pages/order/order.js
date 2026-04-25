@@ -113,6 +113,7 @@ Page({
         success: () => {
           wx.showToast({ title: '支付成功', icon: 'none' })
           this.setData({ status_text: '已支付', order_status: 1 })
+          this.requestSubscribeMessage()
         },
         fail: (err) => {
           wx.showToast({ title: (err && err.errMsg) || '支付失败', icon: 'none' })
@@ -122,6 +123,21 @@ Page({
       wx.hideLoading()
       wx.showToast({ title: '预支付失败', icon: 'none' })
     }
+  },
+  requestSubscribeMessage() {
+    const env = require('../../config/env')
+    const tmplId = env && env.orderMsgTemplateId
+    console.log('requestSubscribeMessage called, tmplId:', tmplId)
+    if (!tmplId || !wx.requestSubscribeMessage) {
+      console.log('early return: tmplId=', tmplId, 'requestSubscribeMessage=', !!wx.requestSubscribeMessage)
+      return
+    }
+    wx.requestSubscribeMessage({
+      tmplIds: [tmplId],
+      success: (res) => console.log('subscribe success', res),
+      fail: (err) => console.log('subscribe fail', err),
+      complete: () => console.log('subscribe complete')
+    })
   },
   onShareAppMessage() {
     const id = Number(this.data.order_id) || 0
