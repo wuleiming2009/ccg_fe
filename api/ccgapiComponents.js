@@ -49,7 +49,8 @@ function UserInitResp(obj) {
     questions: obj.questions,
     model: obj.model || '',
     user_name: obj.user_name || '',
-    phone: obj.phone || obj.wx_phone || ''
+    phone: obj.phone || obj.wx_phone || '',
+    prompt: obj.prompt || ''
   };
 }
 

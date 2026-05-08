@@ -42,7 +42,8 @@ App({
             questions: Array.isArray(initResp.questions) ? initResp.questions : [],
             model: initResp.model || '',
             user_name: initResp.user_name || '',
-            phone: initResp.phone || initResp.wx_phone || ''
+            phone: initResp.phone || initResp.wx_phone || '',
+            prompt: initResp.prompt || ''
           }
           wx.setStorageSync('userConfig', userConfig)
           console.log("获取用户初始化配置:", wx.getStorageSync('userConfig'))

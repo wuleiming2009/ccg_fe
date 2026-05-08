@@ -95,12 +95,14 @@ Page({
 			Array.isArray(cfg.questions) && cfg.questions.length
 				? cfg.questions
 				: questions;
-this.questions = qs;
+		this.questions = qs;
 		this.qThreshold = 3;
 		this.defaultQThreshold = this.qThreshold;
 		const qList = qs.map((q, i) => `${i + 1}. ${q}`).join("；");
-		this.personaPrompt = `${PERSONA_PROMPT}
-
+		const basePrompt = cfg.prompt || PERSONA_PROMPT;
+		console.log('[prompt] using server prompt:', cfg.prompt ? 'YES (len:' + cfg.prompt.length + ')' : 'NO, using default');
+		if (cfg.prompt) console.log('[prompt] preview:', cfg.prompt.slice(0, 200));
+		const suffixPrompt = `
 请逐步询问以下问题，至少覆盖80%，每次只问1-2个并结合上下文：${qList}。
 
 重要规则：
@@ -109,6 +111,7 @@ this.questions = qs;
 3. cta_hint判断标准：当用户已提供足够信息（至少2-3个有效回答）时，cta_hint应为true，提示可以开始推荐
 4. 格式示例：<meta>{"valid_answer":true,"valid_answer_count":3,"cta_hint":true}</meta>
 5. 不要让用户看到<meta>标签，只在文本最后插入`;
+		this.personaPrompt = basePrompt + suffixPrompt;
 
 		this.validAnswerCount = 0;
 		this.matchStarted = false;
