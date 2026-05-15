@@ -486,6 +486,7 @@ function OrderInfoResp(obj) {
       transport_no: t.transport_no || '',
     },
     create_time: obj.create_time || '',
+    benefit_verify_url: obj.benefit_verify_url || '',
   };
 }
 

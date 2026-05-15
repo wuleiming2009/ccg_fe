@@ -56,7 +56,7 @@ Page({
       wx.showToast({ title: '加载订单失败', icon: 'none' })
     }
   },
-  applyInfo(info) {
+applyInfo(info) {
     const statusMap = { 0: '待支付', 1: '已支付', 2: '已取消', 3: '已发货', 4: '已关闭', 5: '已退款' }
     const recipientId = Number(info.recipient_id || (info.recipient && info.recipient.recipient_id) || 0)
     const product = info.product || {}
@@ -73,8 +73,8 @@ Page({
     const unit = qty > 0 ? (total / qty).toFixed(2) : (product.price || '0.00')
     this.setData({
       order_id: info.order_id,
-      product,
-      pictures,
+      product: product,
+      pictures: pictures,
       recipient: info.recipient || {},
       recipient_id: recipientId,
       quantity: qty,
@@ -85,8 +85,9 @@ Page({
       order_date: info.date || '',
       create_time: info.create_time || '',
       isInvite: recipientId === 999,
-      transport: info.transport || {}
-    })
+      transport: info.transport || {},
+      benefit_verify_url: info.benefit_verify_url || ''
+    });
   },
   async onPay() {
     try {

@@ -75,6 +75,13 @@
       </view>
     </view>
   </view>
+
+  <view class="card benefit-card" wx:if="{{benefit_verify_url}}">
+    <view class="sec-h"><view class="sec-bar"></view><text class="sec-title">订单权益</text></view>
+    <view class="benefit-qr">
+      <image class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{benefit_verify_url}}" mode="aspectFit" show-menu-by-longpress></image>
+    </view>
+  </view>
   
   
   <view class="card service-card">

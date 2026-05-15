@@ -1,3 +1,4 @@
+const mtjwxsdk = require('./utils/mtj-wx-sdk.js');
 const ccgapi = require('./api/ccgapi');
 const { createClient } = require('./openai/wx-openai/index');
 const { config: aiConfig } = require('./openai/wx-openai/config');
