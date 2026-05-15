@@ -25,8 +25,8 @@
 }
 
 .icon-box {
-   width: 40rpx;
-  height: 40rpx;
+   width: 56rpx;
+  height: 56rpx;
   margin-bottom: 4rpx;
   overflow: visible; 
 }

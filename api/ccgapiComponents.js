@@ -45,12 +45,17 @@ function UserInitReq() {
  * @property {string} user_name
  */
 function UserInitResp(obj) {
-  return { 
+  const entries = Array.isArray(obj.home_entries) ? obj.home_entries : [];
+  return {
     questions: obj.questions,
     model: obj.model || '',
     user_name: obj.user_name || '',
     phone: obj.phone || obj.wx_phone || '',
-    prompt: obj.prompt || ''
+    prompt: obj.prompt || '',
+    home_entries: entries.map(e => ({
+      img_url: e.img_url || e.ImageUrl || e.IMG_URL || '',
+      text: e.text || e.Text || ''
+    }))
   };
 }
 

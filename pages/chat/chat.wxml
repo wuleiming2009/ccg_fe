@@ -4,7 +4,7 @@
       <view class="intro-container">
         <view class="intro-hero">
           <view class="intro-hero-title">
-            <image class="intro-hero-title-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/home_title.png"></image>
+            <image class="intro-hero-title-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/tapik_logo.png"></image>
           </view>
           <!-- <view class="brand">
             CC G
@@ -16,21 +16,16 @@
             <text class="Hi">Hi</text>
             <text class="name">{{userName ? userName : ''}}</text>
           </view>
-          <view class="ask-row">
-            <image class="intro-hero-title-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/home_desc.png"></image>
-            <!-- <text class="ask-strong">有什么</text>
-            <text class="ask-rest">想聊聊吗？</text> -->
-          </view>
         </view>
         <view class="intro-center">
           <view class="prompt-line">
             <text class="prompt-text"></text>
           </view>
-          <view class="caps-input">
-            <view class="input-area">
+          <view class="caps-input intro-input">
+            <view class="input-area intro-input-area">
               <view class="input-box">
                 <block wx:if="{{!voiceMode}}">
-                  <textarea class="input ta" placeholder="{{introPlaceholder}}" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onIntroInput" />
+                  <input class="input" placeholder="{{introPlaceholder}}" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onIntroInput" />
                 </block>
                 <block wx:else>
                   <view class="voice-input {{recording ? 'recording' : ''}}" bindtouchstart="onVoiceStart" bindtouchend="onVoiceEnd" bindtouchcancel="onVoiceCancel">
@@ -46,13 +41,10 @@
               </view>
             </view>
             <view class="quick-caps-out">
-              <view class="cap" data-text="送自己" bindtap="onQuickCapsule">送自己</view>
-              <view class="cap" data-text="送爱人" bindtap="onQuickCapsule">送爱人</view>
-              <view class="cap" data-text="送长辈" bindtap="onQuickCapsule">送长辈</view>
-              <view class="cap" data-text="送闺蜜" bindtap="onQuickCapsule">送闺蜜</view>
-              <view class="cap" data-text="送客户" bindtap="onQuickCapsule">送客户</view>
-              <view class="cap" data-text="吵架后" bindtap="onQuickCapsule">吵架后</view>
-              <view class="cap" data-text="第一次见" bindtap="onQuickCapsule">第一次见</view>
+              <view class="quick-caps-title">小獭选礼，软乎乎的心意</view>
+              <block wx:for="{{homeEntries}}" wx:key="index">
+                <image class="home-entry-img" src="{{item.img_url}}" mode="aspectFit" bindtap="onHomeEntry" data-text="{{item.text}}"></image>
+              </block>
             </view>
           </view>
         </view>
@@ -143,7 +135,7 @@
         </view>
       </view>
     </scroll-view>
-    <view class="input-area">
+    <view class="input-area chat-input-area">
       <view class="input-box">
         <block wx:if="{{!voiceMode}}">
           <input class="input" placeholder="有问题，尽管问。" placeholder-style="color:#b3b3b3" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />

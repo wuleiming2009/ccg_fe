@@ -44,7 +44,8 @@ App({
             model: initResp.model || '',
             user_name: initResp.user_name || '',
             phone: initResp.phone || initResp.wx_phone || '',
-            prompt: initResp.prompt || ''
+            prompt: initResp.prompt || '',
+            home_entries: initResp.home_entries || []
           }
           wx.setStorageSync('userConfig', userConfig)
           console.log("获取用户初始化配置:", wx.getStorageSync('userConfig'))

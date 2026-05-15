@@ -7,9 +7,10 @@
     <text class="tab-text">礼物集市</text>
   </view>
   <view class="tab-item {{selected === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1" data-path="/pages/chat/chat">
-    <view class="icon-box icon-box-center">
-      <image class="tab-icon tab-icon-center" src="{{selected === 1 ? '../images/tabbar1_s2.png' : '../images/tabbar12.png'}}"></image>
+    <view class="icon-box">
+      <image class="tab-icon" src="{{selected === 1 ? '../images/tabbar1_s2.png' : '../images/tabbar12.png'}}"></image>
     </view>
+    <text class="tab-text">AI礼赠助手</text>
   </view>
   <view class="tab-item {{selected === 2 ? 'active' : ''}}" bindtap="switchTab" data-index="2" data-path="/pages/my/my">
     <view class="icon-box">

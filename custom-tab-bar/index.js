@@ -14,7 +14,7 @@ Component({
         pagePath: "/pages/chat/chat",
         iconPath: "../images/tabbar12.png",
         selectedIconPath: "../images/tabbar1_s2.png",
-        text: ""
+        text: "AI礼赠助手"
       },
       {
         pagePath: "/pages/my/my",

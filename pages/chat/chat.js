@@ -54,7 +54,7 @@ Page({
 		const app = getApp();
 		this.client = app && app.globalData && app.globalData.aiClient;
 		const cfg = wx.getStorageSync("userConfig") || {};
-		this.setData({ hasPills: SHOW_HISTORY_PILLS, userName: cfg.user_name || "" });
+		this.setData({ hasPills: SHOW_HISTORY_PILLS, userName: cfg.user_name || "", homeEntries: cfg.home_entries || [] });
 
 		const lastMatchId = wx.getStorageSync('lastMatchId');
 		if (lastMatchId) {
@@ -120,7 +120,7 @@ Page({
 		this.awaitingRerun = false;
 		this.setData({ scrollInto: "end-anchor" });
 		this.initVoice();
-		const placeholders = ["有什么困惑问我吗？", "有问题，尽管问。"];
+		const placeholders = ["一点点心意想要......."];
 		const ph = placeholders[Math.floor(Math.random() * placeholders.length)];
 		this.setData({ introPlaceholder: ph });
 	},
@@ -336,6 +336,16 @@ onShow() {
 		this.onToggleVoiceMode();
 	},
 	onQuickCapsule(e) {
+		const t =
+			e.currentTarget &&
+			e.currentTarget.dataset &&
+			e.currentTarget.dataset.text;
+		const text = String(t || "").trim();
+		if (!text) return;
+		this.setData({ inputValue: text });
+		this.onIntroSend();
+	},
+	onHomeEntry(e) {
 		const t =
 			e.currentTarget &&
 			e.currentTarget.dataset &&
