@@ -124,6 +124,6 @@ Page({
 		}
 	},
 	onShareAppMessage() {
-		return { title: "CC GIFT 礼物集市", path: "/pages/market/market" };
+		return { title: "獭选 礼物集市", path: "/pages/market/market" };
 	},
 });

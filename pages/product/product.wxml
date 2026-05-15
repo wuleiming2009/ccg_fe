@@ -40,7 +40,7 @@
     <view class="reason" wx:if="{{match_meaning}}">
       <view class="reason-header">
         <view class="reason-dot"></view>
-        <text class="reason-title">CCG管家推荐理由</text>
+        <text class="reason-title">獭选管家推荐理由</text>
       </view>
       <text class="reason-text">{{match_meaning}}</text>
     </view>

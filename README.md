@@ -1,4 +1,4 @@
-# CCG礼赠顾问 (Wechat-UniApp)
+# 獭选礼赠顾问 (Wechat-UniApp)
 
 微信小程序项目，基于 uni-app 框架的 AI 礼物推荐平台。
 
@@ -56,4 +56,4 @@
 
 - 使用微信小程序插件 `WechatSI` (v0.3.3) 支持语音识别
 - 懒加载组件: `lazyCodeLoading: "requiredComponents"`
-- 项目全称: CCG礼赠顾问
+- 项目全称: 獭选礼赠顾问

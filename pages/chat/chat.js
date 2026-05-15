@@ -29,7 +29,7 @@ Page({
 		selectedProductIndex: 0,
 	},
 	onShareAppMessage() {
-		return { title: "CC GIFT 礼赠顾问", path: "/pages/chat/chat" };
+		return { title: "獭选 礼赠顾问", path: "/pages/chat/chat" };
 	},
 	onLoad(options) {
 		try {

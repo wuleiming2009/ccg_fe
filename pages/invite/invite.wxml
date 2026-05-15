@@ -1,6 +1,6 @@
 <view class="invite-page">
   <view class="hero">
-    <text class="brand">CC G<text class="bang">!</text>FT</text>
+    <text class="brand">獭选</text>
     <view class="gift-wrap">
       <image class="gift-img" src="https://wumuxuan-1253516064.cos.ap-shanghai.myqcloud.com/ccg/uni-app/gift.png" mode="aspectFit"></image>
     </view>
@@ -53,7 +53,7 @@
         <text class="lock">🔒</text>
         <text class="privacy-title">地址隐私保护</text>
       </view>
-      <text class="privacy-text">您填写的地址 <text class="em">仅CCG官方可见</text>，用于发货。送礼人无法查看您的任何地址信息。物流信息也只发送给您。</text>
+      <text class="privacy-text">您填写的地址 <text class="em">仅獭选官方可见</text>，用于发货。送礼人无法查看您的任何地址信息。物流信息也只发送给您。</text>
     </view>
     <view class="submit" bindtap="onSubmit">确认填写，接收礼物</view>
     <text class="submit-hint">填写后礼物将在24小时内发出</text>

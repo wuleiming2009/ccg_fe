@@ -457,7 +457,7 @@ Page({
       imageUrl = first.trim()
     }
     if (!imageUrl) imageUrl = this.data.img_url
-    return { title: 'CC GIFT 礼物详情', path, imageUrl }
+    return { title: '獭选 礼物详情', path, imageUrl }
   },
   async onFinalize() {
     try {
