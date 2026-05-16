@@ -5,6 +5,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "商品详情",
+          "pathName": "pages/product/product",
+          "query": "product_id=9186316288",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "pages/chat/chat",
           "pathName": "pages/chat/chat",
           "query": "",
