@@ -41,8 +41,7 @@ function request(url, method = 'GET', data = {}, header = {}) {
           wx.navigateTo({ url: '/pages/login/login' });
           reject(resData);
         } else {
-          // 业务错误，比如参数错误、数据不存在等，显示后端返回的提示文字
-          wx.showToast({ title: resData.msg || '请求失败', icon: 'none' });
+          // 业务错误，比如参数错误、数据不存在等，不显示toast，由调用方处理
           reject(resData);
         }
       },

@@ -7,7 +7,7 @@
         {
           "name": "商品详情",
           "pathName": "pages/product/product",
-          "query": "product_id=9186316288",
+          "query": "product_id=7745818624",
           "scene": null,
           "launchMode": "default"
         },

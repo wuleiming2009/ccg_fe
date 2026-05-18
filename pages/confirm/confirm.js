@@ -329,7 +329,12 @@ Page({
     }
     ccgapi.orderNew({ product_id, quantity, recipient_id }).then(async (newResp) => {
       const order_id = Number(newResp && newResp.order_id) || 0
-      if (!order_id) { wx.hideLoading(); wx.showToast({ title: '创建订单失败', icon: 'none' }); return }
+      if (!order_id) {
+        wx.hideLoading()
+        const errMsg = newResp && (newResp.message || newResp.msg) || '创建订单失败'
+        wx.showToast({ title: errMsg, icon: 'none' })
+        return
+      }
       const prepay = await ccgapi.paymentPrepay({ order_id })
       wx.hideLoading()
       const timeStamp = String(prepay.time_stamp || prepay.timeStamp || '')
@@ -351,6 +356,10 @@ Page({
         },
         fail: (err) => { wx.showToast({ title: (err && err.errMsg) || '支付失败', icon: 'none' }) }
       })
-    }).catch(() => { wx.hideLoading(); wx.showToast({ title: '支付预下单失败', icon: 'none' }) })
+    }).catch((err) => {
+      wx.hideLoading()
+      const errMsg = err && (err.message || err.msg) || '创建订单失败'
+      wx.showToast({ title: errMsg, icon: 'none' })
+    })
   }
 })

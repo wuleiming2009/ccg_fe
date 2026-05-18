@@ -364,9 +364,16 @@
 	border: none;
 }
 .voice-input.recording {
-	background: #ff7a3f;
-	color: #ffffff;
-	box-shadow: none;
+  background: #ff7a3f;
+  color: #ffffff;
+  box-shadow: none;
+}
+.intro-input-area .voice-input.recording {
+  left: 10rpx;
+  right: 120rpx;
+  top: 5rpx;
+  bottom: 5rpx;
+  border-radius: 36rpx;
 }
 .input {
 	position: absolute;
@@ -391,18 +398,20 @@
 	line-height: 76rpx;
 }
 .intro-input-area .input-box .input {
-	position: absolute;
-	top: 10rpx;
-	left: 26rpx;
-	right: 100rpx;
-	height: 60rpx;
-	padding: 0;
+  position: absolute;
+  top: 10rpx;
+  left: 26rpx;
+  right: 120rpx;
+  height: 60rpx;
+  padding: 0;
 }
 .intro-input-area .voice-btn {
-	right: 70rpx;
+  right: 70rpx;
+  z-index: 2;
 }
 .intro-input-area .send-btn {
-	right: 26rpx;
+  right: 26rpx;
+  z-index: 2;
 }
 .send-btn {
 	width: 48rpx;
@@ -672,24 +681,25 @@
 	position: relative;
 }
 .intro-input-area {
-	position: relative;
-	z-index: 1;
-	margin-bottom: 16rpx;
-	margin-top: -70rpx;
-	width: 100%;
-	display: flex;
-	justify-content: center;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 16rpx;
+  margin-top: -70rpx;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 .intro-input-area .input-box {
-	position: relative;
-	width: calc(100%);
-	height: 80rpx;
-	margin-left: -50rpx;
-	margin-right: 10rpx;
-	background: #ffffff;
-	border-radius: 48rpx;
-	border: 2rpx solid #b3b3b3;
-	box-sizing: border-box;
+  position: relative;
+  width: calc(100%);
+  height: 80rpx;
+  margin-left: -50rpx;
+  margin-right: 10rpx;
+  background: #ffffff;
+  border-radius: 48rpx;
+  border: 2rpx solid #b3b3b3;
+  box-sizing: border-box;
+  z-index: 1;
 }
 .chat-input-area {
 	position: relative;
@@ -714,22 +724,29 @@
 	padding: 0 92rpx 0 28rpx;
 }
 .quick-caps-out {
-	margin: 100rpx 0 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 0;
-	width: 100%;
-	margin-left: -20rpx;
+  margin: 100rpx 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  margin-left: -20rpx;
+  position: relative;
+  z-index: 11;
 }
 .quick-caps-title {
-	font-size: 26rpx;
-	color: #6d6158;
+  font-size: 26rpx;
+  color: #6d6158;
 }
 .home-entry-img {
-	width: 760rpx;
-	height: 198rpx;
-	margin-left: -60rpx;
+  width: 760rpx;
+  height: 198rpx;
+  margin-left: -60rpx;
+}
+.quick-caps-title {
+  font-size: 26rpx;
+  color: #6d6158;
+  pointer-events: auto;
 }
 .fixed-footer .input-box {
 	width: auto;
@@ -844,9 +861,17 @@
 	width: 52rpx;
 	height: 52rpx;
 }
+.intro-input-area .voice-img {
+  width: 48rpx;
+  height: 48rpx;
+}
+.intro-input-area .send-img {
+  width: 48rpx;
+  height: 48rpx;
+}
 .send-img {
-	width: 64rpx;
-	height: 64rpx;
+  width: 64rpx;
+  height: 64rpx;
 }
 
 /* 商品卡片横向选择 */

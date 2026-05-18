@@ -117,48 +117,49 @@ Page({
       this._pid = pid
       this.fetchLikes(pid)
       this.fetchUserLikeStatus(pid)
-      const ccgapi = require('../../api/ccgapi')
-      ccgapi.productInfo({ product_id: pid }).then((infoResp) => {
-        if (!this._alive) return
-        const it = infoResp.info || {}
-        const format = (t, sep) => {
-          if (!t) return ''
-          return String(t).split(',').map(s => s.trim()).filter(Boolean).join(sep)
-        }
-        const picsStr = String(it.pictures || '').trim()
-        const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
-        const split = (t) => String(t || '').split(/[,，、\s]+/).map(s => s.trim()).filter(Boolean)
-        const mp2 = Number(it.market_price) || 0
-        const pid2 = it.product_id || pid
-        if (pid2) {
-          this._pid = pid2
-          this.fetchLikes(pid2)
-          this.fetchUserLikeStatus(pid2)
-        }
-        safeSetData({
-          product_id: pid2,
-          img_url: it.img_url,
-          pictures,
-          name: it.name,
-          price: it.price,
-          market_price: mp2,
-          has_market_price: mp2 > 0,
-          slogan: it.slogan || '',
-          contents: it.contents || '',
-          scene: it.scene || '',
-          keywords: it.keywords || '',
-          suitable_for: it.suitable_for || '',
-          brand_info: it.brand_info || '',
-          suitable_for_list: split(it.suitable_for),
-          scene_list: split(it.scene),
-          contents_fmt_list: split(it.contents),
-          // contents_fmt: format(it.contents, ' | '),
-          scene_fmt: format(it.scene, ' · '),
-          keywords_fmt: format(it.keywords, ' · '),
-          match_text: it.match_text,
-          match_meaning: it.match_meaning,
-        })
-      }).catch(() => {})
+      getApp().ensureLogin().then(() => {
+        const ccgapi = require('../../api/ccgapi')
+        ccgapi.productInfo({ product_id: pid }).then((infoResp) => {
+          if (!this._alive) return
+          const it = infoResp.info || {}
+          const format = (t, sep) => {
+            if (!t) return ''
+            return String(t).split(',').map(s => s.trim()).filter(Boolean).join(sep)
+          }
+          const picsStr = String(it.pictures || '').trim()
+          const pictures = picsStr ? picsStr.split(/[,，]/).map(s => String(s || '').trim()).filter(Boolean) : []
+          const split = (t) => String(t || '').split(/[,，、\s]+/).map(s => s.trim()).filter(Boolean)
+          const mp2 = Number(it.market_price) || 0
+          const pid2 = it.product_id || pid
+          if (pid2) {
+            this._pid = pid2
+            this.fetchLikes(pid2)
+            this.fetchUserLikeStatus(pid2)
+          }
+          safeSetData({
+            product_id: pid2,
+            img_url: it.img_url,
+            pictures,
+            name: it.name,
+            price: it.price,
+            market_price: mp2,
+            has_market_price: mp2 > 0,
+            slogan: it.slogan || '',
+            contents: it.contents || '',
+            scene: it.scene || '',
+            keywords: it.keywords || '',
+            suitable_for: it.suitable_for || '',
+            brand_info: it.brand_info || '',
+            suitable_for_list: split(it.suitable_for),
+            scene_list: split(it.scene),
+            contents_fmt_list: split(it.contents),
+            scene_fmt: format(it.scene, ' · '),
+            keywords_fmt: format(it.keywords, ' · '),
+            match_text: it.match_text,
+            match_meaning: it.match_meaning,
+          })
+        }).catch(() => {})
+      })
     }
   },
   fetchLikes(productId) {
@@ -481,7 +482,15 @@ Page({
       if (!product_id) { wx.showToast({ title: '商品无效', icon: 'none' }); return }
       if (!isInvite && !recipient_id) { wx.showToast({ title: '请先选择收礼人', icon: 'none' }); return }
       wx.showLoading({ title: '处理中…', mask: true })
-      const newResp = await ccgapi.orderNew({ product_id, quantity, recipient_id })
+      let newResp
+      try {
+        newResp = await ccgapi.orderNew({ product_id, quantity, recipient_id })
+      } catch (orderNewErr) {
+        wx.hideLoading()
+        const errMsg = orderNewErr && (orderNewErr.message || orderNewErr.msg) || ''
+        wx.showToast({ title: errMsg || '创建订单失败', icon: 'none' })
+        return
+      }
       const order_id = Number(newResp.order_id) || 0
       if (!order_id) {
         wx.hideLoading()
@@ -489,7 +498,6 @@ Page({
         return
       }
       const prepay = await ccgapi.paymentPrepay({ order_id })
-      console.log('[paymentPrepay]', prepay)
       wx.hideLoading()
       const timeStamp = String(prepay.time_stamp || prepay.timeStamp || '')
       const nonceStr = String(prepay.nonce_str || prepay.nonceStr || '')
