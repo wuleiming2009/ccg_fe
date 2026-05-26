@@ -358,6 +358,23 @@ onShow() {
 	async onSend() {
 		const text = (this.data.inputValue || "").trim();
 		if (!text) return;
+
+		// 检查是否匹配活动口令
+		const cfg = wx.getStorageSync("userConfig") || {};
+		const activePasswords = cfg.active_passwords || [];
+		console.log("[onSend] checking password match", { text, activePasswords });
+		if (activePasswords.includes(text) && !this.matchStarted) {
+			this.setData({ inputValue: "", scrollInto: "end-anchor" });
+			const msgs = this.data.messages.concat([{ role: "user", content: text }]);
+			this.setData({ messages: msgs, scrollInto: "end-anchor" });
+			const withTyping = this.data.messages.concat([
+				{ role: "assistant", content: "...", typing: true },
+			]);
+			this.setData({ messages: withTyping, scrollInto: "end-anchor" });
+			this.autoMatchInChatWithPassword(text);
+			return;
+		}
+
 		const hasRecommendKeyword = RECOMMEND_KEYWORDS.some(kw => text.includes(kw));
 		if (hasRecommendKeyword && !this.matchStarted) {
 			this.setData({ inputValue: "", scrollInto: "end-anchor" });
@@ -667,6 +684,75 @@ sanitize(text) {
 			})
 			.catch((e) => {
 				console.error("match_in_chat error", e);
+			});
+	},
+	autoMatchInChatWithPassword(password) {
+		console.log("[autoMatchInChatWithPassword] called", { password, matchStarted: this.matchStarted });
+		if (this.matchStarted) return;
+		this.matchStarted = true;
+		this.autoMatchTriggered = true;
+		const say = {
+			role: "assistant",
+			content: "我了解到你的想法了，找了一些礼物给你看看...",
+		};
+		const list = this.data.messages.slice();
+		const typingIndex = list.length - 1;
+		if (typingIndex >= 0 && list[typingIndex] && list[typingIndex].typing) {
+			list[typingIndex] = say;
+		} else {
+			list.push(say);
+		}
+		this.setData({ messages: list, scrollInto: "end-anchor" });
+		const ccgapi = require("../../api/ccgapi");
+		const records = (this.data.messages || [])
+			.filter((m) => m.role === "user" || m.role === "assistant")
+			.map((m) => ({ role: m.role, content: m.content || "" }));
+		const payloadText = JSON.stringify({ records });
+		console.log("match_in_chat_with_password start", { password });
+		ccgapi
+			.matchInChat({ messages: payloadText, password: password })
+			.then((resp) => {
+				console.log("match_in_chat result", {
+					match_id: resp && resp.match_id,
+					products_count: Array.isArray(resp && resp.products)
+						? resp.products.length
+						: 0,
+					activity_products_count: Array.isArray(resp && resp.activity_products)
+						? resp.activity_products.length
+						: 0,
+				});
+				const products = Array.isArray(resp && resp.products)
+					? resp.products
+					: [];
+				const activityProducts = Array.isArray(resp && resp.activity_products)
+					? resp.activity_products
+					: [];
+				const allProducts = [...activityProducts, ...products];
+				this.prodSeq = (this.prodSeq || 0) + 1;
+				const cards = {
+					type: "products",
+					products: allProducts,
+					_id: this.prodSeq,
+					current: 0,
+				};
+				const updatedList = this.data.messages.slice();
+				const idx = updatedList.findIndex((m) => m.content === "我了解到你的想法了，找了一些礼物给你看看...");
+				if (idx >= 0) {
+					updatedList[idx] = { role: "assistant", content: "我了解到你的想法了，找了一些礼物给你看看。" };
+				}
+				const next = updatedList.concat([cards]);
+				const prodAnchor = `prod-anchor-${cards._id}`;
+				this.setData({ messages: next });
+				wx.nextTick(() => {
+					this.setData({ scrollInto: prodAnchor });
+					setTimeout(() => this.setData({ scrollInto: prodAnchor }), 0);
+					setTimeout(() => this.setData({ scrollInto: prodAnchor }), 3000);
+				});
+				this.productsPending = true;
+				if (this.defaultQThreshold) this.qThreshold = this.defaultQThreshold;
+			})
+			.catch((e) => {
+				console.error("match_in_chat_with_password error", e);
 			});
 	},
 	onOpenProduct(e) {

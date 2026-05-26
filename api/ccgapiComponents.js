@@ -32,9 +32,10 @@ function WelcomeStringResp(obj) {
 
 /**
  * @typedef {Object} UserInitReq
+ * @property {number} [activity_id]
  */
-function UserInitReq() {
-  return {};
+function UserInitReq(input) {
+  return { activity_id: input.activity_id || 0 };
 }
 
 /**
@@ -55,7 +56,8 @@ function UserInitResp(obj) {
     home_entries: entries.map(e => ({
       img_url: e.img_url || e.ImageUrl || e.IMG_URL || '',
       text: e.text || e.Text || ''
-    }))
+    })),
+    active_passwords: Array.isArray(obj.active_passwords) ? obj.active_passwords : []
   };
 }
 
@@ -718,14 +720,26 @@ function GetOrderStatusResp(obj) {
 function MatchInChatReq(input) {
   return {
     messages: input.messages,
+    password: input.password || '',
   };
 }
 
 function MatchInChatResp(obj) {
   const products = Array.isArray(obj.products) ? obj.products : []
+  const activityProducts = Array.isArray(obj.activity_products) ? obj.activity_products : []
   return {
     match_id: (typeof obj.match_id === 'number' ? obj.match_id : (Number(obj.match_id) || 0)),
     products: products.map((item) => ({
+      product_id: (typeof item.product_id === 'number' ? item.product_id : (Number(item.product_id) || 0)),
+      is_ccg: item.is_ccg,
+      img_url: String(item.img_url || '').replace(/`/g, '').trim(),
+      name: String(item.name || '').trim(),
+      price: money.centsToYuan(item.price),
+      match_text: item.match_text,
+      match_meaning: item.match_meaning,
+      buy_url: item.buy_url,
+    })),
+    activity_products: activityProducts.map((item) => ({
       product_id: (typeof item.product_id === 'number' ? item.product_id : (Number(item.product_id) || 0)),
       is_ccg: item.is_ccg,
       img_url: String(item.img_url || '').replace(/`/g, '').trim(),

@@ -8,10 +8,15 @@ App({
   globalData: {
     aiClient: null,
     userConfig: null,
-    loginPromise: null
+    loginPromise: null,
+    activityId: null
   },
-  onLaunch() {
-    console.log('小程序启动')
+  onLaunch(options) {
+    console.log('小程序启动', options)
+    // 保存启动参数中的 activity_id
+    if (options && options.query && options.query.activity_id) {
+      this.globalData.activityId = Number(options.query.activity_id)
+    }
     try {
       const storedSwitch = wx.getStorageSync('guideTest')
       const guideTest = typeof storedSwitch === 'boolean' ? storedSwitch : !!(env && env.guideTest)
@@ -42,14 +47,16 @@ App({
           try {
             const loginResp = await ccgapi.login({ js_code: code })
             wx.setStorageSync('token', loginResp.access_token)
-            const initResp = await ccgapi.userInit({})
+            const activityId = Number(getApp().globalData.activityId) || 0
+            const initResp = await ccgapi.userInit({ activity_id: activityId })
             const userConfig = {
               questions: Array.isArray(initResp.questions) ? initResp.questions : [],
               model: initResp.model || '',
               user_name: initResp.user_name || '',
               phone: initResp.phone || initResp.wx_phone || '',
               prompt: initResp.prompt || '',
-              home_entries: initResp.home_entries || []
+              home_entries: initResp.home_entries || [],
+              active_passwords: Array.isArray(initResp.active_passwords) ? initResp.active_passwords : []
             }
             wx.setStorageSync('userConfig', userConfig)
             console.log("获取用户初始化配置:", wx.getStorageSync('userConfig'))
