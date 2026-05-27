@@ -1,6 +1,6 @@
 <view class="chat-page">
   <block wx:if="{{introMode}}">
-    <view class="intro-layer">
+    <view class="intro-layer" style="height: {{introLayerHeight}}px;">
       <view class="intro-container">
         <view class="intro-hero">
           <view class="intro-hero-title">

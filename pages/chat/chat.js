@@ -54,7 +54,11 @@ Page({
 		const app = getApp();
 		this.client = app && app.globalData && app.globalData.aiClient;
 		const cfg = wx.getStorageSync("userConfig") || {};
-		this.setData({ hasPills: SHOW_HISTORY_PILLS, userName: cfg.user_name || "", homeEntries: cfg.home_entries || [] });
+		const homeEntries = cfg.home_entries || [];
+		const entryCount = homeEntries.length;
+		let introLayerHeight = 770;
+		if (entryCount >= 5) introLayerHeight = 870;
+		this.setData({ hasPills: SHOW_HISTORY_PILLS, userName: cfg.user_name || "", homeEntries, introLayerHeight });
 
 		const lastMatchId = wx.getStorageSync('lastMatchId');
 		if (lastMatchId) {

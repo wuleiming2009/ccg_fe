@@ -500,16 +500,18 @@
 
 /* 首屏输入层 */
 .intro-layer {
-	position: fixed;
+	position: relative;
 	left: 0;
 	right: 0;
 	top: 0;
-	bottom: 0;
+	min-height: 100vh;
 	background: #fefaf9;
 	display: flex;
+	flex-direction: column;
 	align-items: stretch;
 	justify-content: flex-start;
 	z-index: 20;
+	overflow-y: auto;
 }
 .intro-bg {
 	display: none;
@@ -536,7 +538,7 @@
 	align-items: center;
 	justify-content: flex-start;
 	gap: 0;
-	flex: 1;
+	flex: 0;
 	padding-top: 50rpx;
 }
 .intro-above {
