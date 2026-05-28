@@ -5,16 +5,16 @@
     "miniprogram": {
       "list": [
         {
-          "name": "商品详情",
-          "pathName": "pages/product/product",
-          "query": "product_id=7745818624",
+          "name": "活动页启动",
+          "pathName": "pages/chat/chat",
+          "query": "activity_id=2739124224",
           "scene": null,
           "launchMode": "default"
         },
         {
-          "name": "pages/chat/chat",
-          "pathName": "pages/chat/chat",
-          "query": "",
+          "name": "商品详情",
+          "pathName": "pages/product/product",
+          "query": "product_id=7745818624",
           "launchMode": "default",
           "scene": null
         },
