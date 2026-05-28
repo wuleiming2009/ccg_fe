@@ -367,7 +367,7 @@ onShow() {
 		const cfg = wx.getStorageSync("userConfig") || {};
 		const activePasswords = cfg.active_passwords || [];
 		console.log("[onSend] checking password match", { text, activePasswords });
-		if (activePasswords.includes(text) && !this.matchStarted) {
+		if (activePasswords.includes(text)) {
 			this.setData({ inputValue: "", scrollInto: "end-anchor" });
 			const msgs = this.data.messages.concat([{ role: "user", content: text }]);
 			this.setData({ messages: msgs, scrollInto: "end-anchor" });
@@ -692,7 +692,6 @@ sanitize(text) {
 	},
 	autoMatchInChatWithPassword(password) {
 		console.log("[autoMatchInChatWithPassword] called", { password, matchStarted: this.matchStarted });
-		if (this.matchStarted) return;
 		this.matchStarted = true;
 		this.autoMatchTriggered = true;
 		const say = {
